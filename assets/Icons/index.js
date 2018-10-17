@@ -8,4 +8,6 @@ export default function getSource(imageName) {
     if (imageName == "search") return require("./search.png")
     if (imageName == "save") return require("./save.png")
     if (imageName == "cancel") return require("./cancel.png")
+    if (imageName == "bot") return require("./bot.png")
+    if (imageName == "user") return require("./user.png")
 };
