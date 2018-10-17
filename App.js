@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import LogList from "./components/LogList";
+import ChatRoom from "./components/ChatRoom";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
@@ -13,7 +14,8 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <LogList myLog={myLog} />
+        {/*<LogList myLog={myLog} />*/}
+        <ChatRoom />
       </View>
     );
   }
