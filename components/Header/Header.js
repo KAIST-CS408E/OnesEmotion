@@ -33,6 +33,7 @@ const headerTextHeight = (headerHeight * 2) / 5;
 
 const styles = StyleSheet.create({
   header: {
+    width: wp("100%"),
     height: headerHeight,
     backgroundColor: Colors.headerGrey,
     alignItems: "center",
