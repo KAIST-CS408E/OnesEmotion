@@ -22,50 +22,14 @@ class TextInputFooter extends Component {
     const { onPress } = this.props; // onPress에서 반드시 yes, no 둘중 뭐를 체크한건지 param으로 받아오도록 해야함.
     return (
       <View style={styles.container}>
-        <View
-          stpye={{
-            width: wp("45%"),
-            height: "auto",
-            padding: 10
-          }}
-        >
+        <View style={{marginLeft: wp("5%")}}>
           <TouchableOpacity onPress={onPress}>
-            <Text
-              style={{
-                width: wp("40%"),
-                height: 60,
-                fontSize: 25,
-                backgroundColor: Colors.chatElementGrey,
-                borderRadius: 10,
-                textAlign: "center",
-                textAlignVertical: "center"
-              }}
-            >
-              Yes, please
-            </Text>
+            <Text style={styles.text}>Yes, please</Text>
           </TouchableOpacity>
         </View>
-        <View
-          stpye={{
-            width: wp("45%"),
-            height: "auto",
-            padding: 10
-          }}
-        >
+        <View style={{marginRight: wp("5%")}}>
           <TouchableOpacity onPress={onPress}>
-            <Text
-              style={{
-                width: wp("40%"),
-                height: 60,
-                fontSize: 25,
-                backgroundColor: Colors.chatElementGrey,
-                borderRadius: 10,
-                textAlign: "center",
-                textAlignVertical: "center"
-              }}
-            >
-              No, thanks
-            </Text>
+            <Text style={styles.text}>No, thanks</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -82,7 +46,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // flex: 1,
     flexDirection: "row",
-    justifyContent: "space-around"
+    justifyContent: "space-between"
+  },
+  text: {
+    width: wp("40%"),
+    height: 60,
+    fontSize: 23,
+    padding: 10,
+    fontWeight: "bold",
+    backgroundColor: Colors.white,
+    color: Colors.chatElementGrey,
+    borderRadius: 10,
+    textAlign: "center",
+    textAlignVertical: "center"
   }
 });
 
