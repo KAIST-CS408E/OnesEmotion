@@ -1,11 +1,19 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import LogList from "./components/LogList";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp
+} from "react-native-responsive-screen";
+
+const myLog = true; //true for MyLog and false for Story
+const story = false;
 
 export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
+        <LogList myLog={myLog} />
       </View>
     );
   }
@@ -13,9 +21,8 @@ export default class App extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    width: wp("100%"),
+    alignItems: "center",
+    justifyContent: "center"
+  }
 });
