@@ -28,8 +28,8 @@ class Header extends Component {
 }
 
 const hearderSideBoxWidth = wp('20%');
-const headerHeight = hp("13%");
-const headerTextHeight = (headerHeight * 2) / 5;
+const headerHeight = hp("10%");
+const headerTextHeight = (headerHeight * 1) / 3;
 
 const styles = StyleSheet.create({
   header: {
