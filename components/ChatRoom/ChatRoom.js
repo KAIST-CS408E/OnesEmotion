@@ -25,7 +25,7 @@ const questions = {
   1: "Oh i see, how do you feel now?",
   2: "Is there another emotion you felt?",
   3: "Thanks for telling me.",
-  4: "Can I ask others with your situation for feedback?" //botPushThisQuestion 에서 마지막인 인덱스를 꼭 바꿔줘야 마지막 질문을 함.
+  4: "Can I ask others with your situation for feedback?" //botPushThisQuestion 에서 마지막인 인덱스를 꼭 바꿔줘야 마지막 질문과 함꼐 buttoninput 보여줌.
 };
 
 class ChatRoom extends Component {

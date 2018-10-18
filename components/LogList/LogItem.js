@@ -8,6 +8,10 @@ import Colors from "./../../assets/Colors";
 import Icons from "./../../assets/Icons";
 
 class LogItem extends Component {
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.text !== this.props.text;
+  }
+
   render() {
     const {
       myLog,

@@ -8,6 +8,10 @@ import Colors from "./../../assets/Colors";
 import Icons from "./../../assets/Icons";
 
 class ChatElement extends Component {
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.text !== this.props.text;
+  }
+
   render() {
     const { speaker, text } = this.props;
     const isBot = speaker == "bot";
