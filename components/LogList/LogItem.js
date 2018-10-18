@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
@@ -21,10 +21,11 @@ class LogItem extends Component {
       selfEmotion,
       crowdEmotion,
       onRemove,
-      onClick
+      onPress,
     } = this.props;
 
     return (
+      <TouchableOpacity onPress={onPress}>
       <View style={styles.itemBox}>
         {myLog ? (
           <View style={styles.itemBoxLeft}>
@@ -60,6 +61,7 @@ class LogItem extends Component {
           </View>
         ) : null}
       </View>
+      </TouchableOpacity>
     );
   }
 }

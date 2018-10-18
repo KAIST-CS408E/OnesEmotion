@@ -20,6 +20,8 @@ import {
 import Colors from "./../../assets/Colors";
 import Icons from "./../../assets/Icons";
 
+import {Actions} from 'react-native-router-flux';
+
 const questions = {
   0: "Hey, what happened today?",
   1: "Oh i see, how do you feel now?",
@@ -35,6 +37,10 @@ class ChatRoom extends Component {
     isTextInput: true,
     isFinished: false
   };
+
+  routeToLogList = () => {
+    Actions.loglist()
+  }
 
   examplePress = () => {
     Alert.alert(
@@ -61,7 +67,7 @@ class ChatRoom extends Component {
       boxWidth={"20"}
       imageWidth={"7"}
       imageName={"save"}
-      onPress={this.examplePress}
+      onPress={this.routeToLogList}
     />
   );
 
@@ -149,7 +155,7 @@ class ChatRoom extends Component {
           {this.state.isTextInput & !this.state.isFinished ? (
             <TextInputFooter onPress={this.handleTextInput} />
           ) : null}
-          {this.state.isFinished ? <ButtonInputFooter /> : null}
+          {this.state.isFinished ? <ButtonInputFooter onPress={this.routeToLogList} /> : null}
         </View>
       </KeyboardAvoidingView>
     );

@@ -7,16 +7,19 @@ import {
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
 
+import Routes from "./components/Routes";
+
 const myLog = true; //true for MyLog and false for Story
 const story = false;
 
 export default class App extends React.Component {
   render() {
     return (
-      <View style={styles.container}>
-        {/*<LogList myLog={myLog} />*/}
-        <ChatRoom />
-      </View>
+      <Routes />
+      //<View style={styles.container}>
+      //  {/*<LogList myLog={myLog} />*/}
+      //  <ChatRoom />
+      //</View>
     );
   }
 }

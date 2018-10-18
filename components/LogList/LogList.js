@@ -9,6 +9,8 @@ import {
 } from "react-native-responsive-screen";
 import Colors from "./../../assets/Colors";
 
+import {Actions} from 'react-native-router-flux';
+
 const EMOTIONS = ["sobad", "bad", "soso", "good", "sogood"];
 
 class LogList extends Component {
@@ -58,6 +60,10 @@ class LogList extends Component {
       }
     ]
   };
+
+  routeToChatRoom = () => {
+    Actions.chatroom()
+  }
 
   handlePress = id => {};
 
@@ -118,7 +124,7 @@ class LogList extends Component {
         selfEmotion={item.selfEmotion}
         crowdEmotion={item.crowdEmotion}
         onRemove={this.handleRemove}
-        onClick={this.handleClick}
+        onPress={this.routeToChatRoom}
       />
     ));
 
