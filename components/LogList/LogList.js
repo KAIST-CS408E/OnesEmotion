@@ -12,6 +12,11 @@ import Colors from "./../../assets/Colors";
 const EMOTIONS = ["sobad", "bad", "soso", "good", "sogood"];
 
 class LogList extends Component {
+  // Add the Navigation option
+  static navigationOptions = {
+    title: 'LogList',
+  };
+  
   state = {
     logList: [
       {
@@ -76,12 +81,14 @@ class LogList extends Component {
     />
   );
 
-  renderLogListHeaderRight = () => (
+  renderLogListHeaderRight = (navigate) => (
     <ImageButton
       boxWidth={"20"}
       imageWidth={"10"}
       imageName={"search"}
-      onPress={this.examplePress}
+      onPress={
+        () => navigate("Second", {})
+    }
     />
   );
 
@@ -108,6 +115,8 @@ class LogList extends Component {
   render() {
     const { myLog } = this.props;
 
+    var {navigate} = this.props.navigation;
+
     const contents = this.state.logList.map(item => (
       <LogItem
         myLog={myLog}
@@ -127,7 +136,7 @@ class LogList extends Component {
         <Header
           title={myLog ? "MyLog" : "Story"}
           left={this.renderLogListHeaderLeft()}
-          right={this.renderLogListHeaderRight()}
+          right={this.renderLogListHeaderRight(navigate)}
         />
         <ScrollView>{contents}</ScrollView>
       </View>

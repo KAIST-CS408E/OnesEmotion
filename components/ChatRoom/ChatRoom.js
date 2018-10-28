@@ -29,6 +29,11 @@ const questions = {
 };
 
 class ChatRoom extends Component {
+  // Add the Navigation option
+  static navigationOptions = {
+    title: 'ChatRoom',
+  };
+
   state = {
     currentDialog: [{ speaker: "bot", text: questions[0] }],
     dialogIndex: 1,
@@ -56,12 +61,14 @@ class ChatRoom extends Component {
     );
   };
 
-  renderChatRoomHeaderLeft = () => (
+  renderChatRoomHeaderLeft = (navigate) => (
     <ImageButton
       boxWidth={"20"}
       imageWidth={"7"}
       imageName={"save"}
-      onPress={this.examplePress}
+      onPress={
+        () => navigate("First", {})
+      }
     />
   );
 
@@ -113,16 +120,13 @@ class ChatRoom extends Component {
     const { chatLog } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
     // console.log("In ChatRoom this.state:", this.state);
     const contentsTopBottomMargin = 8;
+    var {navigate} = this.props.navigation; 
 
     return (
-      <KeyboardAvoidingView
-        behavior="padding"
-        enabled
-        style={{ backgroundColor: Colors.chatRoomBackground }}
-      >
+      <View>
         <Header
           title={chatLog ? "ChatLog" : "MyHome"}
-          left={this.renderChatRoomHeaderLeft()}
+          left={this.renderChatRoomHeaderLeft(navigate)}
           right={this.renderChatRoomHeaderRight()}
         />
         <View style={styles.chatRoomContents}>
@@ -151,7 +155,7 @@ class ChatRoom extends Component {
           ) : null}
           {this.state.isFinished ? <ButtonInputFooter /> : null}
         </View>
-      </KeyboardAvoidingView>
+      </View>
     );
   }
 }
