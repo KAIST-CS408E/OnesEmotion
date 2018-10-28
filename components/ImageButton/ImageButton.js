@@ -8,9 +8,31 @@ import Colors from "./../../assets/Colors";
 import Icons from "./../../assets/Icons";
 
 class ImageButton extends Component {
+  state = {
+    clicked: false
+  };
+
+  handleOptionClick = () => {
+    // console.log(
+    //   "In ImageButton handleOptionClick this.state.clicked:",
+    //   this.state.clicked
+    // );
+    this.setState({ clicked: !this.state.clicked });
+  };
+
   render() {
-    const { boxWidth, imageWidth, imageName, onPress } = this.props;
+    const { boxWidth, imageWidth, imageName, onPress, isOption } = this.props;
+    // console.log("In ImageButton isOption:", isOption);
+    // console.log("In ImageButton imageName:", imageName);
+
     const boxWidthApplyed = boxWidth ? boxWidth : "20";
+    const imageNameFixed = isOption
+      ? this.state.clicked
+        ? `${imageName}_option_clicked`
+        : `${imageName}_option_unclicked`
+      : imageName;
+    // console.log("In ImageButton imageNameFixed:", imageNameFixed);
+
     return (
       <View
         style={{
@@ -19,14 +41,16 @@ class ImageButton extends Component {
           alignItems: "center"
         }}
       >
-        {onPress ? (
-          <TouchableOpacity onPress={onPress}>
+        {onPress||isOption ? (
+          <TouchableOpacity
+            onPress={isOption ? this.handleOptionClick : onPress}
+          >
             <Image
               style={{
                 width: wp(`${imageWidth}`),
                 height: wp(`${imageWidth}`)
               }}
-              source={Icons(imageName)}
+              source={Icons(imageNameFixed)}
             />
           </TouchableOpacity>
         ) : (
@@ -37,7 +61,7 @@ class ImageButton extends Component {
                   width: wp(`${imageWidth}`),
                   height: wp(`${imageWidth}`)
                 }}
-                source={Icons(imageName)}
+                source={Icons(imageNameFixed)}
               />
             </View>
           </View>

@@ -10,4 +10,15 @@ export default function getSource(imageName) {
     if (imageName == "cancel") return require("./cancel.png")
     if (imageName == "bot") return require("./bot.png")
     if (imageName == "user") return require("./user.png")
+    //iconOptionBox
+    if (imageName == "sogood_option_clicked") return require("./sogood_option_clicked.png")
+    if (imageName == "good_option_clicked") return require("./good_option_clicked.png")
+    if (imageName == "soso_option_clicked") return require("./soso_option_clicked.png")
+    if (imageName == "bad_option_clicked") return require("./bad_option_clicked.png")
+    if (imageName == "sobad_option_clicked") return require("./sobad_option_clicked.png")
+    if (imageName == "sogood_option_unclicked") return require("./sogood_option_unclicked.png")
+    if (imageName == "good_option_unclicked") return require("./good_option_unclicked.png")
+    if (imageName == "soso_option_unclicked") return require("./soso_option_unclicked.png")
+    if (imageName == "bad_option_unclicked") return require("./bad_option_unclicked.png")
+    if (imageName == "sobad_option_unclicked") return require("./sobad_option_unclicked.png")
 };

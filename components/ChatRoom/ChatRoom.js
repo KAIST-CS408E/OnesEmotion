@@ -27,6 +27,7 @@ const questions = {
   3: "Thanks for telling me.",
   4: "Can I ask others with your situation for feedback?" //botPushThisQuestion 에서 마지막인 인덱스를 꼭 바꿔줘야 마지막 질문과 함꼐 buttoninput 보여줌.
 };
+const dialogIndexWithIconOptionBox = 2; //아이콘옵션박스를 띄워야 할 dialog의 index+1의 값을 적어야 함.
 
 class ChatRoom extends Component {
   state = {
@@ -147,7 +148,15 @@ class ChatRoom extends Component {
               : null}
           </ScrollView>
           {this.state.isTextInput & !this.state.isFinished ? (
-            <TextInputFooter onPress={this.handleTextInput} />
+            <TextInputFooter
+              onPress={this.handleTextInput}
+              isIconOptionBox={
+                this.state.dialogIndex == dialogIndexWithIconOptionBox
+                  ? true
+                  : false
+              }
+              isMyLog={chatLog? false: true}
+            />
           ) : null}
           {this.state.isFinished ? <ButtonInputFooter /> : null}
         </View>
