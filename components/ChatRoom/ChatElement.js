@@ -6,6 +6,7 @@ import {
 } from "react-native-responsive-screen";
 import Colors from "./../../assets/Colors";
 import Icons from "./../../assets/Icons";
+import ImageButton from "../ImageButton";
 
 class ChatElement extends Component {
   shouldComponentUpdate(nextProps, nextState) {
@@ -15,6 +16,7 @@ class ChatElement extends Component {
   render() {
     const { speaker, text } = this.props;
     const isBot = speaker == "bot";
+    const isUserIcon = speaker == "userIcon";
     const profileSize = 40;
     const profileBoxSize = 50;
     const textSize = 18;
@@ -53,7 +55,7 @@ class ChatElement extends Component {
                   alignItems: "center",
                   justifyContent: "center",
                   padding: 5,
-                  marginLeft: marginBetweenPrfileAndText,
+                  marginLeft: marginBetweenPrfileAndText
                 }}
               >
                 <Text
@@ -74,7 +76,7 @@ class ChatElement extends Component {
           <View style={styles.userChat}>
             <View
               style={{
-                flexDirection: "row",
+                flexDirection: "row"
               }}
             >
               <View
@@ -85,20 +87,37 @@ class ChatElement extends Component {
                   alignItems: "center",
                   justifyContent: "center",
                   padding: 5,
-                  marginRight: marginBetweenPrfileAndText,
+                  marginRight: marginBetweenPrfileAndText
                 }}
               >
-                <Text
-                  style={{
-                    fontSize: textSize,
-                    color: Colors.black,
-                    backgroundColor: Colors.white,
-                    padding: 5,
-                    borderRadius: 10
-                  }}
-                >
-                  {text}
-                </Text>
+                {isUserIcon ? (
+                  <View
+                    style={{
+                      backgroundColor: Colors.white,
+                      padding: 5,
+                      height: wp("20%"),
+                      borderRadius: 10
+                    }}
+                  >
+                    <ImageButton
+                      boxWidth={"20"}
+                      imageWidth={"15"}
+                      imageName={text}
+                    />
+                  </View>
+                ) : (
+                  <Text
+                    style={{
+                      fontSize: textSize,
+                      color: Colors.black,
+                      backgroundColor: Colors.white,
+                      padding: 5,
+                      borderRadius: 10
+                    }}
+                  >
+                    {text}
+                  </Text>
+                )}
               </View>
               <View
                 style={{

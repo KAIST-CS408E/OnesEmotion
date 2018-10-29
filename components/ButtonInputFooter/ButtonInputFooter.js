@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   container: {
     width: wp("100%"),
     height: 100,
-    marginTop: 10,
+    // marginTop: 10,
     backgroundColor: Colors.headerGrey,
     alignItems: "center",
     // flex: 1,

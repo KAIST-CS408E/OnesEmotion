@@ -13,27 +13,47 @@ import {
 import Colors from "./../../assets/Colors";
 import ImageButton from "./../ImageButton";
 
-const optionIconNameList = ["sogood", "good", "soso", "bad", "sobad"];
+const optionIconNameListOrigin = ["sogood", "good", "soso", "bad", "sobad"];
 
 class TextInputFooter extends Component {
   state = {
-    text: ""
+    text: "",
+    optionIconNameList: [
+      "sogood_option_unclicked",
+      "good_option_unclicked",
+      "soso_option_unclicked",
+      "bad_option_unclicked",
+      "sobad_option_unclicked"
+    ],
+    selectedIconName: ""
   };
 
-  renderIconOptionBox = (iconNameList, isMyLog) => (
+  handleOptionSelect = selectedImageName => {
+    const newList = optionIconNameListOrigin.map(
+      iconName =>
+        iconName == selectedImageName.split("_")[0]
+          ? `${iconName}_option_clicked`
+          : `${iconName}_option_unclicked`
+    );
+    this.setState({
+      optionIconNameList: newList,
+      selectedIconName: `${selectedImageName.split("_")[0]}_option_clicked`
+    });
+  };
+
+  renderIconOptionBox = isMyLog => (
     // console.log("In TextInputFooter renderIconOptionBox iconNameList:", iconNameList);
     <View style={styles.iconOptionBoxContainer}>
       <Text style={styles.iconOptionBoxText}>
         {isMyLog ? "Choose your emotion" : "How about your thought?"}
       </Text>
       <View style={styles.iconOptionBox}>
-        {iconNameList.map(iconName => (
+        {this.state.optionIconNameList.map(iconName => (
           <ImageButton
             boxWidth={"20"}
             imageWidth={"15"}
             imageName={iconName}
-            isOption={true}
-            // onPress={this.examplePress}
+            onPress={this.handleOptionSelect}
           />
         ))}
       </View>
@@ -41,14 +61,12 @@ class TextInputFooter extends Component {
   );
 
   render() {
-    const { onPress, isIconOptionBox, isMyLog } = this.props;
+    const { onPress, onPressIcon, isIconOptionBox, isMyLog } = this.props;
     // console.log("In TextInputFooter isIconOptionBox:", isIconOptionBox);
 
     return (
       <View>
-        {isIconOptionBox
-          ? this.renderIconOptionBox(optionIconNameList, isMyLog)
-          : null}
+        {isIconOptionBox ? this.renderIconOptionBox(isMyLog) : null}
         <View style={styles.container}>
           <View
             style={{
@@ -87,9 +105,20 @@ class TextInputFooter extends Component {
                 justifyContent: "center"
               }}
               onPress={() => {
-                onPress("user", this.state.text);
+                // console.log("In TextInputFooter state before onPress:", this.state);
+                onPress("user", this.state.text, this.state.selectedIconName);
                 // console.log("In TextInputFooter state after onPress:", this.state);
-                this.setState({ text: "" });
+                this.setState({
+                  text: "",
+                  optionIconNameList: [
+                    "sogood_option_unclicked",
+                    "good_option_unclicked",
+                    "soso_option_unclicked",
+                    "bad_option_unclicked",
+                    "sobad_option_unclicked"
+                  ],
+                  selectedIconName: ""
+                });
               }}
             >
               <Text
@@ -112,7 +141,7 @@ class TextInputFooter extends Component {
 }
 
 const IconOptionBoxTitleTextSize = 20;
-const IconOptionBoxTitleBoxSize = 2*IconOptionBoxTitleTextSize;
+const IconOptionBoxTitleBoxSize = 2 * IconOptionBoxTitleTextSize;
 const TextInputBoxHeight = 55;
 const TextInputHeight = TextInputBoxHeight * 0.8;
 
@@ -126,7 +155,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around"
   },
-  iconOptionBoxContainer : {
+  iconOptionBoxContainer: {
     alignItems: "center",
     backgroundColor: Colors.white,
     borderTopWidth: 2.5,

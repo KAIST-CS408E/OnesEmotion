@@ -81,10 +81,10 @@ class ChatRoom extends Component {
 
   botPushThisQuestion = questionIndex => {
     setTimeout(() => {
-      //   console.log(
-      //     "In ChatRoom, botPushThisQuestion: this.state = ",
-      //     this.state
-      //   );
+      // console.log(
+      //   "In ChatRoom, botPushThisQuestion: this.state = ",
+      //   this.state
+      // );
       this.setState({
         currentDialog: [
           ...this.state.currentDialog,
@@ -96,13 +96,21 @@ class ChatRoom extends Component {
     }, this.getRandomInt(2000, 3000));
   };
 
-  handleTextInput = (speaker, text) => {
-    // console.log("In ChatRoom speaker and text:", speaker, text);
+  handleTextInput = (speaker, text, iconInput) => {
+    // console.log(
+    //   "In ChatRoom speaker, text and iconInput:",
+    //   speaker,
+    //   text,
+    //   iconInput
+    // );
     this.setState({
-      currentDialog: [
-        ...this.state.currentDialog,
-        { speaker: speaker, text: text }
-      ],
+      currentDialog: iconInput
+        ? [
+            ...this.state.currentDialog,
+            { speaker: "userIcon", text: iconInput },
+            { speaker: speaker, text: text }
+          ]
+        : [...this.state.currentDialog, { speaker: speaker, text: text }],
       dialogIndex: this.state.dialogIndex + 1,
       isTextInput: false
     });
@@ -150,12 +158,13 @@ class ChatRoom extends Component {
           {this.state.isTextInput & !this.state.isFinished ? (
             <TextInputFooter
               onPress={this.handleTextInput}
+              onPressIcon={this.handleIconSelectInput}
               isIconOptionBox={
                 this.state.dialogIndex == dialogIndexWithIconOptionBox
                   ? true
                   : false
               }
-              isMyLog={chatLog? false: true}
+              isMyLog={chatLog ? false : true}
             />
           ) : null}
           {this.state.isFinished ? <ButtonInputFooter /> : null}
