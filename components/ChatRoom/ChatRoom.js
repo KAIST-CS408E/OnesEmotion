@@ -120,7 +120,7 @@ class ChatRoom extends Component {
 
   render() {
     const { chatLog } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
-    // console.log("In ChatRoom this.state:", this.state);
+    console.log("In ChatRoom this.state:", this.state);
     const contentsTopBottomMargin = 8;
 
     return (
@@ -145,29 +145,39 @@ class ChatRoom extends Component {
               this.scrollView.scrollToEnd({ animated: true });
             }}
           >
-            {this.state.currentDialog
-              ? this.state.currentDialog.map((dialog, index) => (
+            {chatLog
+              ? chatLog.map((dialog, index) => (
                   <ChatElement
                     key={index}
                     speaker={dialog.speaker}
                     text={dialog.text}
                   />
                 ))
-              : null}
+              : this.state.currentDialog.map((dialog, index) => (
+                  <ChatElement
+                    key={index}
+                    speaker={dialog.speaker}
+                    text={dialog.text}
+                  />
+                ))}
           </ScrollView>
-          {this.state.isTextInput & !this.state.isFinished ? (
-            <TextInputFooter
-              onPress={this.handleTextInput}
-              onPressIcon={this.handleIconSelectInput}
-              isIconOptionBox={
-                this.state.dialogIndex == dialogIndexWithIconOptionBox
-                  ? true
-                  : false
-              }
-              isMyLog={chatLog ? false : true}
-            />
-          ) : null}
-          {this.state.isFinished ? <ButtonInputFooter /> : null}
+          {chatLog ? null : ( // null 위치에 Crowd 관련 컴포넌트 나와야!
+            <View>
+              {this.state.isTextInput & !this.state.isFinished ? (
+                <TextInputFooter
+                  onPress={this.handleTextInput}
+                  onPressIcon={this.handleIconSelectInput}
+                  isIconOptionBox={
+                    this.state.dialogIndex == dialogIndexWithIconOptionBox
+                      ? true
+                      : false
+                  }
+                  isMyLog={chatLog ? false : true}
+                />
+              ) : null}
+              {this.state.isFinished ? <ButtonInputFooter /> : null}
+            </View>
+          )}
         </View>
       </KeyboardAvoidingView>
     );
