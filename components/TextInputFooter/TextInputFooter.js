@@ -61,7 +61,7 @@ class TextInputFooter extends Component {
   );
 
   render() {
-    const { onPress, onPressIcon, isIconOptionBox, isMyLog } = this.props;
+    const { onPress, isIconOptionBox, isMyLog } = this.props;
     // console.log("In TextInputFooter isIconOptionBox:", isIconOptionBox);
 
     return (
@@ -106,7 +106,7 @@ class TextInputFooter extends Component {
               }}
               onPress={() => {
                 // console.log("In TextInputFooter state before onPress:", this.state);
-                onPress("user", this.state.text, this.state.selectedIconName);
+                onPress("user", this.state.text, this.state.selectedIconName, isMyLog);
                 // console.log("In TextInputFooter state after onPress:", this.state);
                 this.setState({
                   text: "",

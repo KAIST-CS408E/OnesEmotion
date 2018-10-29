@@ -13,7 +13,7 @@ import {
 } from "react-native-responsive-screen";
 import Colors from "./../../assets/Colors";
 
-class TextInputFooter extends Component {
+class ButtonInputFooter extends Component {
   state = {
     text: "Type your answer"
   };
@@ -62,4 +62,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default TextInputFooter;
+export default ButtonInputFooter;

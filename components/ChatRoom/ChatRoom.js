@@ -11,6 +11,7 @@ import {
 import Header from "./../Header";
 import TextInputFooter from "./../TextInputFooter";
 import ButtonInputFooter from "./../ButtonInputFooter";
+import CrowdBoxFooter from "./../CrowdBoxFooter";
 import ImageButton from "./../ImageButton";
 import ChatElement from "./ChatElement";
 import {
@@ -34,7 +35,8 @@ class ChatRoom extends Component {
     currentDialog: [{ speaker: "bot", text: questions[0] }],
     dialogIndex: 1,
     isTextInput: true,
-    isFinished: false
+    isFinished: false,
+    isCrowdBox: false
   };
 
   examplePress = () => {
@@ -96,7 +98,7 @@ class ChatRoom extends Component {
     }, this.getRandomInt(2000, 3000));
   };
 
-  handleTextInput = (speaker, text, iconInput) => {
+  handleTextInput = (speaker, text, iconInput, isMyLog) => {
     // console.log(
     //   "In ChatRoom speaker, text and iconInput:",
     //   speaker,
@@ -104,24 +106,37 @@ class ChatRoom extends Component {
     //   iconInput
     // );
     this.setState({
-      currentDialog: iconInput
-        ? [
-            ...this.state.currentDialog,
-            { speaker: "userIcon", text: iconInput },
-            { speaker: speaker, text: text }
-          ]
-        : [...this.state.currentDialog, { speaker: speaker, text: text }],
-      dialogIndex: this.state.dialogIndex + 1,
-      isTextInput: false
+      //iconInput은 `${selectedImageName.split("_")[0]}_option_clicked`꼴
+      currentDialog: isMyLog
+        ? iconInput
+          ? [
+              ...this.state.currentDialog,
+              { speaker: "userIcon", text: iconInput },
+              { speaker: speaker, text: text }
+            ]
+          : [...this.state.currentDialog, { speaker: speaker, text: text }]
+        : [
+            {
+              speaker: "user",
+              text: text,
+              profileImageName: `${iconInput.split("_")[0]}_crowdBox`
+            }
+          ],
+      dialogIndex: isMyLog
+        ? this.state.dialogIndex + 1
+        : this.state.dialogIndex,
+      isTextInput: false,
+      isCrowdBox: !isMyLog
     });
     // console.log("In ChatRoom, handleTextInput: this.state = ", this.state);
-    this.botPushThisQuestion(this.state.dialogIndex);
+    isMyLog ? this.botPushThisQuestion(this.state.dialogIndex) : null;
   };
 
   render() {
     const { chatLog } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
-    console.log("In ChatRoom this.state:", this.state);
+    // console.log("In ChatRoom this.state:", this.state);
     const contentsTopBottomMargin = 8;
+    const targetDialog = chatLog ? chatLog : this.state.currentDialog;
 
     return (
       <KeyboardAvoidingView
@@ -145,28 +160,32 @@ class ChatRoom extends Component {
               this.scrollView.scrollToEnd({ animated: true });
             }}
           >
-            {chatLog
-              ? chatLog.map((dialog, index) => (
-                  <ChatElement
-                    key={index}
-                    speaker={dialog.speaker}
-                    text={dialog.text}
-                  />
-                ))
-              : this.state.currentDialog.map((dialog, index) => (
-                  <ChatElement
-                    key={index}
-                    speaker={dialog.speaker}
-                    text={dialog.text}
-                  />
-                ))}
+            {targetDialog.map((dialog, index) => (
+              <ChatElement
+                key={index}
+                speaker={dialog.speaker}
+                text={dialog.text}
+                profileImageName={dialog.speaker == "bot" ? "bot" : "user"}
+              />
+            ))}
           </ScrollView>
-          {chatLog ? null : ( // null 위치에 Crowd 관련 컴포넌트 나와야!
+          {chatLog ? (
+            <View>
+              {this.state.isCrowdBox ? (
+                <CrowdBoxFooter userInputDialog={this.state.currentDialog[0]} />
+              ) : (
+                <TextInputFooter
+                  onPress={this.handleTextInput}
+                  isIconOptionBox={true}
+                  isMyLog={false}
+                />
+              )}
+            </View>
+          ) : (
             <View>
               {this.state.isTextInput & !this.state.isFinished ? (
                 <TextInputFooter
                   onPress={this.handleTextInput}
-                  onPressIcon={this.handleIconSelectInput}
                   isIconOptionBox={
                     this.state.dialogIndex == dialogIndexWithIconOptionBox
                       ? true

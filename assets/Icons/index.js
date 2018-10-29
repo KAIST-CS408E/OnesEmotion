@@ -21,4 +21,10 @@ export default function getSource(imageName) {
     if (imageName == "soso_option_unclicked") return require("./soso_option_unclicked.png")
     if (imageName == "bad_option_unclicked") return require("./bad_option_unclicked.png")
     if (imageName == "sobad_option_unclicked") return require("./sobad_option_unclicked.png")
+    //crowdBox
+    if (imageName == "sogood_crowdBox") return require("./sogood_crowdBox.png")
+    if (imageName == "good_crowdBox") return require("./good_crowdBox.png")
+    if (imageName == "soso_crowdBox") return require("./soso_crowdBox.png")
+    if (imageName == "bad_crowdBox") return require("./bad_crowdBox.png")
+    if (imageName == "sobad_crowdBox") return require("./sobad_crowdBox.png")
 };

@@ -14,7 +14,8 @@ class ChatElement extends Component {
   }
 
   render() {
-    const { speaker, text } = this.props;
+    const { speaker, text, profileImageName } = this.props;
+    // console.log("In ChatElement profileImageName: ",profileImageName);
     const isBot = speaker == "bot";
     const isUserIcon = speaker == "userIcon";
     const profileSize = 40;
@@ -44,7 +45,7 @@ class ChatElement extends Component {
               >
                 <Image
                   style={{ width: profileSize, height: profileSize }}
-                  source={Icons("bot")}
+                  source={Icons(profileImageName)}
                 />
               </View>
               <View
@@ -130,7 +131,7 @@ class ChatElement extends Component {
               >
                 <Image
                   style={{ width: profileSize, height: profileSize }}
-                  source={Icons("user")}
+                  source={Icons(profileImageName)}
                 />
               </View>
             </View>
