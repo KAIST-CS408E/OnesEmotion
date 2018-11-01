@@ -1,6 +1,4 @@
 node_modules/**/*
 .expo/*
 npm-debug.*
-yarn.lock
-package-lock.json
-config.js
+firebaseConfigs.js
