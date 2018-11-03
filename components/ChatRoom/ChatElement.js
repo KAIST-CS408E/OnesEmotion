@@ -20,7 +20,7 @@ class ChatElement extends Component {
     const isUserIcon = speaker == "userIcon";
     const profileSize = 40;
     const profileBoxSize = 50;
-    const textSize = 18;
+    const textSize = 15;
     const textBoxMaxWidth = wp("70%");
     const marginBetweenPrfileAndText = 0;
 

@@ -4,7 +4,8 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  ScrollView
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -13,17 +14,31 @@ import {
 import Colors from "./../../assets/Colors";
 import ImageButton from "./../ImageButton";
 
-const optionIconNameListOrigin = ["sogood", "good", "soso", "bad", "sobad"];
+const optionIconNameListOrigin = [
+  "joy",
+  "trust",
+  "fear",
+  "surprise",
+  "anticipation",
+  "anger",
+  "disgust",
+  "sadness",
+  "nothing"
+];
 
 class TextInputFooter extends Component {
   state = {
     text: "",
     optionIconNameList: [
-      "sogood_option_unclicked",
-      "good_option_unclicked",
-      "soso_option_unclicked",
-      "bad_option_unclicked",
-      "sobad_option_unclicked"
+      "joy_option_unclicked",
+      "trust_option_unclicked",
+      "fear_option_unclicked",
+      "surprise_option_unclicked",
+      "anticipation_option_unclicked",
+      "anger_option_unclicked",
+      "disgust_option_unclicked",
+      "sadness_option_unclicked",
+      "nothing_option_unclicked"
     ],
     selectedIconName: ""
   };
@@ -42,20 +57,27 @@ class TextInputFooter extends Component {
   };
 
   renderIconOptionBox = isMyLog => (
-    // console.log("In TextInputFooter renderIconOptionBox iconNameList:", iconNameList);
     <View style={styles.iconOptionBoxContainer}>
       <Text style={styles.iconOptionBoxText}>
         {isMyLog ? "Choose your emotion" : "How about your thought?"}
       </Text>
       <View style={styles.iconOptionBox}>
-        {this.state.optionIconNameList.map(iconName => (
-          <ImageButton
-            boxWidth={"20"}
-            imageWidth={"15"}
-            imageName={iconName}
-            onPress={this.handleOptionSelect}
-          />
-        ))}
+        <ScrollView
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: "space-between"
+          }}
+          horizontal={true}
+        >
+          {this.state.optionIconNameList.map(iconName => (
+            <ImageButton
+              boxWidth={"18"}
+              imageWidth={"14"}
+              imageName={iconName}
+              onPress={this.handleOptionSelect}
+            />
+          ))}
+        </ScrollView>
       </View>
     </View>
   );
@@ -83,7 +105,7 @@ class TextInputFooter extends Component {
               style={{
                 width: wp("80%"),
                 marginLeft: 10,
-                fontSize: 20
+                fontSize: 15
               }}
               onChangeText={text => this.setState({ text })}
               value={this.state.text}
@@ -106,16 +128,25 @@ class TextInputFooter extends Component {
               }}
               onPress={() => {
                 // console.log("In TextInputFooter state before onPress:", this.state);
-                onPress("user", this.state.text, this.state.selectedIconName, isMyLog);
+                onPress(
+                  "user",
+                  this.state.text,
+                  this.state.selectedIconName,
+                  isMyLog
+                );
                 // console.log("In TextInputFooter state after onPress:", this.state);
                 this.setState({
                   text: "",
                   optionIconNameList: [
-                    "sogood_option_unclicked",
-                    "good_option_unclicked",
-                    "soso_option_unclicked",
-                    "bad_option_unclicked",
-                    "sobad_option_unclicked"
+                    "joy_option_unclicked",
+                    "trust_option_unclicked",
+                    "fear_option_unclicked",
+                    "surprise_option_unclicked",
+                    "anticipation_option_unclicked",
+                    "anger_option_unclicked",
+                    "disgust_option_unclicked",
+                    "sadness_option_unclicked",
+                    "nothing_option_unclicked"
                   ],
                   selectedIconName: ""
                 });
@@ -124,7 +155,7 @@ class TextInputFooter extends Component {
               <Text
                 style={{
                   color: Colors.white,
-                  fontSize: 20,
+                  fontSize: 15,
                   fontWeight: "bold",
                   textAlign: "center",
                   textAlignVertical: "center"
@@ -142,7 +173,7 @@ class TextInputFooter extends Component {
 
 const IconOptionBoxTitleTextSize = 20;
 const IconOptionBoxTitleBoxSize = 2 * IconOptionBoxTitleTextSize;
-const TextInputBoxHeight = 55;
+const TextInputBoxHeight = 44;
 const TextInputHeight = TextInputBoxHeight * 0.8;
 
 const styles = StyleSheet.create({
@@ -165,11 +196,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between"
   },
   iconOptionBox: {
-    height: 80,
-    alignItems: "center",
-    // flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between"
+    width: wp("100%"),
+    height: 60
+    // alignItems: "center",
+    // // flex: 1,
+    // flexDirection: "row",
+    // justifyContent: "space-between"
   },
   iconOptionBoxText: {
     fontSize: IconOptionBoxTitleTextSize,
