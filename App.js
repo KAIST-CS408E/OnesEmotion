@@ -24,7 +24,7 @@ const sampleDialog = [
   },
   {
     speaker: "userIcon",
-    text: "bad_option_clicked"
+    text: "disgust_option_clicked"
   },
   {
     speaker: "user",
@@ -58,7 +58,7 @@ export default class App extends React.Component {
     return (
       <View style={styles.container}>
         {/*<LogList myLog={myLog} />*/}
-        <ChatRoom/>
+        <ChatRoom chatLog={sampleDialog}/>
       </View>
     );
   }

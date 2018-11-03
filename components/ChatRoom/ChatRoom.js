@@ -148,7 +148,7 @@ class ChatRoom extends Component {
             {
               speaker: "user",
               text: text,
-              profileImageName: `${iconInput.split("_")[0]}_crowdBox`
+              profileImageName: `${iconInput.split("_")[0]}_option_clicked`
             }
           ],
       dialogIndex: isMyLog

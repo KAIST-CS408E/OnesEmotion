@@ -14,18 +14,6 @@ import {
 import Colors from "./../../assets/Colors";
 import ImageButton from "./../ImageButton";
 
-const optionIconNameListOrigin = [
-  "joy",
-  "trust",
-  "fear",
-  "surprise",
-  "anticipation",
-  "anger",
-  "disgust",
-  "sadness",
-  "nothing"
-];
-
 class TextInputFooter extends Component {
   state = {
     text: "",
@@ -44,6 +32,17 @@ class TextInputFooter extends Component {
   };
 
   handleOptionSelect = selectedImageName => {
+    const optionIconNameListOrigin = [
+      "joy",
+      "trust",
+      "fear",
+      "surprise",
+      "anticipation",
+      "anger",
+      "disgust",
+      "sadness",
+      "nothing",
+    ];
     const newList = optionIconNameListOrigin.map(
       iconName =>
         iconName == selectedImageName.split("_")[0]
@@ -85,6 +84,17 @@ class TextInputFooter extends Component {
   render() {
     const { onPress, isIconOptionBox, isMyLog } = this.props;
     // console.log("In TextInputFooter isIconOptionBox:", isIconOptionBox);
+    const optionIconNameListOrigin = [
+      "joy",
+      "trust",
+      "fear",
+      "surprise",
+      "anticipation",
+      "anger",
+      "disgust",
+      "sadness",
+      "nothing"
+    ];
 
     return (
       <View>
@@ -137,17 +147,7 @@ class TextInputFooter extends Component {
                 // console.log("In TextInputFooter state after onPress:", this.state);
                 this.setState({
                   text: "",
-                  optionIconNameList: [
-                    "joy_option_unclicked",
-                    "trust_option_unclicked",
-                    "fear_option_unclicked",
-                    "surprise_option_unclicked",
-                    "anticipation_option_unclicked",
-                    "anger_option_unclicked",
-                    "disgust_option_unclicked",
-                    "sadness_option_unclicked",
-                    "nothing_option_unclicked"
-                  ],
+                  optionIconNameList: optionIconNameListOrigin,
                   selectedIconName: ""
                 });
               }}

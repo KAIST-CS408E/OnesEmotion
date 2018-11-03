@@ -21,13 +21,19 @@ class CrowdBoxFooter extends Component {
       {
         speaker: "bot",
         text: "Calm down! Why don’t you talk to your friend?",
-        profileImageName: "sogood_crowdBox"
+        profileImageName: "anticipation_option_clicked"
       },
       {
         speaker: "bot",
         text:
           "Well.. how about talking to your friend if you are still disappointed?",
-        profileImageName: "soso_crowdBox"
+        profileImageName: "fear_option_clicked"
+      },
+      {
+        speaker: "bot",
+        text:
+          "Well.. how about talking to your friend if you are still disappointed?",
+        profileImageName: "fear_option_clicked"
       }
     ]
   };
