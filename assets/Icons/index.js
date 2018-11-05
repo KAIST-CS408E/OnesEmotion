@@ -11,6 +11,8 @@ export default function getSource(imageName) {
     if (imageName == "bot") return require("./bot.png")
     if (imageName == "user") return require("./user.png")
     if (imageName == "menu") return require("./menu.png")
+    if (imageName == "chat") return require("./chat.png")
+    if (imageName == "MyLog") return require("./MyLog.png")
     //iconOptionBox
     // if (imageName == "sogood_option_clicked") return require("./sogood_option_clicked.png")
     // if (imageName == "good_option_clicked") return require("./good_option_clicked.png")

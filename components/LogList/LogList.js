@@ -8,10 +8,24 @@ import {
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
 import Colors from "./../../assets/Colors";
+import Icons from "./../../assets/Icons";
+
+import { createStackNavigator, createDrawerNavigator, DrawerActions } from 'react-navigation';
 
 const EMOTIONS = ["sobad", "bad", "soso", "good", "sogood"];
 
 class LogList extends Component {
+  static navigationOptions = {
+    drawerLable: 'LogList',
+    drawerIcon: ({tintColor}) => (
+      <Image
+        source={Icons("MyLog")}
+        style={[styles.icon]}
+      />
+    ),
+    title: 'LogList',
+  };
+
   state = {
     logList: [
       {
@@ -73,15 +87,18 @@ class LogList extends Component {
       boxWidth={"20"}
       imageWidth={"10"}
       imageName={"save"}
+      onPress={() =>this.props.navigation.dispatch(DrawerActions.openDrawer())}
     />
   );
 
-  renderLogListHeaderRight = () => (
+  renderLogListHeaderRight = (navigate) => (
     <ImageButton
       boxWidth={"20"}
       imageWidth={"10"}
       imageName={"search"}
-      onPress={this.examplePress}
+      onPress={
+        () => navigate("ChatRoom", {})
+      }
     />
   );
 
@@ -139,6 +156,10 @@ const styles = StyleSheet.create({
   logList: {
     alignItems: "center",
     justifyContent: "center"
+  },
+  icon: {
+    width: 24,
+    height: 24,
   }
 });
 
