@@ -67,7 +67,7 @@ class ChatRoom extends Component {
       imageWidth={"7"}
       imageName={"save"}
       onPress={
-        () => navigate("First", {})
+        () => navigate("LogList", {})
       }
     />
   );
@@ -129,9 +129,9 @@ class ChatRoom extends Component {
           left={this.renderChatRoomHeaderLeft(navigate)}
           right={this.renderChatRoomHeaderRight()}
         />
-        <View style={styles.chatRoomContents}>
           <ScrollView
             style={{
+              backgroundColor: Colors.chatRoomBackground,
               paddingBottom: contentsTopBottomMargin,
               paddingTop: contentsTopBottomMargin
             }}
@@ -154,7 +154,6 @@ class ChatRoom extends Component {
             <TextInputFooter onPress={this.handleTextInput} />
           ) : null}
           {this.state.isFinished ? <ButtonInputFooter /> : null}
-        </View>
       </View>
     );
   }

@@ -7,17 +7,33 @@ import {
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
 
-import { StackNavigator } from 'react-navigation';
 
-const Navigation = StackNavigator({
-  First: {screen: LogList},
-  Second: {screen: ChatRoom}
+import { createStackNavigator, createDrawerNavigator } from 'react-navigation';
+
+
+// import LogStack from "./components/LogList"
+// import ChatStack from "./components/ChatRoom"
+
+const App = createDrawerNavigator({
+  LogList:{
+  	screen: LogList,
+  },
+  ChatRoom: {
+  	screen: ChatRoom,
+  }
 });
 
-const myLog = true; //true for MyLog and false for Story
-const story = false;
+export default App
 
-export default Navigation;
+// const Navigation = createStackNavigator({
+//   First: {screen: LogList},
+//   Second: {screen: ChatRoom}
+// });
+
+// const myLog = true; //true for MyLog and false for Story
+// const story = false;
+
+// export default Navigation;
 
 // export default class App extends React.Component {
 //   render() {
