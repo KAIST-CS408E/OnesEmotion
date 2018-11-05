@@ -1,18 +1,26 @@
-import rq from "request-promise-native";
+import axios from "axios";
 // TODO: change request to axios
 export default nlp = {
-  nounNumber: async function (text) {
+  meaningless: async function (text) {
     try {
-      const result = await rq(`http://parser.datanada.com/parse?version=1&string=${text}`);
-      const morphemes  = JSON.parse(result);
+      const {data} = await axios.get(`http://parser.datanada.com/parse?version=1&string=${text}`);
       let noun = 0;
-      morphemes.forEach((morpheme) => {
-        if (morpheme[pos].indexOf('N')) {
+      let verb = 0;
+      data.forEach((morpheme) => {
+        let pos = morpheme["pos"]
+        if (pos.indexOf('N') == 0) {
+          // 명사
           noun++;
         }
+        if (pos.indexOf('VV') == 0) {
+          // 동사
+          verb++;
+        }
       });
-      console.log(noun);
-      return noun;
+      if (noun > 1 && verb > 0) {
+        return false;
+      }
+      return true;
     } catch (e) {
       console.log(e.toString());
       throw e;
