@@ -125,7 +125,7 @@ class TextInputFooter extends Component {
               autoCapitalize="none"
             />
           </View>
-          <View style={{ opacity: this.state.text? 1 : 0.5 }}>
+          <View style={{ opacity: this.state.text ? 1 : 0.5 }}>
             <TouchableOpacity
               disabled={this.state.text ? false : true}
               style={{
@@ -148,7 +148,17 @@ class TextInputFooter extends Component {
                 // console.log("In TextInputFooter state after onPress:", this.state);
                 this.setState({
                   text: "",
-                  optionIconNameList: optionIconNameListOrigin,
+                  optionIconNameList: [
+                    "joy_option_unclicked",
+                    "trust_option_unclicked",
+                    "fear_option_unclicked",
+                    "surprise_option_unclicked",
+                    "anticipation_option_unclicked",
+                    "anger_option_unclicked",
+                    "disgust_option_unclicked",
+                    "sadness_option_unclicked",
+                    "nothing_option_unclicked"
+                  ],
                   selectedIconName: ""
                 });
               }}

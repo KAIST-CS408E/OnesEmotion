@@ -12,7 +12,7 @@ export default nlp = {
           // 명사
           noun++;
         }
-        if (pos.indexOf('VV') == 0) {
+        if (pos.indexOf('V') == 0) {
           // 동사
           verb++;
         }

@@ -20,14 +20,22 @@ import {
 } from "react-native-responsive-screen";
 import Colors from "./../../assets/Colors";
 import Icons from "./../../assets/Icons";
+import nlp from "./../../utils/nlp";
 
-const dialogIndexWithIconOptionBox = new Set([2, 3]); //아이콘옵션박스를 띄워야 할 dialog의 index+1의 값을 적어야 함.
+const reaskingQ = [
+  "내가 제대로 이해했는지 모르겠어. 좀 더 말해줄 수 있어?",
+  "미안해 잘 알아듣지 못했어. 다시 말해줄 수 있어?",
+  "좀 더 자세히 말해줄 수 있을까?",
+  "다시한번 구체적으로 말해줄 수 있어?",
+  "한번만 다시 구체적으로 말해줄 수 있을까?"
+];
+const dialogIndexWithIconOptionBox = new Set([1, 2]); //아이콘옵션박스를 띄워야 할 dialog의 index+1의 값을 적어야 함.
 const lastDialogWord = "음 그렇구나..";
 
 class ChatRoom extends Component {
   state = {
     currentDialog: [{ speaker: "bot", text: "오늘 무슨 일 있었어?" }],
-    dialogIndex: 1,
+    dialogIndex: 0,
     isTextInput: true,
     countOfIconInput: 0,
     isFinished: false,
@@ -93,23 +101,24 @@ class ChatRoom extends Component {
     return Math.floor(Math.random() * (max - min)) + min;
   };
 
-  botPushThisQuestion = questionIndex => {
+  botPushThisQuestion = (questionIndex, questionDialogSet, isFinished) => {
     setTimeout(() => {
-      console.log(
-        "In ChatRoom, botPushThisQuestion: this.state = ",
-        this.state,
-        questionIndex,
-        this.state.questions.length
-      );
+      // console.log(
+      //   "In ChatRoom, botPushThisQuestion: this.state = ",
+      //   this.state,
+      //   questionIndex,
+      //   this.state.questions.length
+      // );
       this.setState({
         currentDialog: [
           ...this.state.currentDialog,
-          { speaker: "bot", text: this.state.questions[questionIndex] }
+          questionDialogSet
+          // { speaker: "bot", text: this.state.questions[questionIndex] }
         ],
         isTextInput: true,
-        isFinished: questionIndex == 0 ? true : false
+        isFinished: questionIndex == "Finished"
       });
-    }, this.getRandomInt(2000, 3000));
+    }, this.getRandomInt(500, 1000));
   };
 
   iconNameToKorean = iconName => {
@@ -123,7 +132,14 @@ class ChatRoom extends Component {
     if (iconName.includes("sadness")) return "슬픔";
   };
 
-  handleTextInput = (speaker, text, iconInput, isMyLog) => {
+  // meaningless = async (text) => {
+  //   const meaningless = await nlp.meaningless(text);
+  //   this.setState({
+
+  //   })
+  // }
+
+  handleTextInput = async (speaker, text, iconInput, isMyLog) => {
     // console.log(
     //   "asdkl;fjasdf;j :",
     //   this.state.currentDialog[this.state.currentDialog.length-1]["text"].includes("음 그렇구나.. 혹시 해결할 수 있는 방법이 있을까?")
@@ -134,86 +150,112 @@ class ChatRoom extends Component {
     //   text,
     //   iconInput
     // );
-    this.setState({
-      //iconInput은 `${selectedImageName.split("_")[0]}_option_clicked`꼴
-      currentDialog: isMyLog
+    const meaningless = await nlp.meaningless(text);
+    // console.log("In ChatRoom >>>>>>>>>>> nlp: ", meaningless);
+    this.setState(
+      meaningless
         ? iconInput
-          ? [
-              ...this.state.currentDialog,
-              { speaker: "userIcon", text: iconInput },
-              { speaker: speaker, text: text }
-            ]
-          : [...this.state.currentDialog, { speaker: speaker, text: text }]
-        : [
-            {
-              speaker: "user",
-              text: text,
-              profileImageName: `${iconInput.split("_")[0]}_option_clicked`
+          ? {
+              currentDialog: [
+                ...this.state.currentDialog,
+                { speaker: "userIcon", text: iconInput },
+                { speaker: speaker, text: text }
+              ],
+              isTextInput: true
             }
-          ],
-      dialogIndex: isMyLog
-        ? (iconInput &&
-            iconInput.includes("nothing") &&
-            this.state.countOfIconInput == 0) ||
-          this.state.currentDialog[this.state.currentDialog.length - 1][
-            "text"
-          ].includes(lastDialogWord)
-          ? 0
-          : this.state.dialogIndex + 1
-        : this.state.dialogIndex,
-      countOfIconInput: iconInput
-        ? this.state.countOfIconInput + 1
-        : this.state.countOfIconInput,
-      isTextInput: false,
-      isCrowdBox: !isMyLog,
-      emotionList:
-        this.state.emotionList.length < 2 && iconInput
-          ? this.state.emotionList.concat(iconInput)
-          : this.state.emotionList,
-      questions:
-        (iconInput &&
-          iconInput.includes("nothing") &&
-          this.state.countOfIconInput == 0) ||
-        this.state.currentDialog[this.state.currentDialog.length - 1][
-          "text"
-        ].includes(lastDialogWord) //첫번째 감정선택에서 '없음'인 경우 ending1으로 넘어감
-          ? this.state.currentDialog[this.state.currentDialog.length - 1][
-              "text"
-            ].includes(lastDialogWord)
-            ? this.state.ending2
-            : this.state.ending1
-          : this.state.emotionList.length == 0 &&
-            iconInput &&
-            !iconInput.includes("nothing") //아직 emotionList에 반영이 안되어서 emotionList는 length가 0!
-            ? [
-                "오늘 무슨 일 있었어?",
-                "말해줘서 고마워. 네가 그 상황에서 어떤 감정을 느꼈는지 말해줄 수 있어? 아래의 보기에서 골라줘!",
-                `너가 느낀 감정은 ${this.iconNameToKorean(
-                  iconInput
-                )}(이)구나. 혹시 다른 감정도 느꼈어? 그렇다면 아래의 보기에서 골라줘!`,
-                `그럼 너는 그때 ${this.iconNameToKorean(
-                  iconInput
-                )}(을)를 느꼈구나. 혹시 그런 감정을 느낀 이유가 있었어?`,
-                "음 그렇구나.. 혹시 지금 문제가 되는 부분이 있니?" //botPushThisQuestion 에서 마지막인 인덱스를 꼭 바꿔줘야 마지막 질문과 함꼐 buttoninput 보여줌.
-              ]
-            : this.state.emotionList.length == 1 &&
-              iconInput &&
-              !iconInput.includes("nothing") //아직 emotionList에 반영이 안되어서 emotionList는 length가 1!
-              ? [
-                  "오늘 무슨 일 있었어?",
-                  "말해줘서 고마워. 네가 그 상황에서 어떤 감정을 느꼈는지 말해줄 수 있어? 아래의 보기에서 골라줘!",
-                  `너가 느낀 감정은 ${
-                    this.iconNameToKorean(this.state.emotionList[0])
-                  }(이)구나. 혹시 다른 감정도 느꼈어? 그렇다면 아래의 보기에서 골라줘!`,
-                  `너는 그때 ${
-                    this.iconNameToKorean(this.state.emotionList[0])
-                  }, ${this.iconNameToKorean(
-                    iconInput
-                  )}(을)를 느꼈구나. 혹시 그런 감정을 느낀 이유가 있었어?`,
-                  "음 그렇구나.. 혹시 지금 문제가 되는 부분이 있니?" //botPushThisQuestion 에서 마지막인 인덱스를 꼭 바꿔줘야 마지막 질문과 함꼐 buttoninput 보여줌.
-                ]
-              : this.state.questions
-    });
+          : {
+              currentDialog: [
+                ...this.state.currentDialog,
+                { speaker: speaker, text: text }
+              ],
+              isTextInput: true
+            }
+        : {
+            //iconInput은 `${selectedImageName.split("_")[0]}_option_clicked`꼴
+            currentDialog: isMyLog
+              ? iconInput
+                ? [
+                    ...this.state.currentDialog,
+                    { speaker: "userIcon", text: iconInput },
+                    { speaker: speaker, text: text }
+                  ]
+                : [
+                    ...this.state.currentDialog,
+                    { speaker: speaker, text: text }
+                  ]
+              : [
+                  {
+                    speaker: "user",
+                    text: text,
+                    profileImageName: `${
+                      iconInput.split("_")[0]
+                    }_option_clicked`
+                  }
+                ],
+            dialogIndex: isMyLog
+              ? (iconInput &&
+                  iconInput.includes("nothing") &&
+                  this.state.countOfIconInput == 0) ||
+                this.state.currentDialog[this.state.currentDialog.length - 1][
+                  "text"
+                ].includes(lastDialogWord)
+                ? "Finished"
+                : this.state.dialogIndex + 1
+              : this.state.dialogIndex,
+            countOfIconInput: iconInput
+              ? this.state.countOfIconInput + 1
+              : this.state.countOfIconInput,
+            isTextInput: false,
+            isCrowdBox: !isMyLog,
+            emotionList:
+              this.state.emotionList.length < 2 && iconInput
+                ? this.state.emotionList.concat(iconInput)
+                : this.state.emotionList,
+            questions:
+              (iconInput &&
+                iconInput.includes("nothing") &&
+                this.state.countOfIconInput == 0) ||
+              this.state.currentDialog[this.state.currentDialog.length - 1][
+                "text"
+              ].includes(lastDialogWord) //첫번째 감정선택에서 '없음'인 경우 ending1으로 넘어감
+                ? this.state.currentDialog[this.state.currentDialog.length - 1][
+                    "text"
+                  ].includes(lastDialogWord)
+                  ? this.state.ending2
+                  : this.state.ending1
+                : this.state.emotionList.length == 0 &&
+                  iconInput &&
+                  !iconInput.includes("nothing") //아직 emotionList에 반영이 안되어서 emotionList는 length가 0!
+                  ? [
+                      "오늘 무슨 일 있었어?",
+                      "말해줘서 고마워. 네가 그 상황에서 어떤 감정을 느꼈는지 말해줄 수 있어? 아래의 보기에서 골라줘!",
+                      `너가 느낀 감정은 ${this.iconNameToKorean(
+                        iconInput
+                      )}(이)구나. 혹시 다른 감정도 느꼈어? 그렇다면 아래의 보기에서 골라줘!`,
+                      `그럼 너는 그때 ${this.iconNameToKorean(
+                        iconInput
+                      )}(을)를 느꼈구나. 혹시 그런 감정을 느낀 이유가 있었어?`,
+                      "음 그렇구나.. 혹시 지금 문제가 되는 부분이 있니?" //botPushThisQuestion 에서 마지막인 인덱스를 꼭 바꿔줘야 마지막 질문과 함꼐 buttoninput 보여줌.
+                    ]
+                  : this.state.emotionList.length == 1 &&
+                    iconInput &&
+                    !iconInput.includes("nothing") //아직 emotionList에 반영이 안되어서 emotionList는 length가 1!
+                    ? [
+                        "오늘 무슨 일 있었어?",
+                        "말해줘서 고마워. 네가 그 상황에서 어떤 감정을 느꼈는지 말해줄 수 있어? 아래의 보기에서 골라줘!",
+                        `너가 느낀 감정은 ${this.iconNameToKorean(
+                          this.state.emotionList[0]
+                        )}(이)구나. 혹시 다른 감정도 느꼈어? 그렇다면 아래의 보기에서 골라줘!`,
+                        `너는 그때 ${this.iconNameToKorean(
+                          this.state.emotionList[0]
+                        )}, ${this.iconNameToKorean(
+                          iconInput
+                        )}(을)를 느꼈구나. 혹시 그런 감정을 느낀 이유가 있었어?`,
+                        "음 그렇구나.. 혹시 지금 문제가 되는 부분이 있니?" //botPushThisQuestion 에서 마지막인 인덱스를 꼭 바꿔줘야 마지막 질문과 함꼐 buttoninput 보여줌.
+                      ]
+                    : this.state.questions
+          }
+    );
     // console.log("In ChatRoom, handleTextInput: this.state = ", this.state);
     const dialogIndexFixed = isMyLog
       ? (iconInput &&
@@ -222,15 +264,23 @@ class ChatRoom extends Component {
         this.state.currentDialog[this.state.currentDialog.length - 1][
           "text"
         ].includes(lastDialogWord)
-        ? 0
+        ? "Finished"
         : this.state.dialogIndex
       : this.state.dialogIndex;
-    isMyLog ? this.botPushThisQuestion(dialogIndexFixed) : null;
+    isMyLog && !meaningless
+      ? this.botPushThisQuestion(dialogIndexFixed, {
+          speaker: "bot",
+          text: this.state.questions[dialogIndexFixed]
+        })
+      : this.botPushThisQuestion(dialogIndexFixed, {
+          speaker: "bot",
+          text: reaskingQ[this.getRandomInt(0, reaskingQ.length - 1)]
+        });
   };
 
   render() {
     const { chatLog } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
-    console.log("In ChatRoom this.state:", this.state);
+    // console.log("In ChatRoom this.state:", this.state);
     const contentsTopBottomMargin = 8;
     const targetDialog = chatLog ? chatLog : this.state.currentDialog;
 
