@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   },
   itemText: {
     textAlign: "center",
-    fontSize: itemBoxHeight / 7,
+    fontSize: itemBoxHeight / 12,
     color: Colors.white
   },
   imageSelfEmotion: {

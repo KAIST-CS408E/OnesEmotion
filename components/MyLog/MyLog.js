@@ -1,25 +1,51 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Image } from "react-native";
+import Icons from "./../../assets/Icons";
 import LogList from "../LogList";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
 
-export default class MyLog extends React.Component {
+import { withNavigation, DrawerActions } from 'react-navigation';
+
+class MyLog extends React.Component {
+  static navigationOptions = {
+    drawerLable: 'MyLog',
+    drawerIcon: ({tintColor}) => (
+      <Image
+        source={Icons("MyLog")}
+        style={[styles.icon]}
+      />
+    ),
+    title: 'MyLog',
+  };
+
   render() {
+    const myLog = true
+    const navigation = this.props.navigation;
+
     return (
       <View style={styles.container}>
-        <LogList myLog={true} />
+        <LogList 
+          myLog={myLog} 
+          navigation={navigation}
+        />
       </View>
     );
   }
 }
+
+export default withNavigation(MyLog);
 
 const styles = StyleSheet.create({
   container: {
     width: wp("100%"),
     alignItems: "center",
     justifyContent: "center"
+  },
+  icon: {
+    width: 24,
+    height: 24,
   }
 });

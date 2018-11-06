@@ -3,6 +3,7 @@ import {
   View,
   Alert,
   Text,
+  Image,
   StyleSheet,
   TextInput,
   ScrollView,
@@ -20,11 +21,24 @@ import {
 } from "react-native-responsive-screen";
 import Colors from "./../../assets/Colors";
 import Icons from "./../../assets/Icons";
+import { createStackNavigator, createDrawerNavigator, DrawerActions } from 'react-navigation';
+
 
 const dialogIndexWithIconOptionBox = new Set([2, 3]); //아이콘옵션박스를 띄워야 할 dialog의 index+1의 값을 적어야 함.
 const lastDialogWord = "음 그렇구나..";
 
 class ChatRoom extends Component {
+  static navigationOptions = {
+    drawerLable: 'ChatRoom',
+    drawerIcon: ({tintColor}) => (
+      <Image
+        source={Icons("chat")}
+        style={[styles.icon]}
+      />
+    ),
+    title: 'ChatRoom',
+  };
+
   state = {
     currentDialog: [{ speaker: "bot", text: "오늘 무슨 일 있었어?" }],
     dialogIndex: 1,
@@ -71,21 +85,25 @@ class ChatRoom extends Component {
     );
   };
 
-  renderChatRoomHeaderLeft = () => (
+  renderChatRoomHeaderLeft = (navigate) => (
     <ImageButton
       boxWidth={"20"}
       imageWidth={"7"}
       imageName={"save"}
-      onPress={this.examplePress}
+      onPress={
+        () => navigate("Story", {})
+      }
     />
   );
 
-  renderChatRoomHeaderRight = () => (
+  renderChatRoomHeaderRight = (navigate) => (
     <ImageButton
       boxWidth={"20"}
       imageWidth={"5"}
       imageName={"cancel"}
-      onPress={this.examplePress}
+      onPress={
+        () => navigate("Story", {})
+      }
     />
   );
 
@@ -233,66 +251,66 @@ class ChatRoom extends Component {
     console.log("In ChatRoom this.state:", this.state);
     const contentsTopBottomMargin = 8;
     const targetDialog = chatLog ? chatLog : this.state.currentDialog;
+    var {navigate} = this.props.navigation;
 
     return (
-      <KeyboardAvoidingView
-        behavior="padding"
-        enabled
-        style={{ backgroundColor: Colors.chatRoomBackground }}
+      <View
+        style={{
+          height: hp("100%"),
+        }}
       >
         <Header
           title={chatLog ? "ChatLog" : "MyHome"}
-          left={this.renderChatRoomHeaderLeft()}
-          right={this.renderChatRoomHeaderRight()}
+          left={this.renderChatRoomHeaderLeft(navigate)}
+          right={this.renderChatRoomHeaderRight(navigate)}
         />
-        <View style={styles.chatRoomContents}>
-          <ScrollView
-            style={{
-              paddingBottom: contentsTopBottomMargin,
-              paddingTop: contentsTopBottomMargin
-            }}
-            ref={ref => (this.scrollView = ref)}
-            onContentSizeChange={(contentWidth, contentHeight) => {
-              this.scrollView.scrollToEnd({ animated: true });
-            }}
-          >
-            {targetDialog.map((dialog, index) => (
-              <ChatElement
-                key={index}
-                speaker={dialog.speaker}
-                text={dialog.text}
-                profileImageName={dialog.speaker == "bot" ? "bot" : "user"}
+        <ScrollView
+          style={{
+            backgroundColor: Colors.chatRoomBackground,
+            paddingBottom: contentsTopBottomMargin,
+            paddingTop: contentsTopBottomMargin
+          }}
+          ref={ref => (this.scrollView = ref)}
+          onContentSizeChange={(contentWidth, contentHeight) => {
+            this.scrollView.scrollToEnd({ animated: true });
+          }}
+        >
+          {targetDialog.map((dialog, index) => (
+            <ChatElement
+              key={index}
+              speaker={dialog.speaker}
+              text={dialog.text}
+              profileImageName={dialog.speaker == "bot" ? "bot" : "user"}
+            />
+          ))}
+        </ScrollView>
+        {chatLog ? (
+          <View>
+            {this.state.isCrowdBox ? (
+              <CrowdBoxFooter userInputDialog={this.state.currentDialog[0]} />
+            ) : (
+              <TextInputFooter
+                onPress={this.handleTextInput}
+                isIconOptionBox={true}
+                isMyLog={false}
               />
-            ))}
-          </ScrollView>
-          {chatLog ? (
-            <View>
-              {this.state.isCrowdBox ? (
-                <CrowdBoxFooter userInputDialog={this.state.currentDialog[0]} />
-              ) : (
-                <TextInputFooter
-                  onPress={this.handleTextInput}
-                  isIconOptionBox={true}
-                  isMyLog={false}
-                />
-              )}
-            </View>
-          ) : (
-            <View>
-              {this.state.isTextInput & !this.state.isFinished ? (
-                <TextInputFooter
-                  onPress={this.handleTextInput}
-                  isIconOptionBox={dialogIndexWithIconOptionBox.has(
-                    this.state.dialogIndex
-                  )}
-                  isMyLog={chatLog ? false : true}
-                />
-              ) : null}
-              {this.state.isFinished ? <ButtonInputFooter /> : null}
-            </View>
-          )}
-        </View>
-      </KeyboardAvoidingView>
+            )}
+          </View>
+        ) : (
+          <View>
+            {this.state.isTextInput & !this.state.isFinished ? (
+              <TextInputFooter
+                onPress={this.handleTextInput}
+                isIconOptionBox={dialogIndexWithIconOptionBox.has(
+                  this.state.dialogIndex
+                )}
+                isMyLog={chatLog ? false : true}
+              />
+            ) : null}
+            {this.state.isFinished ? <ButtonInputFooter /> : null}
+          </View>
+        )}
+      </View>
     );
   }
 }
@@ -300,6 +318,10 @@ class ChatRoom extends Component {
 const styles = StyleSheet.create({
   chatRoomContents: {
     flex: 1
+  },
+  icon: {
+    width: 24,
+    height: 24,
   }
 });
 

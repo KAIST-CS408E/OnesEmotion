@@ -16,14 +16,14 @@ const EMOTIONS = ["sobad", "bad", "soso", "good", "sogood"];
 
 class LogList extends Component {
   static navigationOptions = {
-    drawerLable: 'LogList',
+    drawerLable: 'Story',
     drawerIcon: ({tintColor}) => (
       <Image
-        source={Icons("MyLog")}
+        source={Icons("Story")}
         style={[styles.icon]}
       />
     ),
-    title: 'LogList',
+    title: 'Story',
   };
 
   state = {
@@ -86,18 +86,18 @@ class LogList extends Component {
     <ImageButton
       boxWidth={"20"}
       imageWidth={"10"}
-      imageName={"save"}
+      imageName={"menu"}
       onPress={() =>this.props.navigation.dispatch(DrawerActions.openDrawer())}
     />
   );
 
-  renderLogListHeaderRight = (navigate) => (
+  renderLogListHeaderRight = () => (
     <ImageButton
       boxWidth={"20"}
       imageWidth={"10"}
       imageName={"search"}
       onPress={
-        () => navigate("ChatRoom", {})
+        () => this.props.navigation.navigate("ChatRoom")
       }
     />
   );
