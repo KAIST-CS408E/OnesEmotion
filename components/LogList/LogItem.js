@@ -25,6 +25,7 @@ class LogItem extends Component {
     } = this.props;
 
     const {navigate} = this.props.navigation;
+    // const page = (myLog ? "MyLog" : "OtherChat");
 
 
     return (
