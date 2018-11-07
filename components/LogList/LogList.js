@@ -91,11 +91,11 @@ class LogList extends Component {
     />
   );
 
-  renderLogListHeaderRight = () => (
+  renderLogListHeaderRight = (myLog) => (
     <ImageButton
       boxWidth={"20"}
       imageWidth={"10"}
-      imageName={"search"}
+      imageName={myLog? "add" : null}
       onPress={
         () => this.props.navigation.navigate("ChatRoom")
       }
@@ -136,6 +136,7 @@ class LogList extends Component {
         crowdEmotion={item.crowdEmotion}
         onRemove={this.handleRemove}
         onClick={this.handleClick}
+        navigation = {this.props.navigation}
       />
     ));
 
@@ -144,7 +145,7 @@ class LogList extends Component {
         <Header
           title={myLog ? "MyLog" : "Story"}
           left={this.renderLogListHeaderLeft()}
-          right={this.renderLogListHeaderRight()}
+          right={this.renderLogListHeaderRight(myLog)}
         />
         <ScrollView>{contents}</ScrollView>
       </View>

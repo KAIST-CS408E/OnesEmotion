@@ -85,24 +85,24 @@ class ChatRoom extends Component {
     );
   };
 
-  renderChatRoomHeaderLeft = (navigate) => (
+  renderChatRoomHeaderLeft = () => (
     <ImageButton
       boxWidth={"20"}
       imageWidth={"7"}
       imageName={"save"}
       onPress={
-        () => navigate("Story", {})
+        () => this.props.navigation.goBack()
       }
     />
   );
 
-  renderChatRoomHeaderRight = (navigate) => (
+  renderChatRoomHeaderRight = () => (
     <ImageButton
       boxWidth={"20"}
       imageWidth={"5"}
       imageName={"cancel"}
       onPress={
-        () => navigate("Story", {})
+        () => this.props.navigation.goBack()
       }
     />
   );
@@ -261,8 +261,8 @@ class ChatRoom extends Component {
       >
         <Header
           title={chatLog ? "ChatLog" : "MyHome"}
-          left={this.renderChatRoomHeaderLeft(navigate)}
-          right={this.renderChatRoomHeaderRight(navigate)}
+          left={this.renderChatRoomHeaderLeft()}
+          right={this.renderChatRoomHeaderRight()}
         />
         <ScrollView
           style={{
