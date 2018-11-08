@@ -36,7 +36,7 @@ export default api = {
       }
     } catch (e) {
       console.log(e.toString());
-      throw e;
+      return null;
     }
   },
   login: async function (email, password) {
@@ -51,7 +51,7 @@ export default api = {
       }
     } catch (e) {
       console.log(e.toString());
-      throw e;
+      return null;
     }
   },
   logout: async function () {
@@ -59,7 +59,7 @@ export default api = {
       return auth.signOut();
     } catch (e) {
       console.log(e.toString());
-      throw e;
+      return null;
     }
   },
   getUser: async function () {
@@ -71,7 +71,7 @@ export default api = {
       }
     } catch (e) {
       console.log(e.toString());
-      throw e;
+      return null;
     }
   },
   createChat: async function (userId) {
@@ -85,7 +85,7 @@ export default api = {
       return chatId
     } catch (e) {
       console.log(e.toString());
-      throw e;
+      return null;
     }
   },
   sendMsg: async function (userId, chatId, content) {
@@ -97,7 +97,7 @@ export default api = {
       });
     } catch (e) {
       console.log(e.toString());
-      throw e;
+      return null;
     }
   },
   sendEmotion: async function (userId, chatId, emotion) {
@@ -112,7 +112,7 @@ export default api = {
       });
     } catch (e) {
       console.log(e.toSring());
-      throw e;
+      return null;
     }
   },
   getAllChats: async function (userId) {
@@ -141,7 +141,7 @@ export default api = {
       return allChats;
     } catch (e) {
       console.log(e.toString());
-      throw e;
+      return null;
     }
   },
   getAChat: async function (chatId) {
@@ -161,7 +161,7 @@ export default api = {
       }
     } catch (e) {
       console.log(e.toString());
-      throw e;
+      return null;
     }
   },
   getAllStories: async function (userId) {
@@ -196,7 +196,7 @@ export default api = {
       return allStories;
     } catch (e) {
       console.log(e.toSring());
-      throw e;
+      return null;
     }
   },
   getAStory: async function (chatId) {
@@ -222,7 +222,7 @@ export default api = {
       }
     } catch (e) {
       console.log(e.toString());
-      throw e;
+      return null;
     }
   },
   leaveAComment: async function (userId, chatId, content, emotion) {
@@ -237,7 +237,7 @@ export default api = {
       });
     } catch (e) {
       console.log(e.toString());
-      throw e;
+      return null;
     }
   }
 }
