@@ -96,16 +96,25 @@ export default api = {
       return null
     }
   },
-  sendMsg: async function (userId, chatId, content) {
+  sendMessage: async function (userId, chatId, content) {
     try {
-      return db.collection('chats').doc(chatId).collection('msgs').add({
+      const doc = await db.collection('chats').doc(chatId).collection('msgs').add({
         userId: userId,
         content: content,
         createdAt: new Date()
       });
+      return doc.id
     } catch (e) {
       console.log(e.toString());
-      return null;
+      return null
+    }
+  },
+  removeMessage: async function (chatId, messageId) {
+    try {
+      return db.collection('chats').doc(chatId).collection('msgs').doc(messageId).delete()
+    } catch (e) {
+      console.log(e.toString());
+      return null
     }
   },
   sendEmotion: async function (userId, chatId, emotion) {
