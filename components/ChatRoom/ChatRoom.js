@@ -28,17 +28,6 @@ const dialogIndexWithIconOptionBox = new Set([2, 3]); //아이콘옵션박스를
 const lastDialogWord = "음 그렇구나..";
 
 class ChatRoom extends Component {
-  static navigationOptions = {
-    drawerLable: 'ChatRoom',
-    drawerIcon: ({tintColor}) => (
-      <Image
-        source={Icons("chat")}
-        style={[styles.icon]}
-      />
-    ),
-    title: 'ChatRoom',
-  };
-
   state = {
     currentDialog: [{ speaker: "bot", text: "오늘 무슨 일 있었어?" }],
     dialogIndex: 1,

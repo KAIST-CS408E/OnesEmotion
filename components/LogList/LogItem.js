@@ -5,6 +5,7 @@ import {
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
 import Colors from "./../../assets/Colors";
+import Images from "./../../assets/Images";
 import Icons from "./../../assets/Icons";
 
 class LogItem extends Component {

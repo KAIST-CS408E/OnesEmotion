@@ -10,17 +10,6 @@ import {
 import { withNavigation, DrawerActions } from 'react-navigation';
 
 class MyLog extends React.Component {
-  static navigationOptions = {
-    drawerLable: 'MyLog',
-    drawerIcon: ({tintColor}) => (
-      <Image
-        source={Icons("MyLog")}
-        style={[styles.icon]}
-      />
-    ),
-    title: 'MyLog',
-  };
-
   render() {
     const myLog = true
     const navigation = this.props.navigation;

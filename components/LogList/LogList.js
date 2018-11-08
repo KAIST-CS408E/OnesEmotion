@@ -15,17 +15,6 @@ import { createStackNavigator, createDrawerNavigator, DrawerActions } from 'reac
 const EMOTIONS = ["sobad", "bad", "soso", "good", "sogood"];
 
 class LogList extends Component {
-  static navigationOptions = {
-    drawerLable: 'Story',
-    drawerIcon: ({tintColor}) => (
-      <Image
-        source={Icons("Story")}
-        style={[styles.icon]}
-      />
-    ),
-    title: 'Story',
-  };
-
   state = {
     logList: [
       {

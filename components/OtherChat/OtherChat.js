@@ -54,10 +54,6 @@ const sampleDialog = [
 ];
 
 class OtherChat extends React.Component {
-  static navigationOptions = {
-    title: 'OtherChat',
-  };
-
   render() {
     const chatLog = sampleDialog
     const navigation = this.props.navigation;
