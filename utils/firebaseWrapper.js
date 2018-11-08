@@ -78,6 +78,7 @@ export default api = {
     try {
       const chat = await db.collection('chats').add({
         userId: userId,
+        totalComments: 0,
         createdAt: new Date()
       });
       const chatId = chat.id;
@@ -200,6 +201,10 @@ export default api = {
         comments.forEach((comment) => {
           commentList.push(comment.data())
         });
+        // caching comment length(totalComments)
+        await db.collection('chats').doc(chatId).update({
+          totalComments: commentList.length 
+        })
         const chatInfoDoc = await db.collection('chats').doc(chatId).get()
         const chatInfo = chatInfoDoc.data();
         allStories.push({
@@ -242,9 +247,46 @@ export default api = {
       return null;
     }
   },
+  recommandStories: async function (userId) {
+    const allStoryIds = [];
+    const storyList = await db.collection('chats').get()
+    storyList.forEach((chat) => {
+      if (chat.totalComments < 2) {
+        return;
+      }
+      allStoryIds.push(chat.id);
+    })
+    const allStories = [];
+    await Promise.all(allStoryIds.map(async (chatId) => {
+      const msgs = await db.collection('chats').doc(chatId).collection('msgs').get()
+      const msgList = [];
+      msgs.forEach((msg) => {
+        msgList.push(msg.data())
+      });
+      const comments = await db.collection('chats').doc(chatId).collection('comments').get()
+      const commentList = [];
+      comments.forEach((comment) => {
+        commentList.push(comment.data())
+      });
+      // caching comment length(totalComments)
+      await db.collection('chats').doc(chatId).update({
+        totalComments: commentList.length 
+      })
+      const chatInfoDoc = await db.collection('chats').doc(chatId).get()
+      const chatInfo = chatInfoDoc.data();
+      allStories.push({
+        chatId: chatId,
+        userId: chatInfo.userId,
+        createdAt: chatInfo.createdAt,
+        messages: msgList,
+        comments: commentList
+      });
+    }));
+    return allStories;
+  },
   leaveAComment: async function (userId, chatId, content, emotion) {
     try {
-      return db.collection('chats').doc(chatId).collection('comments').add({
+      await db.collection('chats').doc(chatId).collection('comments').add({
         userId: userId,
         content: content,
         emotion: emotion,
