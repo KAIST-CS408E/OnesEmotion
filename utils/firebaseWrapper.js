@@ -88,6 +88,14 @@ export default api = {
       return null;
     }
   },
+  removeChat: async function (chatId) {
+    try {
+      return db.collection('chats').doc(chatId).delete()
+    } catch (e) {
+      console.log(e.toString())
+      return null
+    }
+  },
   sendMsg: async function (userId, chatId, content) {
     try {
       return db.collection('chats').doc(chatId).collection('msgs').add({
@@ -111,7 +119,7 @@ export default api = {
         createdAt: new Date()
       });
     } catch (e) {
-      console.log(e.toSring());
+      console.log(e.toString());
       return null;
     }
   },
@@ -195,7 +203,7 @@ export default api = {
       }));
       return allStories;
     } catch (e) {
-      console.log(e.toSring());
+      console.log(e.toString());
       return null;
     }
   },
