@@ -25,24 +25,22 @@ export default nlp = {
       console.log(morphemes)
       morphemes.forEach((morpheme) => {
         let pos = morpheme["pos"]
-        if (morpheme["deprel"] == previous["deprel"]) {
-          return;
-        }
+        // if (morpheme["deprel"] == previous["deprel"]) {
+        //   return;
+        // }
         if (pos.indexOf('N') == 0) {
           // 명사
           noun++;
         }
-        if (pos == 'VV') {
+        if (pos.indexOf('V') == 0) {
           // 동사
           verb++;
         }
         previous = morpheme
       });
       if (noun > 1 && verb > 0) {
-        console.log("의미 있는 문장")
         return false;
       }
-      console.log("의미 없는 문장")
       return true;
     } catch (e) {
       console.log(e.toString());
