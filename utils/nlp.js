@@ -10,7 +10,7 @@ export default nlp = {
       throw e;
     }
   },
-  meaningless: async function (text) {
+  isMeaningful: async function (text) {
     try {
       const morphemes = await this.analyse(text)
       let noun = 0;
@@ -39,19 +39,19 @@ export default nlp = {
         previous = morpheme
       });
       if (noun > 1 && verb > 0) {
-        return false;
+        return true;
       }
-      return true;
+      return false;
     } catch (e) {
       console.log(e.toString());
       throw e;
     }
   },
-  empty: async function (text) {
+  isNotEmpty: function (text) {
     if (!text.trim()) {
-      return true
+      return false
     }
-    return false
+    return true
   },
   test: async function (text) {
     try {
