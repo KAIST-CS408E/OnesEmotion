@@ -47,6 +47,12 @@ export default nlp = {
       throw e;
     }
   },
+  empty: async function (text) {
+    if (!text.trim()) {
+      return true
+    }
+    return false
+  },
   test: async function (text) {
     try {
       const morphemes = await this.analyse(text)
