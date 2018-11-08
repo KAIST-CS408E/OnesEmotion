@@ -3,6 +3,7 @@ const firebase = require("firebase");
 require("firebase/firestore");
 
 import { FIREBASE_APP_NAME, FIREBASE_API_KEY, FIREBASE_SENDER_ID } from './firebaseConfigs';
+import ButtonInputFooter from "../components/ButtonInputFooter";
 
 firebase.initializeApp({
   apiKey: FIREBASE_API_KEY,
@@ -18,8 +19,19 @@ db.settings({
   timestampsInSnapshots: true
 })
 
+// 'api' functions (e.g. api.logout())
+// For all functions, if they fail to run, return 'null'
 export default api = {
   signup: async function (name, email, password) {
+    // INPUT
+    // name: user's name
+    // email: user's email
+    // password: user's password
+    // OUTPUT
+    // Object {
+    //   userId: user's identifier
+    //   name: user's name
+    // }
     try {
       const user = await auth.createUserWithEmailAndPassword(email, password);
       await user.updateProfile({
@@ -40,6 +52,14 @@ export default api = {
     }
   },
   login: async function (email, password) {
+    // INPUT
+    // email: user's email
+    // password: user's password
+    // OUTPUT
+    // Object {
+    //   userId: user's identifier
+    //   name: user's name
+    // }
     try {
       const user = await auth.signInWithEmailAndPassword(email, password);
       if (!user) {
@@ -55,6 +75,10 @@ export default api = {
     }
   },
   logout: async function () {
+    // INPUT
+    // null
+    // OUTPUT
+    // Object {}
     try {
       return auth.signOut();
     } catch (e) {
@@ -63,6 +87,13 @@ export default api = {
     }
   },
   getUser: async function () {
+    // INPUT
+    // null
+    // OUTPUT
+    // Object {
+    //   userId: user's identifier
+    //   name: user's name
+    // }
     try {
       const user = auth.currentUser;
       return {
@@ -75,6 +106,10 @@ export default api = {
     }
   },
   createChat: async function (userId) {
+    // INPUT
+    // userId: user's identifier
+    // OUTPUT
+    // chatId: chatroom's identifier
     try {
       const chat = await db.collection('chats').add({
         userId: userId,
@@ -90,6 +125,10 @@ export default api = {
     }
   },
   removeChat: async function (chatId) {
+    // INPUT
+    // chatId: chatroom's identifier
+    // OUTPUT
+    // Object {}
     try {
       return db.collection('chats').doc(chatId).delete()
     } catch (e) {
@@ -97,7 +136,13 @@ export default api = {
       return null
     }
   },
-  sendMessage: async function (userId, chatId, content) {
+  createMessage: async function (userId, chatId, content) {
+    // INPUT
+    // userId: user's identifier
+    // chatId: chatroom's identifier
+    // content: content of the message
+    // OUTPUT
+    // messageId : message's identifier
     try {
       const doc = await db.collection('chats').doc(chatId).collection('msgs').add({
         userId: userId,
@@ -111,6 +156,11 @@ export default api = {
     }
   },
   removeMessage: async function (chatId, messageId) {
+    // INPUT
+    // chatId: chatroom's identifier
+    // messageId: message's identifier
+    // OUTPUT
+    // Object {}
     try {
       return db.collection('chats').doc(chatId).collection('msgs').doc(messageId).delete()
     } catch (e) {
@@ -118,7 +168,13 @@ export default api = {
       return null
     }
   },
-  sendEmotion: async function (userId, chatId, emotion) {
+  createEmotion: async function (userId, chatId, emotion) {
+    // INPUT
+    // userId: user's identifier
+    // chatId: chatroom's identifier
+    // emotion: unique name of the emotion
+    // OUTPUT
+    // Object {}
     try {
       await db.collection('chats').doc(chatId).update({
         userEmotion: emotion
@@ -134,6 +190,20 @@ export default api = {
     }
   },
   getAllChats: async function (userId) {
+    // INPUT
+    // userId: user's identifier
+    // OUTPUT
+    // Array [ Object {
+    //  chatId: chatroom's identifier
+    //  userId: user's identifier
+    //  createdAt: chatroom's created datetime
+    //  messages: Array [ Object {
+    //              messageId: message's identifier
+    //              userId: user's identifier
+    //              content: content of the message
+    //              createdAt: message's created datetime
+    //            }, ...]
+    // }, ...]
     try {
       const allChatIds = [];
       const chatList = await db.collection('users').doc(userId).collection('chats').get()
@@ -145,7 +215,13 @@ export default api = {
         const msgs = await db.collection('chats').doc(chatId).collection('msgs').get()
         const msgList = [];
         msgs.forEach((msg) => {
-          msgList.push(msg.data())
+          message = msg.data()
+          msgList.push({
+            messageId: msg.id,
+            userId: message.userId,
+            createdAt: message.createdAt,
+            content: message.content
+          })
         });
         const chatInfoDoc = await db.collection('chats').doc(chatId).get()
         const chatInfo = chatInfoDoc.data();
@@ -163,11 +239,31 @@ export default api = {
     }
   },
   getAChat: async function (chatId) {
+    // INPUT
+    // chatId: chatroom's identifier
+    // OUTPUT
+    // Object {
+    //   chatId: chatroom's identifier
+    //   userId: user's identifier
+    //   createdAt: chatroom's created datetime
+    //   messages: Array [ Object {
+    //               messageId: message's identifier
+    //               userId: user's identifier
+    //               content: content of the message
+    //               createdAt: message's created datetime
+    //             }, ...]
+    // }
     try {
       const msgs = await db.collection('chats').doc(chatId).collection('msgs').get()
       const msgList = [];
       msgs.forEach((msg) => {
-        msgList.push(msg.data())
+        message = msg.data()
+        msgList.push({
+          messageId: msg.id,
+          userId: message.userId,
+          createdAt: message.createdAt,
+          content: message.content
+        })
       });
       const chatInfoDoc = await db.collection('chats').doc(chatId).get()
       const chatInfo = chatInfoDoc.data();
@@ -183,6 +279,29 @@ export default api = {
     }
   },
   getAllStories: async function (userId) {
+    // INPUT
+    // userId: user's identifier
+    // OUTPUT
+    // Array [ Object {
+    //  chatId: chatroom's identifier
+    //  userId: user's identifier
+    //  createdAt: chatroom's created datetime
+    //  messages: Array [ Object {
+    //              messageId: message's identifier
+    //              userId: user's identifier
+    //              content: content of the message
+    //              createdAt: message's created datetime
+    //            }, ...]
+    //  comments: Array [ Object {
+    //              commentId: comment's identifier
+    //              userId: user's identifier
+    //              content: content of the comment
+    //              emotion: emotion of the comment
+    //              like: like count
+    //              report: report count
+    //              createdAt: comment's created datetime
+    //            }, ...]
+    // }, ...]
     try {
       const allStoryIds = [];
       const storyList = await db.collection('chats').get()
@@ -194,12 +313,27 @@ export default api = {
         const msgs = await db.collection('chats').doc(chatId).collection('msgs').get()
         const msgList = [];
         msgs.forEach((msg) => {
-          msgList.push(msg.data())
+          message = msg.data()
+          msgList.push({
+            messageId: msg.id,
+            userId: message.userId,
+            createdAt: message.createdAt,
+            content: message.content
+          })
         });
         const comments = await db.collection('chats').doc(chatId).collection('comments').get()
         const commentList = [];
         comments.forEach((comment) => {
-          commentList.push(comment.data())
+          cmnt = comment.data()
+          commentList.push({
+            commentId: cmnt.id,
+            userId: cmnt.userId,
+            content: cmnt.content,
+            emotion: cmnt.emotion,
+            like: cmnt.like,
+            report: cmnt.report,
+            createdAt: cmnt.createdAt
+          })
         });
         // caching comment length(totalComments)
         await db.collection('chats').doc(chatId).update({
@@ -222,16 +356,54 @@ export default api = {
     }
   },
   getAStory: async function (chatId) {
+    // INPUT
+    // chatId: chatroom's identifier
+    // OUTPUT
+    // Object {
+    //  chatId: chatroom's identifier
+    //  userId: user's identifier
+    //  createdAt: chatroom's created datetime
+    //  messages: Array [ Object {
+    //              messageId: message's identifier
+    //              userId: user's identifier
+    //              content: content of the message
+    //              createdAt: message's created datetime
+    //            }, ...]
+    //  comments: Array [ Object {
+    //              commentId: comment's identifier
+    //              userId: user's identifier
+    //              content: content of the comment
+    //              emotion: emotion of the comment
+    //              like: like count
+    //              report: report count
+    //              createdAt: comment's created datetime
+    //            }, ...]
+    // }
     try {
       const msgs = await db.collection('chats').doc(chatId).collection('msgs').get()
       const msgList = [];
       msgs.forEach((msg) => {
-        msgList.push(msg.data())
+        message = msg.data()
+        msgList.push({
+          messageId: msg.id,
+          userId: message.userId,
+          createdAt: message.createdAt,
+          content: message.content
+        })
       });
       const comments = await db.collection('chats').doc(chatId).collection('comments').get()
       const commentList = [];
       comments.forEach((comment) => {
-        commentList.push(comment.data())
+        cmnt = comment.data()
+        commentList.push({
+          commentId: cmnt.id,
+          userId: cmnt.userId,
+          content: cmnt.content,
+          emotion: cmnt.emotion,
+          like: cmnt.like,
+          report: cmnt.report,
+          createdAt: cmnt.createdAt
+        })
       });
       const chatInfoDoc = await db.collection('chats').doc(chatId).get()
       const chatInfo = chatInfoDoc.data();
@@ -248,10 +420,33 @@ export default api = {
     }
   },
   recommandStories: async function (userId) {
+    // INPUT
+    // userId: user's identifier
+    // OUTPUT
+    // Array [ Object {
+    //  chatId: chatroom's identifier
+    //  userId: user's identifier
+    //  createdAt: chatroom's created datetime
+    //  messages: Array [ Object {
+    //              messageId: message's identifier
+    //              userId: user's identifier
+    //              content: content of the message
+    //              createdAt: message's created datetime
+    //            }, ...]
+    //  comments: Array [ Object {
+    //              commentId: comment's identifier
+    //              userId: user's identifier
+    //              content: content of the comment
+    //              emotion: emotion of the comment
+    //              like: like count
+    //              report: report count
+    //              createdAt: comment's created datetime
+    //            }, ...]
+    // }, ...]
     const allStoryIds = [];
     const storyList = await db.collection('chats').get()
     storyList.forEach((chat) => {
-      if (chat.totalComments < 2) {
+      if (chat.totalComments > 1) {
         return;
       }
       allStoryIds.push(chat.id);
@@ -261,12 +456,27 @@ export default api = {
       const msgs = await db.collection('chats').doc(chatId).collection('msgs').get()
       const msgList = [];
       msgs.forEach((msg) => {
-        msgList.push(msg.data())
+        message = msg.data()
+        msgList.push({
+          messageId: msg.id,
+          userId: message.userId,
+          createdAt: message.createdAt,
+          content: message.content
+        })
       });
       const comments = await db.collection('chats').doc(chatId).collection('comments').get()
       const commentList = [];
       comments.forEach((comment) => {
-        commentList.push(comment.data())
+        cmnt = comment.data()
+        commentList.push({
+          commentId: cmnt.id,
+          userId: cmnt.userId,
+          content: cmnt.content,
+          emotion: cmnt.emotion,
+          like: cmnt.like,
+          report: cmnt.report,
+          createdAt: cmnt.createdAt
+        })
       });
       // caching comment length(totalComments)
       await db.collection('chats').doc(chatId).update({
@@ -284,9 +494,16 @@ export default api = {
     }));
     return allStories;
   },
-  leaveAComment: async function (userId, chatId, content, emotion) {
+  createComment: async function (userId, chatId, content, emotion) {
+    // INPUT
+    // userId: user's identifier
+    // chatId: chatroom's identifier
+    // content: content of the comment
+    // emotion: emotion of the comment
+    // OUTPUT
+    // commentId
     try {
-      await db.collection('chats').doc(chatId).collection('comments').add({
+      const doc = await db.collection('chats').doc(chatId).collection('comments').add({
         userId: userId,
         content: content,
         emotion: emotion,
@@ -294,9 +511,57 @@ export default api = {
         report: 0,
         createdAt: new Date()
       });
+      return doc.id
     } catch (e) {
       console.log(e.toString());
       return null;
+    }
+  },
+  removeComment: async function (chatId, commentId) {
+    // INPUT
+    // chatId: chatroom's identifier
+    // commentId: comment's identifier
+    // OUTPUT
+    // Object {}
+    try {
+      return db.collection('chats').doc(chatId).collection('comments').doc(commentId).delete()
+    } catch (e) {
+      console.log(e.toString());
+      return null
+    } 
+  },
+  likeComment: async function (chatId, commentId) {
+    // INPUT
+    // chatId: chatroom's identifier
+    // commentId: comment's identifier
+    // OUTPUT
+    // Object {}
+    try {
+      const commentDoc = await db.collection('chats').doc(chatId).collection('comments').doc(commentId).get()
+      const commentInfo = commentDoc.data()
+      return db.collection('chats').doc(chatId).collection('comments').doc(commentId).update({
+        like: commentInfo.like + 1
+      })
+    } catch (e) {
+      console.log(e.toString());
+      return null
+    }
+  },
+  reportComment: async function (chatId, commentId) {
+    // INPUT
+    // chatId: chatroom's identifier
+    // commentId: comment's identifier
+    // OUTPUT
+    // Object {}
+    try {
+      const commentDoc = await db.collection('chats').doc(chatId).collection('comments').doc(commentId).get()
+      const commentInfo = commentDoc.data()
+      return db.collection('chats').doc(chatId).collection('comments').doc(commentId).update({
+        report: commentInfo.report + 1
+      })
+    } catch (e) {
+      console.log(e.toString());
+      return null
     }
   }
 }
