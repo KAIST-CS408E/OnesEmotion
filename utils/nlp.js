@@ -22,7 +22,6 @@ export default nlp = {
         "head": "",
         "id": ""
       };
-      console.log(morphemes)
       morphemes.forEach((morpheme) => {
         let pos = morpheme["pos"]
         // if (morpheme["deprel"] == previous["deprel"]) {
