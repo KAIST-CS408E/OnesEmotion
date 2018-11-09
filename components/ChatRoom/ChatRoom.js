@@ -315,7 +315,7 @@ class ChatRoom extends Component {
           isIconInput: isItLastItem ? isIconInput : this.state.isIconInput,
           isFinished: isItLastItem ? isFinished : this.state.isFinished
         });
-      }, firstTimeIntervalFiexd + this.getRandomInt(1000, 1850) * timeOffset);
+      }, firstTimeIntervalFiexd + this.getRandomInt(1200, 1850) * timeOffset);
       timeOffset += 1;
     });
   };
