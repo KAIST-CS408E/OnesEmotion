@@ -45,11 +45,19 @@ const botQuestions = {
     "만약 지금 그 감정으로 인한 문제가 있다면 어떤게 있을까?" //q4와 5는 합쳐질 수 있음. /butPush함수에서 변용!
   ],
   q6: [
-    "내가 제대로 이해했는지 모르겠어. 좀 더 말해줄 수 있어?",
-    "미안해 잘 알아듣지 못했어. 다시 말해줄 수 있어?",
     "좀 더 자세히 말해줄 수 있을까?",
-    "다시한번 구체적으로 말해줄 수 있어?",
-    "한번만 다시 구체적으로 말해줄 수 있을까?"
+    "좀 더 구체적으로 말해줄 수 있어?",
+    "한번만 다시 자세히 말해줄 수 있을까?",
+    "한번만 다시 구체적으로 말해줄 수 있을까?",
+    "좀 더 자세히 설명해줄 수 있을까?",
+    "좀 더 구체적으로 설명해줄 수 있어?",
+    "한번만 다시 자세히 설명해줄 수 있을까?",
+    "한번만 다시 구체적으로 설명해줄 수 있을까?"
+  ],
+  q61: [
+    "내용을 입력해 줘야해!",
+    "빈 내용이 입력되었네. 다시 입력해줄래?",
+    "다시 입력해줘!"
   ],
   q7: [
     "조심스럽지만, 지금 말해준 것들 다른 사람들과 공유해도 될까?",
@@ -76,13 +84,8 @@ class ChatRoom extends Component {
     isCrowdBox: false,
     isTextInput: true,
     isIconInput: false,
-    isFinished: false
-  };
-
-  checkTextInput = async (text, isBoth = false) => {
-    // const nlp = await nlp.(text);
-    // const isNotEmpty = await nlp.(text);
-    isBoth ? null : null;
+    isFinished: false,
+    isOnceAgained: false
   };
 
   handleTextInput = async (speaker, text, iconInput, isMyLog) => {
@@ -117,8 +120,17 @@ class ChatRoom extends Component {
     };
     this.setState(isMyLog ? myLogInput : forCrowdBox);
     //check user input here
+    let nextQuestionFixed = this.state.nextQuestion;
+    !nlp.isNotEmpty(text) ? (nextQuestionFixed = "q61") : null; //모든 답변은 내용이 있어야 함.
+    const isTarget =
+      !this.state.isOnceAgained && this.state.currentQuestion == "q0";
+    const isMeaningful = !isTarget ? true : await nlp.isMeaningful(text);
+    isTarget && !isMeaningful ? (nextQuestionFixed = "q6") : null; //q0일 때 불충분한 답변이면 한번만 더 물어봄.
+    this.setState({
+      isOnceAgained: isTarget ? true : false
+    });
     //add bot question here
-    this.botPushThisQuestion(this.state.nextQuestion);
+    this.botPushThisQuestion(nextQuestionFixed);
   };
 
   handleIconInput = (speaker, iconInput, isMyLog) => {
@@ -253,10 +265,18 @@ class ChatRoom extends Component {
       nextQuestion = "q8";
     }
     if (thisQuestion == "q6") {
+      //구체적인 설명을 되물어야 하는 경우
       thisQuestionText = [
         botQuestions.q6[this.getRandomInt(0, botQuestions.q6.length - 1)]
       ];
-      nextQuestion = thisQuestion;
+      nextQuestion = this.state.nextQuestion;
+    }
+    if (thisQuestion == "q61") {
+      //내용이 아얘 없이 스페이스바만 있는 경우
+      thisQuestionText = [
+        botQuestions.q61[this.getRandomInt(0, botQuestions.q61.length - 1)]
+      ];
+      nextQuestion = this.state.nextQuestion;
     }
     if (thisQuestion == "q7") {
       thisQuestionText = botQuestions.q7;
@@ -272,6 +292,8 @@ class ChatRoom extends Component {
     const isTextInput = !isFinished && !isIconInput;
     // console.log("In ChatRoom botPushThisQuestion isFinished:", isFinished);
 
+    const isAfterCheckingMeaningful = thisQuestion == "q1" && this.state.currentDialog.length<3;
+    const firstTimeIntervalFiexd = isAfterCheckingMeaningful ? 0 : 1000
     let timeOffset = 0;
     thisQuestionText.map((text, index) => {
       // console.log(text);
@@ -293,7 +315,7 @@ class ChatRoom extends Component {
           isIconInput: isItLastItem ? isIconInput : this.state.isIconInput,
           isFinished: isItLastItem ? isFinished : this.state.isFinished
         });
-      }, 1000 + this.getRandomInt(1000, 1850) * timeOffset);
+      }, firstTimeIntervalFiexd + this.getRandomInt(1000, 1850) * timeOffset);
       timeOffset += 1;
     });
   };
