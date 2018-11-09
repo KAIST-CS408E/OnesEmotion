@@ -239,7 +239,7 @@ class ChatRoom extends Component {
       const latestIconInput =
         listOfEmotion[listOfEmotion.length ? listOfEmotion.length - 1 : 0];
       const isIconInputNothing =
-        listOfEmotion.length != 0 && latestIconInput.includes("nothing");
+        listOfEmotion.length != 0 && (latestIconInput.includes("nothing") || latestIconInput.includes(prevIconInput)); //없음을 눌렀거나 첫번째로 고른 감정과 동일한 감정을 눌렀거나
       // console.log(
       //   "In ChatRoom botPushThisQuestion if q4 latestIconInput:",
       //   latestIconInput
