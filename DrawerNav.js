@@ -4,6 +4,7 @@ import { createDrawerNavigator, DrawerItems } from 'react-navigation';
 import Icons from "./assets/Icons";
 
 import MyLog from "./components/MyLog";
+import MyChat from "./components/MyChat";
 import Story from "./components/Story";
 import ChatRoom from "./components/ChatRoom";
 import OtherChat from "./components/OtherChat";
@@ -92,6 +93,12 @@ export default DrawerNav = createDrawerNavigator({
 	},
 	OtherChat: {
 		screen: OtherChat,
+    navigationOptions: {
+      drawerLabel: <Hidden />
+    }
+	},
+	MyChat: {
+		screen: MyChat,
     navigationOptions: {
       drawerLabel: <Hidden />
     }

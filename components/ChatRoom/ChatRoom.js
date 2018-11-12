@@ -110,7 +110,7 @@ class ChatRoom extends Component {
         "keyboardDidHide",
         this.keyboardDidHide.bind(this)
       );
-    } catch(e) {
+    } catch (e) {
       this.keyboardDidShowListener = DeviceEventEmitter.addListener(
         "keyboardDidShow",
         this.keyboardDidShow.bind(this)
@@ -446,7 +446,7 @@ class ChatRoom extends Component {
   // }
 
   render() {
-    const { chatLog } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
+    const { chatLog, isCrowdBox, isStartTop } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
     console.log("In ChatRoom this.state:", this.state);
     const contentsTopBottomMargin = 8;
     const targetDialog = chatLog ? chatLog : this.state.currentDialog;
@@ -471,7 +471,7 @@ class ChatRoom extends Component {
           }}
           ref={ref => (this.scrollView = ref)}
           onContentSizeChange={(contentWidth, contentHeight) => {
-            this.scrollView.scrollToEnd({ animated: true });
+            isStartTop ? null : this.scrollView.scrollToEnd({ animated: true });
           }}
         >
           {targetDialog.map((dialog, index) => (
@@ -485,8 +485,11 @@ class ChatRoom extends Component {
         </ScrollView>
         {chatLog ? (
           <View>
-            {this.state.isCrowdBox ? (
-              <CrowdBoxFooter userInputDialog={this.state.currentDialog[0]} />
+            {this.state.isCrowdBox || isCrowdBox ? (
+              <CrowdBoxFooter
+                isCrowdBox={true}
+                userInputDialog={this.state.currentDialog[0]}
+              />
             ) : (
               <TextInputFooter
                 onPress={this.handleTextInput}
