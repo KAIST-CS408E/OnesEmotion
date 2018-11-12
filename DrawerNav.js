@@ -41,7 +41,7 @@ class MidTitle extends React.Component {
 				</View>
 				<TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('ChatRoom')}>
 	    		<Image style={styles.icon} source={Icons("chat")}/>
-		    	<Text style={styles.title}>내가 진행중인 이야기</Text>
+		    	<Text style={styles.title}>내가 진행중인 대화</Text>
 	    	</TouchableOpacity>
 				<TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('MyLog')}>
 	    		<Image style={styles.icon} source={Icons("MyLog")}/>
@@ -53,7 +53,7 @@ class MidTitle extends React.Component {
 	    	</TouchableOpacity>
         <View style={styles.line}/>
         <View style={styles.menubox}>
-        	<Text style={{ color: '#616161', paddingLeft: 20 }}>공감이 필요한 이야기</Text>
+        	<Text style={{ color: '#616161', paddingLeft: 20 }}>답변이 필요한 이야기</Text>
         </View>
 				<TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate('OtherChat')}>
 	    		<Image style={styles.icon} source={Icons("emphaty")}/>

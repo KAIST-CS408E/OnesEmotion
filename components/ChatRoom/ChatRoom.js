@@ -249,7 +249,7 @@ class ChatRoom extends Component {
         }}
       >
         <Header
-          title={chatLog ? "ChatLog" : "MyHome"}
+          title={chatLog ? "Title 1" : "내가 진행중인 대화"}
           left={this.renderChatRoomHeaderLeft()}
           right={this.renderChatRoomHeaderRight()}
         />

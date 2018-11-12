@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between"
   },
   headerTitle: {
-    fontSize: headerTextHeight,
+    fontSize: 20,
     color: Colors.white,
     height: headerHeight,
     textAlignVertical: "center"

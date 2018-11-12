@@ -132,7 +132,7 @@ class LogList extends Component {
     return (
       <View>
         <Header
-          title={myLog ? "MyLog" : "Story"}
+          title={myLog ? "나의 이야기" : "다른 사람들의 이야기"}
           left={this.renderLogListHeaderLeft()}
           right={this.renderLogListHeaderRight(myLog)}
         />
