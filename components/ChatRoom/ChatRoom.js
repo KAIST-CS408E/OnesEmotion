@@ -110,7 +110,7 @@ class ChatRoom extends Component {
         "keyboardDidHide",
         this.keyboardDidHide.bind(this)
       );
-    } catch {
+    } catch(e) {
       this.keyboardDidShowListener = DeviceEventEmitter.addListener(
         "keyboardDidShow",
         this.keyboardDidShow.bind(this)
