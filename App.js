@@ -4,6 +4,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
+import nlp from './utils/nlp';
 
 import DrawerNav from './DrawerNav';
 
@@ -57,6 +58,9 @@ const sampleDialog = [
 export default class App extends React.Component {
   constructor() {
     super();
+  }
+  componentDidMount() {
+    nlp.isMeaningful("안녕하세요. 제가 요즘 궁금한 건 장을 보는 일입니다.");
   }
 
   render() {
