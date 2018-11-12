@@ -7,7 +7,10 @@ import {
   StyleSheet,
   TextInput,
   ScrollView,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  DeviceEventEmitter,
+  Keyboard,
+  Dimensions
 } from "react-native";
 import Header from "./../Header";
 import TextInputFooter from "./../TextInputFooter";
@@ -93,8 +96,51 @@ class ChatRoom extends Component {
     isTextInput: true,
     isIconInput: false,
     isFinished: false,
-    isOnceAgained: false
+    isOnceAgained: false,
+    visibleHeight: hp("100%")
   };
+
+  componentWillMount() {
+    try {
+      this.keyboardDidShowListener = Keyboard.addListener(
+        "keyboardDidShow",
+        this.keyboardDidShow.bind(this)
+      );
+      this.keyboardDidHideListener = Keyboard.addListener(
+        "keyboardDidHide",
+        this.keyboardDidHide.bind(this)
+      );
+    } catch (e) {
+      this.keyboardDidShowListener = DeviceEventEmitter.addListener(
+        "keyboardDidShow",
+        this.keyboardDidShow.bind(this)
+      );
+      this.keyboardDidHideListener = DeviceEventEmitter.addListener(
+        "keyboardDidHide",
+        this.keyboardDidHide.bind(this)
+      );
+    }
+  }
+
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
+  }
+
+  keyboardDidShow(e) {
+    let newSize = Dimensions.get("window").height - e.endCoordinates.height;
+    this.setState({
+      visibleHeight: newSize
+      // topLogo: {width: 100, height: 70}
+    });
+  }
+
+  keyboardDidHide(e) {
+    this.setState({
+      visibleHeight: Dimensions.get("window").height
+      // topLogo: {width: Dimensions.get('window').width}
+    });
+  }
 
   handleTextInput = async (speaker, text, iconInput, isMyLog) => {
     //crowdbox면 this.state.currentDialog를 답변 하나만 있는 상태로 초기화!
@@ -400,7 +446,7 @@ class ChatRoom extends Component {
   // }
 
   render() {
-    const { chatLog } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
+    const { chatLog, isCrowdBox, isStartTop } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
     console.log("In ChatRoom this.state:", this.state);
     const contentsTopBottomMargin = 8;
     const targetDialog = chatLog ? chatLog : this.state.currentDialog;
@@ -409,7 +455,7 @@ class ChatRoom extends Component {
     return (
       <View
         style={{
-          height: hp("100%")
+          height: this.state.visibleHeight
         }}
       >
         <Header
@@ -425,7 +471,7 @@ class ChatRoom extends Component {
           }}
           ref={ref => (this.scrollView = ref)}
           onContentSizeChange={(contentWidth, contentHeight) => {
-            this.scrollView.scrollToEnd({ animated: true });
+            isStartTop ? null : this.scrollView.scrollToEnd({ animated: true });
           }}
         >
           {targetDialog.map((dialog, index) => (
@@ -439,8 +485,11 @@ class ChatRoom extends Component {
         </ScrollView>
         {chatLog ? (
           <View>
-            {this.state.isCrowdBox ? (
-              <CrowdBoxFooter userInputDialog={this.state.currentDialog[0]} />
+            {this.state.isCrowdBox || isCrowdBox ? (
+              <CrowdBoxFooter
+                isCrowdBox={true}
+                userInputDialog={this.state.currentDialog[0]}
+              />
             ) : (
               <TextInputFooter
                 onPress={this.handleTextInput}

@@ -53,7 +53,7 @@ const sampleDialog = [
   }
 ];
 
-class OtherChat extends React.Component {
+class MyChat extends React.Component {
   render() {
     const chatLog = sampleDialog
     const navigation = this.props.navigation;
@@ -62,6 +62,7 @@ class OtherChat extends React.Component {
       <View style={styles.container}>
         <ChatRoom 
           chatLog={chatLog}
+          isCrowdBox={true}
           isStartTop={true}
           navigation={navigation}
         />
@@ -70,7 +71,7 @@ class OtherChat extends React.Component {
   }
 }
 
-export default withNavigation(OtherChat);
+export default withNavigation(MyChat);
 
 const styles = StyleSheet.create({
   container: {

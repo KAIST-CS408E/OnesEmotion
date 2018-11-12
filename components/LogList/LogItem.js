@@ -22,15 +22,20 @@ class LogItem extends Component {
       selfEmotion,
       crowdEmotion,
       onRemove,
-      onClick,
+      onClick
     } = this.props;
 
-    const {navigate} = this.props.navigation;
+    const { navigate } = this.props.navigation;
     // const page = (myLog ? "MyLog" : "OtherChat");
 
-
     return (
-      <TouchableOpacity onPress={() => this.props.navigation.navigate("OtherChat")}>
+      <TouchableOpacity
+        onPress={() =>
+          myLog
+            ? this.props.navigation.navigate("MyChat")
+            : this.props.navigation.navigate("OtherChat")
+        }
+      >
         <View style={styles.itemBox}>
           {myLog ? (
             <View style={styles.itemBoxLeft}>
@@ -42,7 +47,9 @@ class LogItem extends Component {
               </View>
             </View>
           ) : null}
-          <View style={myLog ? styles.itemBoxMiddle : styles.itemBoxMiddleStory}>
+          <View
+            style={myLog ? styles.itemBoxMiddle : styles.itemBoxMiddleStory}
+          >
             <View style={styles.itemBoxTextBox}>
               <View style={{ alignItems: "center" }}>
                 <Text style={styles.itemDate}>{date}</Text>
@@ -86,7 +93,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
-    backgroundColor: Colors.logBackground,
+    backgroundColor: Colors.logBackground
   },
   itemBoxMiddle: {
     width: myLogWidthMiddle,
