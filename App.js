@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, StatusBar } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
@@ -57,6 +57,10 @@ const sampleDialog = [
 export default class App extends React.Component {
   constructor() {
     super();
+  }
+  
+  componentDidMount() {
+     StatusBar.setHidden(true);
   }
 
   render() {
