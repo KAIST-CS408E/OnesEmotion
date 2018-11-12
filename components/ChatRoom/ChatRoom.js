@@ -444,10 +444,18 @@ class ChatRoom extends Component {
   //   this.setState({
   //   })
   // }
+  printDialogAsWellFormed = () => {
+    this.state.currentDialog.map((dialog, index) => {
+      index == 0 ? console.log("[") : null;
+      console.log(`{"speaker":"${dialog.speaker}", "text":"${dialog.text}"},`);
+      index == this.state.currentDialog.length - 1 ? console.log("]\n") : null;
+    });
+  };
 
   render() {
     const { chatLog, isCrowdBox, isStartTop } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
-    console.log("In ChatRoom this.state:", this.state);
+    // console.log("In ChatRoom this.state:", this.state);
+    this.printDialogAsWellFormed();
     const contentsTopBottomMargin = 8;
     const targetDialog = chatLog ? chatLog : this.state.currentDialog;
     var { navigate } = this.props.navigation;
@@ -487,7 +495,7 @@ class ChatRoom extends Component {
           <View>
             {this.state.isCrowdBox || isCrowdBox ? (
               <CrowdBoxFooter
-                isCrowdBox={true}
+                isCrowdBox={isCrowdBox}
                 userInputDialog={this.state.currentDialog[0]}
               />
             ) : (

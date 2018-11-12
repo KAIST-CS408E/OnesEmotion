@@ -33,6 +33,7 @@ class TextInputFooter extends Component {
 
   handleOptionSelect = selectedImageName => {
     const optionIconNameListOrigin = [
+      "nothing",
       "joy",
       "trust",
       "fear",
@@ -41,7 +42,6 @@ class TextInputFooter extends Component {
       "anger",
       "disgust",
       "sadness",
-      "nothing"
     ];
     const newList = optionIconNameListOrigin.map(
       iconName =>
@@ -138,6 +138,7 @@ class TextInputFooter extends Component {
                 this.setState({
                   text: "",
                   optionIconNameList: [
+                    "nothing_option_unclicked",
                     "joy_option_unclicked",
                     "trust_option_unclicked",
                     "fear_option_unclicked",
@@ -146,7 +147,6 @@ class TextInputFooter extends Component {
                     "anger_option_unclicked",
                     "disgust_option_unclicked",
                     "sadness_option_unclicked",
-                    "nothing_option_unclicked"
                   ],
                   selectedIconName: ""
                 });
