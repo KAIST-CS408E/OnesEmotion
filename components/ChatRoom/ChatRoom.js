@@ -7,7 +7,9 @@ import {
   StyleSheet,
   TextInput,
   ScrollView,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  DeviceEventEmitter,
+  Dimensions,
 } from "react-native";
 import Header from "./../Header";
 import TextInputFooter from "./../TextInputFooter";
@@ -93,8 +95,34 @@ class ChatRoom extends Component {
     isTextInput: true,
     isIconInput: false,
     isFinished: false,
-    isOnceAgained: false
+    isOnceAgained: false,
+    visibleHeight: hp("100%"),
   };
+
+  componentWillMount () {
+    this.keyboardDidShowListener = DeviceEventEmitter.addListener('keyboardDidShow', this.keyboardDidShow.bind(this))
+    this.keyboardDidHideListener = DeviceEventEmitter.addListener('keyboardDidHide', this.keyboardDidHide.bind(this))
+  }
+
+  componentWillUnmount () {
+    this.keyboardDidShowListener.remove()
+    this.keyboardDidHideListener.remove()
+  }
+
+  keyboardDidShow (e) {
+    let newSize = Dimensions.get('window').height - e.endCoordinates.height
+    this.setState({
+      visibleHeight: newSize,
+      // topLogo: {width: 100, height: 70}
+    })
+  }
+  
+  keyboardDidHide (e) {
+    this.setState({
+      visibleHeight: Dimensions.get('window').height,
+      // topLogo: {width: Dimensions.get('window').width}
+    })
+  }
 
   handleTextInput = async (speaker, text, iconInput, isMyLog) => {
     //crowdbox면 this.state.currentDialog를 답변 하나만 있는 상태로 초기화!
@@ -409,7 +437,7 @@ class ChatRoom extends Component {
     return (
       <View
         style={{
-          height: hp("100%")
+          height: this.state.visibleHeight
         }}
       >
         <Header
