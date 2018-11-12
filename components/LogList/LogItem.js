@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
 import Colors from "./../../assets/Colors";
+import Images from "./../../assets/Images";
 import Icons from "./../../assets/Icons";
 
 class LogItem extends Component {
@@ -21,45 +22,51 @@ class LogItem extends Component {
       selfEmotion,
       crowdEmotion,
       onRemove,
-      onClick
+      onClick,
     } = this.props;
 
+    const {navigate} = this.props.navigation;
+    // const page = (myLog ? "MyLog" : "OtherChat");
+
+
     return (
-      <View style={styles.itemBox}>
-        {myLog ? (
-          <View style={styles.itemBoxLeft}>
-            <View style={styles.itemBoxImageBox}>
-              <Image
-                style={styles.imageSelfEmotion}
-                source={Icons(selfEmotion)}
-              />
+      <TouchableOpacity onPress={() => this.props.navigation.navigate("OtherChat")}>
+        <View style={styles.itemBox}>
+          {myLog ? (
+            <View style={styles.itemBoxLeft}>
+              <View style={styles.itemBoxImageBox}>
+                <Image
+                  style={styles.imageSelfEmotion}
+                  source={Icons(selfEmotion)}
+                />
+              </View>
             </View>
-          </View>
-        ) : null}
-        <View style={myLog ? styles.itemBoxMiddle : styles.itemBoxMiddleStory}>
-          <View style={styles.itemBoxTextBox}>
-            <View style={{ alignItems: "center" }}>
-              <Text style={styles.itemDate}>{date}</Text>
-            </View>
-            <View style={{ alignItems: "center" }}>
-              <Text style={styles.itemText}>{text}</Text>
-            </View>
-          </View>
-        </View>
-        {myLog ? (
-          <View style={styles.itemBoxRight}>
-            <View style={styles.itemBoxImageBox}>
-              <Image
-                style={styles.imageCrowdEmotion}
-                source={Icons(crowdEmotion)}
-              />
-              <View style={{ paddingTop: imageSizeCrowd / 3 }}>
-                <Image style={styles.imageCrowd} source={Icons("crowd")} />
+          ) : null}
+          <View style={myLog ? styles.itemBoxMiddle : styles.itemBoxMiddleStory}>
+            <View style={styles.itemBoxTextBox}>
+              <View style={{ alignItems: "center" }}>
+                <Text style={styles.itemDate}>{date}</Text>
+              </View>
+              <View style={{ alignItems: "center" }}>
+                <Text style={styles.itemText}>{text}</Text>
               </View>
             </View>
           </View>
-        ) : null}
-      </View>
+          {myLog ? (
+            <View style={styles.itemBoxRight}>
+              <View style={styles.itemBoxImageBox}>
+                <Image
+                  style={styles.imageCrowdEmotion}
+                  source={Icons(crowdEmotion)}
+                />
+                <View style={{ paddingTop: imageSizeCrowd / 3 }}>
+                  <Image style={styles.imageCrowd} source={Icons("crowd")} />
+                </View>
+              </View>
+            </View>
+          ) : null}
+        </View>
+      </TouchableOpacity>
     );
   }
 }
@@ -79,7 +86,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
-    backgroundColor: Colors.logBackground
+    backgroundColor: Colors.logBackground,
   },
   itemBoxMiddle: {
     width: myLogWidthMiddle,
@@ -124,7 +131,7 @@ const styles = StyleSheet.create({
   },
   itemText: {
     textAlign: "center",
-    fontSize: itemBoxHeight / 7,
+    fontSize: itemBoxHeight / 12,
     color: Colors.white
   },
   imageSelfEmotion: {

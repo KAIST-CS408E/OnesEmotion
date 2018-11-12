@@ -8,6 +8,9 @@ import {
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
 import Colors from "./../../assets/Colors";
+import Icons from "./../../assets/Icons";
+
+import { createStackNavigator, createDrawerNavigator, DrawerActions } from 'react-navigation';
 
 const EMOTIONS = ["sobad", "bad", "soso", "good", "sogood"];
 
@@ -72,16 +75,19 @@ class LogList extends Component {
     <ImageButton
       boxWidth={"20"}
       imageWidth={"10"}
-      imageName={"save"}
+      imageName={"menu"}
+      onPress={() =>this.props.navigation.dispatch(DrawerActions.openDrawer())}
     />
   );
 
-  renderLogListHeaderRight = () => (
+  renderLogListHeaderRight = (myLog) => (
     <ImageButton
       boxWidth={"20"}
       imageWidth={"10"}
-      imageName={"search"}
-      onPress={this.examplePress}
+      imageName={myLog? "add" : null}
+      onPress={
+        () => this.props.navigation.navigate("ChatRoom")
+      }
     />
   );
 
@@ -119,15 +125,16 @@ class LogList extends Component {
         crowdEmotion={item.crowdEmotion}
         onRemove={this.handleRemove}
         onClick={this.handleClick}
+        navigation = {this.props.navigation}
       />
     ));
 
     return (
       <View>
         <Header
-          title={myLog ? "MyLog" : "Story"}
+          title={myLog ? "나의 이야기" : "다른 사람들의 이야기"}
           left={this.renderLogListHeaderLeft()}
-          right={this.renderLogListHeaderRight()}
+          right={this.renderLogListHeaderRight(myLog)}
         />
         <ScrollView>{contents}</ScrollView>
       </View>
@@ -139,6 +146,10 @@ const styles = StyleSheet.create({
   logList: {
     alignItems: "center",
     justifyContent: "center"
+  },
+  icon: {
+    width: 24,
+    height: 24,
   }
 });
 

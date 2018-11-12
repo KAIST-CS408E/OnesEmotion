@@ -1,15 +1,14 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Image } from "react-native";
+import Icons from "./../../assets/Icons";
+import ChatRoom from "../ChatRoom";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
-import nlp from './utils/nlp';
 
-import DrawerNav from './DrawerNav';
+import { withNavigation, DrawerActions } from 'react-navigation';
 
-const myLog = true; //true for MyLog and false for Story
-const story = false;
 const sampleDialog = [
   {
     speaker: "bot",
@@ -53,19 +52,33 @@ const sampleDialog = [
     text: "Can I ask others with your situation for feedback?"
   }
 ];
-// chatLog={sampleDialog}
 
-export default class App extends React.Component {
-  constructor() {
-    super();
-  }
-  componentDidMount() {
-    nlp.isMeaningful("안녕하세요. 제가 요즘 궁금한 건 장을 보는 일입니다.");
-  }
-
+class OtherChat extends React.Component {
   render() {
+    const chatLog = sampleDialog
+    const navigation = this.props.navigation;
+
     return (
-      <DrawerNav />
+      <View style={styles.container}>
+        <ChatRoom 
+          chatLog={chatLog} 
+          navigation={navigation}
+        />
+      </View>
     );
   }
 }
+
+export default withNavigation(OtherChat);
+
+const styles = StyleSheet.create({
+  container: {
+    width: wp("100%"),
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  icon: {
+    width: 24,
+    height: 24,
+  }
+});
