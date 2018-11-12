@@ -14,7 +14,7 @@ import {
 import Colors from "./../../assets/Colors";
 import ImageButton from "./../ImageButton";
 
-class TextInputFooter extends Component {
+class IconInputFooter extends Component {
   state = {
     text: "",
     optionIconNameList: [
@@ -33,6 +33,7 @@ class TextInputFooter extends Component {
 
   handleOptionSelect = selectedImageName => {
     const optionIconNameListOrigin = [
+      "nothing",
       "joy",
       "trust",
       "fear",
@@ -41,7 +42,6 @@ class TextInputFooter extends Component {
       "anger",
       "disgust",
       "sadness",
-      "nothing"
     ];
     const newList = optionIconNameListOrigin.map(
       iconName =>
@@ -82,43 +82,19 @@ class TextInputFooter extends Component {
   );
 
   render() {
-    const { onPress, isIconOptionBox, isMyLog } = this.props;
-    // console.log("In TextInputFooter isIconOptionBox:", isIconOptionBox);
+    const { onPress, isMyLog } = this.props;
+    // console.log("In IconInputFooter isIconOptionBox:", isIconOptionBox);
+    const isDisabled = this.state.selectedIconName == "";
 
     return (
       <View>
-        {isIconOptionBox ? this.renderIconOptionBox(isMyLog) : null}
+        {this.renderIconOptionBox(isMyLog)}
         <View style={styles.container}>
-          <View
-            style={{
-              height: "auto",
-              height: TextInputHeight,
-              backgroundColor: Colors.white,
-              borderRadius: 15,
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center"
-            }}
-          >
-            <TextInput
-              style={{
-                width: wp("80%"),
-                marginLeft: 10,
-                fontSize: 15
-              }}
-              onChangeText={text => this.setState({ text })}
-              value={this.state.text}
-              underlineColorAndroid="transparent"
-              placeholder="Type your answer"
-              placeholderTextColor={Colors.headerGrey}
-              autoCapitalize="none"
-            />
-          </View>
-          <View style={{ opacity: this.state.text ? 1 : 0.5 }}>
+          <View style={{ opacity: isDisabled ? 0.5 : 1 }}>
             <TouchableOpacity
-              disabled={this.state.text ? false : true}
+              disabled={isDisabled ? true : false}
               style={{
-                width: wp("15%"),
+                width: wp("99%"),
                 height: TextInputHeight,
                 backgroundColor: Colors.chatElementGrey,
                 borderRadius: 10,
@@ -127,17 +103,13 @@ class TextInputFooter extends Component {
                 justifyContent: "center"
               }}
               onPress={() => {
-                // console.log("In TextInputFooter state before onPress:", this.state);
-                onPress(
-                  "user",
-                  this.state.text,
-                  this.state.selectedIconName,
-                  isMyLog
-                );
-                // console.log("In TextInputFooter state after onPress:", this.state);
+                // console.log("In IconInputFooter state before onPress:", this.state);
+                onPress("user", this.state.selectedIconName, isMyLog);
+                // console.log("In IconInputFooter state after onPress:", this.state);
                 this.setState({
                   text: "",
                   optionIconNameList: [
+                    "nothing_option_unclicked",
                     "joy_option_unclicked",
                     "trust_option_unclicked",
                     "fear_option_unclicked",
@@ -146,7 +118,6 @@ class TextInputFooter extends Component {
                     "anger_option_unclicked",
                     "disgust_option_unclicked",
                     "sadness_option_unclicked",
-                    "nothing_option_unclicked"
                   ],
                   selectedIconName: ""
                 });
@@ -212,4 +183,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default TextInputFooter;
+export default IconInputFooter;

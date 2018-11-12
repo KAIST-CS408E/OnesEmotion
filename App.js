@@ -52,8 +52,13 @@ const sampleDialog = [
     text: "Can I ask others with your situation for feedback?"
   }
 ];
+// chatLog={sampleDialog}
 
 export default class App extends React.Component {
+  constructor() {
+    super();
+  }
+
   render() {
     return (
       <DrawerNav />
