@@ -187,7 +187,7 @@ class ChatRoom extends Component {
       boxWidth={"20"}
       imageWidth={"7"}
       imageName={"save"}
-      onPress={() => this.props.navigation.goBack()}
+      onPress={() => this.props.navigation.navigate("Story")}
     />
   );
 
@@ -196,7 +196,7 @@ class ChatRoom extends Component {
       boxWidth={"20"}
       imageWidth={"5"}
       imageName={"cancel"}
-      onPress={() => this.props.navigation.goBack()}
+      onPress={() => this.props.navigation.navigate("Story")}
     />
   );
 
