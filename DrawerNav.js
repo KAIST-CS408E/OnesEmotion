@@ -3,6 +3,9 @@ import { StyleSheet, View, SafeAreaView, Image, Text, TouchableHighlight, Button
 import { createDrawerNavigator, DrawerItems } from 'react-navigation';
 import Icons from "./assets/Icons";
 
+import Login from "./components/Login/Login";
+import Signup from "./components/Login/Signup";
+
 import MyLog from "./components/MyLog";
 import Story from "./components/Story";
 import ChatRoom from "./components/ChatRoom";
@@ -95,10 +98,22 @@ export default DrawerNav = createDrawerNavigator({
     navigationOptions: {
       drawerLabel: <Hidden />
     }
+	},
+	Login: {
+		screen: Login,
+    navigationOptions: {
+      drawerLabel: <Hidden />
+    }
+	},
+	Signup: {
+		screen: Signup,
+    navigationOptions: {
+      drawerLabel: <Hidden />
+    }
 	}
 },{
 		contentComponent: MidTitle,
-		initialRouteName: 'Story'
+		initialRouteName: 'Login'
 });
 
 const styles = StyleSheet.create({
