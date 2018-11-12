@@ -210,8 +210,7 @@ export default api = {
       chatList.forEach((chat) => {
         allChatIds.push(chat.id);
       })
-      const allChats = [];
-      await Promise.all(allChatIds.map(async (chatId) => {
+      const allChats = await Promise.all(allChatIds.map(async (chatId) => {
         const msgs = await db.collection('chats').doc(chatId).collection('msgs').get()
         const msgList = [];
         msgs.forEach((msg) => {
@@ -225,12 +224,12 @@ export default api = {
         });
         const chatInfoDoc = await db.collection('chats').doc(chatId).get()
         const chatInfo = chatInfoDoc.data();
-        allChats.push({
+        return {
           chatId: chatId,
           userId: chatInfo.userId,
           createdAt: chatInfo.createdAt,
           messages: msgList
-        });
+        }
       }));
       return allChats;
     } catch (e) {
@@ -308,8 +307,7 @@ export default api = {
       storyList.forEach((chat) => {
         allStoryIds.push(chat.id);
       })
-      const allStories = [];
-      await Promise.all(allStoryIds.map(async (chatId) => {
+      const allStories = await Promise.all(allStoryIds.map(async (chatId) => {
         const msgs = await db.collection('chats').doc(chatId).collection('msgs').get()
         const msgList = [];
         msgs.forEach((msg) => {
@@ -341,13 +339,13 @@ export default api = {
         })
         const chatInfoDoc = await db.collection('chats').doc(chatId).get()
         const chatInfo = chatInfoDoc.data();
-        allStories.push({
+        return {
           chatId: chatId,
           userId: chatInfo.userId,
           createdAt: chatInfo.createdAt,
           messages: msgList,
           comments: commentList
-        });
+        }
       }));
       return allStories;
     } catch (e) {
@@ -451,8 +449,7 @@ export default api = {
       }
       allStoryIds.push(chat.id);
     })
-    const allStories = [];
-    await Promise.all(allStoryIds.map(async (chatId) => {
+    const allStories = await Promise.all(allStoryIds.map(async (chatId) => {
       const msgs = await db.collection('chats').doc(chatId).collection('msgs').get()
       const msgList = [];
       msgs.forEach((msg) => {
@@ -484,13 +481,13 @@ export default api = {
       })
       const chatInfoDoc = await db.collection('chats').doc(chatId).get()
       const chatInfo = chatInfoDoc.data();
-      allStories.push({
+      return {
         chatId: chatId,
         userId: chatInfo.userId,
         createdAt: chatInfo.createdAt,
         messages: msgList,
         comments: commentList
-      });
+      }
     }));
     return allStories;
   },
