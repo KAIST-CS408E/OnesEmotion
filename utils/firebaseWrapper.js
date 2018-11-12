@@ -2,8 +2,7 @@
 const firebase = require("firebase");
 require("firebase/firestore");
 
-import { FIREBASE_APP_NAME, FIREBASE_API_KEY, FIREBASE_SENDER_ID } from './firebaseConfigs';
-import ButtonInputFooter from "../components/ButtonInputFooter";
+import { FIREBASE_APP_NAME, FIREBASE_API_KEY, FIREBASE_SENDER_ID } from '../configs/firebaseConfigs';
 
 firebase.initializeApp({
   apiKey: FIREBASE_API_KEY,
