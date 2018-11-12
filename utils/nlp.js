@@ -24,11 +24,7 @@ export default nlp = {
         'access_key': ETRI_ACCESS_KEY,
         'argument': {
             'text': text,
-<<<<<<< HEAD
             'analysis_code': 'morp'
-=======
-            'analysis_code': 'ner'
->>>>>>> master
         }
       });
       let morphemes = [];
