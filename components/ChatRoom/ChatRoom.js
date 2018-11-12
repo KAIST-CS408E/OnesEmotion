@@ -9,7 +9,8 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   DeviceEventEmitter,
-  Dimensions,
+  Keyboard,
+  Dimensions
 } from "react-native";
 import Header from "./../Header";
 import TextInputFooter from "./../TextInputFooter";
@@ -96,32 +97,49 @@ class ChatRoom extends Component {
     isIconInput: false,
     isFinished: false,
     isOnceAgained: false,
-    visibleHeight: hp("100%"),
+    visibleHeight: hp("100%")
   };
 
-  componentWillMount () {
-    this.keyboardDidShowListener = DeviceEventEmitter.addListener('keyboardDidShow', this.keyboardDidShow.bind(this))
-    this.keyboardDidHideListener = DeviceEventEmitter.addListener('keyboardDidHide', this.keyboardDidHide.bind(this))
+  componentWillMount() {
+    try {
+      this.keyboardDidShowListener = Keyboard.addListener(
+        "keyboardDidShow",
+        this.keyboardDidShow.bind(this)
+      );
+      this.keyboardDidHideListener = Keyboard.addListener(
+        "keyboardDidHide",
+        this.keyboardDidHide.bind(this)
+      );
+    } catch {
+      this.keyboardDidShowListener = DeviceEventEmitter.addListener(
+        "keyboardDidShow",
+        this.keyboardDidShow.bind(this)
+      );
+      this.keyboardDidHideListener = DeviceEventEmitter.addListener(
+        "keyboardDidHide",
+        this.keyboardDidHide.bind(this)
+      );
+    }
   }
 
-  componentWillUnmount () {
-    this.keyboardDidShowListener.remove()
-    this.keyboardDidHideListener.remove()
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
   }
 
-  keyboardDidShow (e) {
-    let newSize = Dimensions.get('window').height - e.endCoordinates.height
+  keyboardDidShow(e) {
+    let newSize = Dimensions.get("window").height - e.endCoordinates.height;
     this.setState({
-      visibleHeight: newSize,
+      visibleHeight: newSize
       // topLogo: {width: 100, height: 70}
-    })
+    });
   }
-  
-  keyboardDidHide (e) {
+
+  keyboardDidHide(e) {
     this.setState({
-      visibleHeight: Dimensions.get('window').height,
+      visibleHeight: Dimensions.get("window").height
       // topLogo: {width: Dimensions.get('window').width}
-    })
+    });
   }
 
   handleTextInput = async (speaker, text, iconInput, isMyLog) => {
