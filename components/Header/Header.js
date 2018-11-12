@@ -28,7 +28,7 @@ class Header extends Component {
 }
 
 const hearderSideBoxWidth = wp('20%');
-const headerHeight = hp("10%");
+const headerHeight = hp("8%");
 const headerTextHeight = (headerHeight * 1) / 3;
 
 const styles = StyleSheet.create({
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between"
   },
   headerTitle: {
-    fontSize: 20,
+    fontSize: 16,
     color: Colors.white,
     height: headerHeight,
     textAlignVertical: "center"
