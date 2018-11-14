@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, StatusBar} from "react-native";
+import { View, Text, StyleSheet, StatusBar } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
@@ -27,13 +27,13 @@ class Header extends Component {
   }
 }
 
-const hearderSideBoxWidth = wp('20%');
+const hearderSideBoxWidth = wp("20%");
 const headerHeight = hp("8%");
 const headerTextHeight = (headerHeight * 1) / 3;
 
 const styles = StyleSheet.create({
   header: {
-    marginTop:StatusBar.currentHeight,
+    marginTop: StatusBar.currentHeight,
     width: wp("100%"),
     height: headerHeight,
     backgroundColor: Colors.headerGrey,

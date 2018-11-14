@@ -56,14 +56,10 @@ const botQuestions = {
     "만약 지금 그 감정으로 인한 문제가 있다면 어떤게 있을까?" //q4와 5는 합쳐질 수 있음. /butPush함수에서 변용!
   ],
   q6: [
-    "좀 더 자세히 말해줄 수 있을까?",
-    "좀 더 구체적으로 말해줄 수 있어?",
-    "한번만 다시 자세히 말해줄 수 있을까?",
-    "한번만 다시 구체적으로 말해줄 수 있을까?",
-    "좀 더 자세히 설명해줄 수 있을까?",
-    "좀 더 구체적으로 설명해줄 수 있어?",
-    "한번만 다시 자세히 설명해줄 수 있을까?",
-    "한번만 다시 구체적으로 설명해줄 수 있을까?"
+    "음.. 상황 설명이 좀 더 구체적이면 좋을 것 같아.",
+    "음.. 상황 설명이 좀 더 자세하면 좋을 것 같아.",
+    "그렇구나. 상황 설명이 좀 더 구체적이면 좋을 것 같아.",
+    "그렇구나. 조금더 자세한 설명이 있으면 좋을 것 같아."
   ],
   q61: [
     "내용을 입력해 줘야해!",
@@ -256,7 +252,7 @@ class ChatRoom extends Component {
     if (iconName.includes("trust")) return "신뢰";
     if (iconName.includes("fear")) return "공포";
     if (iconName.includes("surprise")) return "놀라움";
-    if (iconName.includes("anticipation")) return "기대";
+    if (iconName.includes("anticipation")) return "설렘";
     if (iconName.includes("anger")) return "화남";
     if (iconName.includes("disgust")) return "혐오";
     if (iconName.includes("sadness")) return "슬픔";
@@ -288,12 +284,20 @@ class ChatRoom extends Component {
     if (this.isIncludes(["혐오", "화남"], emotion1, emotion2)) {
       return "경멸";
     }
-    if (this.isIncludes(["화남", "기대"], emotion1, emotion2)) {
+    if (this.isIncludes(["화남", "설렘"], emotion1, emotion2)) {
       return "공격적인 상태";
     }
-    if (this.isIncludes(["즐거움", "기대"], emotion1, emotion2)) {
+    if (this.isIncludes(["즐거움", "설렘"], emotion1, emotion2)) {
       return "낙천적인 상태";
     }
+  };
+
+  isBadEmotion = (emotion1, emotion2) => {
+    // console.log("Input emotion1, 2: ", emotion1, emotion2);
+    if (this.isIncludes(["즐거움", "설렘", "신뢰"], emotion1, emotion2)) {
+      return false;
+    }
+    return true;
   };
 
   getRandomInt = (min, max) => {
@@ -301,7 +305,7 @@ class ChatRoom extends Component {
   };
 
   botPushThisQuestion = (thisQuestion, listOfEmotion = null) => {
-    // console.log("thisQuestion: ",thisQuestion)
+    console.log("thisQuestion: ", thisQuestion);
     let nextQuestion = [];
     let thisQuestionText = "";
     //nextQuestion을 list형태로 만들고, 보여줘야 하는 답변을 순서대로 list안에 넣어둠!
@@ -341,6 +345,7 @@ class ChatRoom extends Component {
       nextQuestion = "q4";
     }
     if (thisQuestion == "q4") {
+      // console.log("im in q4!!!");
       const prevIconInput = listOfEmotion[0];
       const latestIconInput =
         listOfEmotion[listOfEmotion.length ? listOfEmotion.length - 1 : 0];
@@ -348,17 +353,29 @@ class ChatRoom extends Component {
         listOfEmotion.length != 0 &&
         (latestIconInput.includes("nothing") ||
           latestIconInput.includes(prevIconInput)); //없음을 눌렀거나 첫번째로 고른 감정과 동일한 감정을 눌렀거나
+      const isBadEmotion = this.isBadEmotion(
+        this.iconNameToKorean(prevIconInput),
+        this.iconNameToKorean(latestIconInput)
+      );
+      // console.log("q4: isBadEmotion: ", isBadEmotion);
       // console.log(
       //   "In ChatRoom botPushThisQuestion if q4 latestIconInput:",
       //   latestIconInput
       // );
       thisQuestionText = isIconInputNothing
-        ? [
-            `${this.iconNameToKorean(
-              prevIconInput
-            )}만 느꼈구나. 답해줘서 고마워.`,
-            botQuestions.q5[botQuestions.q5.length - 1]
-          ]
+        ? isBadEmotion
+          ? [
+              `${this.iconNameToKorean(
+                prevIconInput
+              )}만 느꼈구나. 답해줘서 고마워.`,
+              botQuestions.q5[botQuestions.q5.length - 1] //p5랑 합쳐졌으므로 이 경우 nextQuestion은 "q8"
+            ]
+          : [
+              `${this.iconNameToKorean(
+                prevIconInput
+              )}만 느꼈구나. 답해줘서 고마워.`,
+              "혹시 이 감정이 너에게 긍정적인 영향을 주고 있니?"
+            ]
         : [
             `${this.iconNameToKorean(
               latestIconInput
@@ -375,13 +392,25 @@ class ChatRoom extends Component {
         this.iconNameToKorean(listOfEmotion[1])
       );
       // console.log("analyzedEmotion: ", analyzedEmotion);
+      const isBadEmotion = this.isBadEmotion(
+        this.iconNameToKorean(listOfEmotion[0]),
+        this.iconNameToKorean(listOfEmotion[1])
+      );
       thisQuestionText = analyzedEmotion
         ? [
             `음 내가 생각하기엔 너가 느끼는 감정은 ${analyzedEmotion}(와)과 관련이 있는것 같아!`,
             "너는 어떻게 생각해?"
           ]
-        : botQuestions.q5;
-      nextQuestion = analyzedEmotion ? "q5" : "q8";
+        : isBadEmotion
+        ? botQuestions.q5
+        : botQuestions.q8;
+      nextQuestion = analyzedEmotion
+        ? isBadEmotion
+          ? "q5"
+          : "q8"
+        : isBadEmotion
+        ? "q8"
+        : null;
     }
     if (thisQuestion == "q5") {
       thisQuestionText = botQuestions.q5;
@@ -390,7 +419,8 @@ class ChatRoom extends Component {
     if (thisQuestion == "q6") {
       //구체적인 설명을 되물어야 하는 경우
       thisQuestionText = [
-        botQuestions.q6[this.getRandomInt(0, botQuestions.q6.length - 1)]
+        botQuestions.q6[this.getRandomInt(0, botQuestions.q6.length - 1)],
+        "조금만 더 설명해줄 수 있어?"
       ];
       nextQuestion = this.state.nextQuestion;
     }
@@ -417,7 +447,7 @@ class ChatRoom extends Component {
 
     const isAfterCheckingMeaningful =
       thisQuestion == "q1" && this.state.currentDialog.length < 3;
-    const firstTimeIntervalFiexd = isAfterCheckingMeaningful ? 0 : 1000;
+    const firstTimeIntervalFiexd = isAfterCheckingMeaningful ? 0 : 1800;
     let timeOffset = 0;
     thisQuestionText.map((text, index) => {
       // console.log(text);
@@ -439,7 +469,7 @@ class ChatRoom extends Component {
           isIconInput: isItLastItem ? isIconInput : this.state.isIconInput,
           isFinished: isItLastItem ? isFinished : this.state.isFinished
         });
-      }, firstTimeIntervalFiexd + this.getRandomInt(1200, 1850) * timeOffset);
+      }, firstTimeIntervalFiexd + this.getRandomInt(1500, 1950) * timeOffset);
       timeOffset += 1;
     });
   };
@@ -449,10 +479,18 @@ class ChatRoom extends Component {
   //   this.setState({
   //   })
   // }
+  printDialogAsWellFormed = () => {
+    this.state.currentDialog.map((dialog, index) => {
+      index == 0 ? console.log("[") : null;
+      console.log(`{"speaker":"${dialog.speaker}", "text":"${dialog.text}"},`);
+      index == this.state.currentDialog.length - 1 ? console.log("]\n") : null;
+    });
+  };
 
   render() {
     const { chatLog, isCrowdBox, isStartTop } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
-    console.log("In ChatRoom this.state:", this.state);
+    // console.log("In ChatRoom this.state:", this.state);
+    this.printDialogAsWellFormed();
     const contentsTopBottomMargin = 8;
     const targetDialog = chatLog ? chatLog : this.state.currentDialog;
     var { navigate } = this.props.navigation;
@@ -493,7 +531,7 @@ class ChatRoom extends Component {
           <View>
             {this.state.isCrowdBox || isCrowdBox ? (
               <CrowdBoxFooter
-                isCrowdBox={true}
+                isCrowdBox={isCrowdBox}
                 userInputDialog={this.state.currentDialog[0]}
               />
             ) : (
