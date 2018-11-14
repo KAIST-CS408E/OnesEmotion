@@ -13,9 +13,12 @@ export default function getSource(imageName) {
     if (imageName == "menu") return require("./menu.png")
     if (imageName == "chat") return require("./chat.png")
     if (imageName == "MyLog") return require("./MyLog.png")
+    if (imageName == "Header_save") return require("./Header_save.png")
     if (imageName == "add") return require("./add.png")
     if (imageName == "Story") return require("./Story.png")
     if (imageName == "emphaty") return require("./emphaty.png")
+    if (imageName == "refresh") return require("./refresh.png")
+    if (imageName == "exit") return require("./exit.png")
     if (imageName == "Logo") return require("./Logo.png")
     //iconOptionBox
     // if (imageName == "sogood_option_clicked") return require("./sogood_option_clicked.png")

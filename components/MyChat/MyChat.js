@@ -41,20 +41,25 @@ const sampleDialog = [
   { speaker: "bot", text: "지금까지 말해준 것들을 다른사람들과 공유해도 될까?" }
 ];
 
-class OtherChat extends React.Component {
+class MyChat extends React.Component {
   render() {
     const chatLog = sampleDialog;
     const navigation = this.props.navigation;
 
     return (
       <View style={styles.container}>
-        <ChatRoom chatLog={chatLog} isStartTop={true} navigation={navigation} />
+        <ChatRoom
+          chatLog={chatLog}
+          isCrowdBox={true}
+          isStartTop={true}
+          navigation={navigation}
+        />
       </View>
     );
   }
 }
 
-export default withNavigation(OtherChat);
+export default withNavigation(MyChat);
 
 const styles = StyleSheet.create({
   container: {

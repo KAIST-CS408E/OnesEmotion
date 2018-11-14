@@ -20,16 +20,18 @@ class ButtonInputFooter extends Component {
 
   render() {
     const { onPress } = this.props; // onPress에서 반드시 yes, no 둘중 뭐를 체크한건지 param으로 받아오도록 해야함.
+    var { navigate } = this.props.navigation;
+
     return (
       <View style={styles.container}>
         <View style={{marginLeft: wp("5%")}}>
-          <TouchableOpacity onPress={onPress}>
-            <Text style={styles.text}>Yes, please</Text>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate("MyLog")}>
+            <Text style={styles.text}>응 그렇게 해줘</Text>
           </TouchableOpacity>
         </View>
         <View style={{marginRight: wp("5%")}}>
-          <TouchableOpacity onPress={onPress}>
-            <Text style={styles.text}>No, thanks</Text>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate("MyLog")}>
+            <Text style={styles.text}>아니 괜찮아</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -40,7 +42,7 @@ class ButtonInputFooter extends Component {
 const styles = StyleSheet.create({
   container: {
     width: wp("100%"),
-    height: 100,
+    height: 70,
     // marginTop: 10,
     backgroundColor: Colors.headerGrey,
     alignItems: "center",
@@ -50,8 +52,8 @@ const styles = StyleSheet.create({
   },
   text: {
     width: wp("40%"),
-    height: 60,
-    fontSize: 23,
+    height: 40,
+    fontSize: 15,
     padding: 10,
     fontWeight: "bold",
     backgroundColor: Colors.white,
