@@ -161,7 +161,7 @@ class TextInputFooter extends Component {
                   textAlignVertical: "center"
                 }}
               >
-                Done
+                전송
               </Text>
             </TouchableOpacity>
           </View>

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, ImageBackground } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
@@ -36,7 +36,10 @@ class LogItem extends Component {
             : this.props.navigation.navigate("OtherChat")
         }
       >
-        <View style={styles.itemBox}>
+        <ImageBackground 
+          source={Images("background2")}
+          style={styles.itemBox}
+        >
           {myLog ? (
             <View style={styles.itemBoxLeft}>
               <View style={styles.itemBoxImageBox}>
@@ -72,7 +75,7 @@ class LogItem extends Component {
               </View>
             </View>
           ) : null}
-        </View>
+        </ImageBackground>
       </TouchableOpacity>
     );
   }
@@ -93,7 +96,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
-    backgroundColor: Colors.logBackground
+    // backgroundColor: Colors.logBackground
   },
   itemBoxMiddle: {
     width: myLogWidthMiddle,

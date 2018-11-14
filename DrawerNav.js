@@ -68,7 +68,7 @@ class MidTitle extends React.Component {
           onPress={() => this.props.navigation.navigate("ChatRoom")}
         >
           <Image style={styles.icon} source={Icons("chat")} />
-          <Text style={styles.title}>내가 진행중인 대화</Text>
+          <Text style={styles.title}>새로운 이야기 추가하기</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
@@ -136,10 +136,10 @@ export default (DrawerNav = createDrawerNavigator(
       screen: ChatRoom
     },
     MyLog: {
-      screen: MyLog
+      screen: MyLog,
     },
     Story: {
-      screen: Story
+      screen: Story,
     },
     OtherChat: {
       screen: OtherChat,

@@ -228,21 +228,26 @@ class ChatRoom extends Component {
     );
   };
 
-  renderChatRoomHeaderLeft = () => (
-    <ImageButton
-      boxWidth={"20"}
-      imageWidth={"7"}
-      imageName={"save"}
-      onPress={() => this.props.navigation.navigate("Story")}
-    />
+  renderChatRoomHeaderLeft = (chatLog) => (
+    chatLog
+      ? null
+      : <ImageButton
+          boxWidth={"20"}
+          imageWidth={"7"}
+          imageName={"save"}
+          onPress={() => this.props.navigation.navigate("MyLog")}
+        />
   );
 
-  renderChatRoomHeaderRight = () => (
+  renderChatRoomHeaderRight = (chatLog) => (
     <ImageButton
       boxWidth={"20"}
       imageWidth={"5"}
       imageName={"cancel"}
-      onPress={() => this.props.navigation.navigate("Story")}
+      onPress={
+        chatLog
+        ? () => this.props.navigation.navigate("Story")
+        : () => this.props.navigation.navigate("MyLog")}
     />
   );
 
@@ -451,6 +456,7 @@ class ChatRoom extends Component {
     const contentsTopBottomMargin = 8;
     const targetDialog = chatLog ? chatLog : this.state.currentDialog;
     var { navigate } = this.props.navigation;
+    const navigation = this.props.navigation;
 
     return (
       <View
@@ -460,8 +466,8 @@ class ChatRoom extends Component {
       >
         <Header
           title={chatLog ? "Title 1" : "내가 진행중인 대화"}
-          left={this.renderChatRoomHeaderLeft()}
-          right={this.renderChatRoomHeaderRight()}
+          left={this.renderChatRoomHeaderLeft(chatLog)}
+          right={this.renderChatRoomHeaderRight(chatLog)}
         />
         <ScrollView
           style={{
@@ -510,7 +516,7 @@ class ChatRoom extends Component {
             {this.state.isIconInput & !this.state.isFinished ? (
               <IconInputFooter onPress={this.handleIconInput} isMyLog={true} />
             ) : null}
-            {this.state.isFinished ? <ButtonInputFooter /> : null}
+            {this.state.isFinished ? <ButtonInputFooter navigation={navigation} /> : null}
           </View>
         )}
       </View>
