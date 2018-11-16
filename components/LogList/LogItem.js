@@ -27,6 +27,10 @@ class LogItem extends Component {
 
     const { navigate } = this.props.navigation;
     // const page = (myLog ? "MyLog" : "OtherChat");
+    
+    var num = Math.floor(Math.random() * (4 - 1 + 1)) + 1;
+    num += "";
+    const imagename = "background" + num;
 
     return (
       <TouchableOpacity
@@ -37,7 +41,7 @@ class LogItem extends Component {
         }
       >
         <ImageBackground 
-          source={Images("background2")}
+          source={Images(imagename)}
           style={styles.itemBox}
         >
           {myLog ? (

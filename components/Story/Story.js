@@ -9,6 +9,7 @@ import {
 
 import { withNavigation, DrawerActions } from 'react-navigation';
 
+
 class MyLog extends React.Component {
   render() {
     const myLog = false

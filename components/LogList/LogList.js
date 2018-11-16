@@ -11,8 +11,12 @@ import Colors from "./../../assets/Colors";
 import Icons from "./../../assets/Icons";
 
 import { createStackNavigator, createDrawerNavigator, DrawerActions } from 'react-navigation';
+import NoticeBox from '../NoticeBox';
+
 
 const EMOTIONS = ["sobad", "bad", "soso", "good", "sogood"];
+const storyNotice = ['다른 사람들의 이야기', '이 페이지에서는', '다른 사람들의 이야기를 볼 수 있습니다.', '다른 사람의 입장에서', '내 경험을 바탕으로 댓글을 남겨 주세요!'];
+const myLogNotice = ['나의 이야기', '이 페이지에서는', '내 감정을 이야기할 수 있습니다.', '오른쪽 상단의 + 버튼을 클릭하여', '이야기를 시작하세요!'];
 
 class LogList extends Component {
   state = {
@@ -137,6 +141,9 @@ class LogList extends Component {
           title={myLog ? "나의 이야기" : "다른 사람들의 이야기"}
           left={this.renderLogListHeaderLeft()}
           right={this.renderLogListHeaderRight(myLog)}
+        />
+        <NoticeBox
+          notice={myLog ? myLogNotice : storyNotice}
         />
         <ScrollView>{contents}</ScrollView>
       </View>
