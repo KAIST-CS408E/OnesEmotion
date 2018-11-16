@@ -31,6 +31,7 @@ import {
   DrawerActions
 } from "react-navigation";
 
+import fb from "../../utils/firebaseWrapper";
 import nlp from "./../../utils/nlp";
 
 const botQuestions = {
@@ -93,7 +94,10 @@ class ChatRoom extends Component {
     isIconInput: false,
     isFinished: false,
     isOnceAgained: false,
-    visibleHeight: hp("100%")
+    visibleHeight: hp("100%"),
+    // get user info
+    user: fb.getUser(),
+    chatId: null
   };
 
   componentWillMount() {
@@ -138,7 +142,16 @@ class ChatRoom extends Component {
     });
   }
 
+  createChatRoom = async () => {
+    const {user} = this.state;
+    const chatId = await fb.createChat(user.userId);
+    this.setState({
+      chatId
+    })
+  }
+
   handleTextInput = async (speaker, text, iconInput, isMyLog) => {
+    const {user, chatId} = this.state;
     //crowdbox면 this.state.currentDialog를 답변 하나만 있는 상태로 초기화!
     const myLogInput = {
       //when is not MyLog and don't have iconInput
@@ -168,7 +181,14 @@ class ChatRoom extends Component {
       isIconInput: false,
       isFinished: false
     };
-    this.setState(isMyLog ? myLogInput : forCrowdBox);
+    // this.setState(isMyLog ? myLogInput : forCrowdBox);
+    if (isMyLog) {
+      fb.createMessage(user.userId, chatId, text);
+      this.setState(myLogInput);
+    } else {
+      fb.createComment(user.userId, chatId, text, `${iconInput.split("_")[0]}_option_clicked`)
+      this.setState(forCrowdBox);
+    }
     //check user input here
     let nextQuestionFixed = this.state.nextQuestion;
     !nlp.isNotEmpty(text) ? (nextQuestionFixed = "q61") : null; //모든 답변은 내용이 있어야 함.
@@ -305,6 +325,7 @@ class ChatRoom extends Component {
   };
 
   botPushThisQuestion = (thisQuestion, listOfEmotion = null) => {
+    const {user, chatId} = this.state;
     console.log("thisQuestion: ", thisQuestion);
     let nextQuestion = [];
     let thisQuestionText = "";
@@ -453,6 +474,7 @@ class ChatRoom extends Component {
       // console.log(text);
       const isItLastItem = index == thisQuestionText.length - 1;
       setTimeout(() => {
+        fb.createMessage("bot", chatId, text);
         this.setState({
           currentDialog: [
             ...this.state.currentDialog,
