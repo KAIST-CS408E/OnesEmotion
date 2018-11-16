@@ -39,7 +39,7 @@ class CrowdBoxFooter extends Component {
   };
 
   render() {
-    const { userInputDialog, onPress } = this.props; // onPress에서 반드시 yes, no 둘중 뭐를 체크한건지 param으로 받아오도록 해야함.
+    const { userInputDialog, isCrowdBox, onPress } = this.props; // onPress에서 반드시 yes, no 둘중 뭐를 체크한건지 param으로 받아오도록 해야함.
     // console.log("In CrowdBoxFooter userInputDialog elems: ", userInputDialog);
     // console.log(
     //   "In CrowdBoxFooter userInputDialog elems: ",
@@ -74,11 +74,13 @@ class CrowdBoxFooter extends Component {
                 profileImageName={dialog.profileImageName}
               />
             ))}
-            <ChatElement
-              speaker={userInputDialog.speaker}
-              text={userInputDialog.text}
-              profileImageName={userInputDialog.profileImageName}
-            />
+            {isCrowdBox ? null : (
+              <ChatElement
+                speaker={userInputDialog.speaker}
+                text={userInputDialog.text}
+                profileImageName={userInputDialog.profileImageName}
+              />
+            )}
           </ScrollView>
         </View>
       </View>

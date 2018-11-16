@@ -59,9 +59,9 @@ export default class App extends React.Component {
     super();
   }
   
-  componentDidMount() {
-     StatusBar.setHidden(true);
-  }
+  // componentDidMount() {
+  //    StatusBar.setHidden(true);
+  // }
 
   render() {
     return (
