@@ -6,6 +6,7 @@ import {
 } from "react-native-responsive-screen";
 
 import DrawerNav from './DrawerNav';
+import fb from './utils/firebaseWrapper';
 
 const myLog = true; //true for MyLog and false for Story
 const story = false;

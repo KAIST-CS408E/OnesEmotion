@@ -21,12 +21,13 @@ import Story from "./components/Story";
 import ChatRoom from "./components/ChatRoom";
 import OtherChat from "./components/OtherChat";
 
+import fb from "./utils/firebaseWrapper";
+
 class Hidden extends React.Component {
   render() {
     return null;
   }
 }
-
 // const MidTitle = (props) => (
 // 	<SafeAreaView style={{ flex: 1}}>
 // 		<View style={{ height: 150, backgroundColor: 'white', alignItems: 'center', justifyContent:'center' }}>
@@ -42,6 +43,18 @@ class Hidden extends React.Component {
 // )
 
 class MidTitle extends React.Component {
+
+	componentWillMount() {
+		this.autoLogin()
+	}
+	
+	autoLogin = async function () {
+		const isLoggedIn = await fb.isUserLoggedIn()
+		if (isLoggedIn) {
+			this.props.navigation.navigate('Story')
+		}
+	}
+	
   render() {
     return (
       <SafeAreaView style={{ flex: 1 }}>

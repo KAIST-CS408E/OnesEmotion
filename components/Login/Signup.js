@@ -36,7 +36,7 @@ export default class Signup extends React.Component {
       this.props.navigation.navigate("Story")
     } catch (e) {
       console.log(e);
-      throw e;
+      return
     }
   }
 
