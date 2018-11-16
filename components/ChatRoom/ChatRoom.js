@@ -205,7 +205,9 @@ class ChatRoom extends Component {
   };
 
   handleIconInput = (speaker, iconInput, isMyLog) => {
+    const {user, chatId} = this.state;
     // console.log("In ChatRoom handleIconInput iconInput: ", iconInput);
+    fb.createEmotion(user.userId, chatId, iconInput)
     this.setState({
       currentDialog: [
         ...this.state.currentDialog,
