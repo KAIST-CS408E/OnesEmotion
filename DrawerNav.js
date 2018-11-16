@@ -10,6 +10,11 @@ import {
   TouchableOpacity
 } from "react-native";
 import { createDrawerNavigator, DrawerItems } from "react-navigation";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp
+} from "react-native-responsive-screen";
+
 import Icons from "./assets/Icons";
 
 import Login from "./components/Login/Login";
@@ -44,7 +49,7 @@ class Hidden extends React.Component {
 class MidTitle extends React.Component {
   render() {
     return (
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, width: wp("65%")}}>
         <View
           style={{
             height: 150,
@@ -68,26 +73,26 @@ class MidTitle extends React.Component {
           onPress={() => this.props.navigation.navigate("ChatRoom")}
         >
           <Image style={styles.icon} source={Icons("chat")} />
-          <Text style={styles.title}>새로운 이야기 추가하기</Text>
+          <Text style={styles.title}>새로운 이야기 시작하기</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
           onPress={() => this.props.navigation.navigate("MyLog")}
         >
           <Image style={styles.icon} source={Icons("MyLog")} />
-          <Text style={styles.title}>나의 이야기</Text>
+          <Text style={styles.title}>내 이야기 보기</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
           onPress={() => this.props.navigation.navigate("Story")}
         >
           <Image style={styles.icon} source={Icons("Story")} />
-          <Text style={styles.title}>다른 사람들의 이야기</Text>
+          <Text style={styles.title}>다른 사람들의 이야기 보기</Text>
         </TouchableOpacity>
         <View style={styles.line} />
         <View style={styles.menubox}>
           <Text style={{ color: "#616161", paddingLeft: 20 }}>
-            답변이 필요한 이야기
+            답변이 필요한 이야기들
           </Text>
         </View>
         <TouchableOpacity
