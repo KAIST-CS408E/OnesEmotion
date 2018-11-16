@@ -106,11 +106,7 @@ class ChatRoom extends Component {
         "keyboardDidHide",
         this.keyboardDidHide.bind(this)
       );
-<<<<<<< HEAD
-    } catch(e) {
-=======
     } catch (e) {
->>>>>>> master
       this.keyboardDidShowListener = DeviceEventEmitter.addListener(
         "keyboardDidShow",
         this.keyboardDidShow.bind(this)
@@ -228,15 +224,6 @@ class ChatRoom extends Component {
     );
   };
 
-<<<<<<< HEAD
-  renderChatRoomHeaderLeft = () => (
-    <ImageButton
-      boxWidth={"20"}
-      imageWidth={"7"}
-      imageName={"save"}
-      onPress={() => this.props.navigation.navigate("Story")}
-    />
-=======
   renderChatRoomHeaderLeft = (chatLog) => (
     chatLog
       ? null
@@ -246,7 +233,6 @@ class ChatRoom extends Component {
           imageName={"save"}
           onPress={() => this.props.navigation.navigate("MyLog")}
         />
->>>>>>> master
   );
 
   renderChatRoomHeaderRight = (chatLog) => (
@@ -254,14 +240,10 @@ class ChatRoom extends Component {
       boxWidth={"20"}
       imageWidth={"5"}
       imageName={"cancel"}
-<<<<<<< HEAD
-      onPress={() => this.props.navigation.navigate("Story")}
-=======
       onPress={
         chatLog
         ? () => this.props.navigation.navigate("Story")
         : () => this.props.navigation.navigate("MyLog")}
->>>>>>> master
     />
   );
 
