@@ -110,7 +110,7 @@ class ChatRoom extends Component {
         "keyboardDidHide",
         this.keyboardDidHide.bind(this)
       );
-    } catch {
+    } catch(e) {
       this.keyboardDidShowListener = DeviceEventEmitter.addListener(
         "keyboardDidShow",
         this.keyboardDidShow.bind(this)
@@ -233,7 +233,7 @@ class ChatRoom extends Component {
       boxWidth={"20"}
       imageWidth={"7"}
       imageName={"save"}
-      onPress={() => this.props.navigation.goBack()}
+      onPress={() => this.props.navigation.navigate("Story")}
     />
   );
 
@@ -242,7 +242,7 @@ class ChatRoom extends Component {
       boxWidth={"20"}
       imageWidth={"5"}
       imageName={"cancel"}
-      onPress={() => this.props.navigation.goBack()}
+      onPress={() => this.props.navigation.navigate("Story")}
     />
   );
 

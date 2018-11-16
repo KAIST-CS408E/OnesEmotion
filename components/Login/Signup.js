@@ -15,6 +15,7 @@ import {
 
 import Logo from './Logo';
 import Form from './Form';
+import fb from '../../utils/firebaseWrapper';
 
 export default class Signup extends React.Component {
 
@@ -22,12 +23,36 @@ export default class Signup extends React.Component {
     Actions.pop();
   }
 
+  state = {
+    username: '',
+    email: '',
+    password: ''
+  }
+
+  signup = () => {
+    try {
+      const {username, email, password} = this.state;
+      fb.signup(username, email, password);
+      this.props.navigation.navigate("Story")
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
+  }
+
+  handleTextChange = (field, value) => {
+    const obj = {};
+    obj[field] = value;
+    this.setState(obj);
+  }
+
 	render() {
+    const {username, email, password} = this.state;
 		return(
 				<View style={styles.container}>
 					<Logo/>
-					<Form type="Signup"/>
-          <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate("Story")}>
+					<Form type="Signup" handleTextChange={this.handleTextChange} form={{username, email, password}}/>
+          <TouchableOpacity style={styles.button} onPress={this.signup}>
             <Text style={styles.buttonText}>Signup</Text>
           </TouchableOpacity>
 					<View style={styles.signupTextCont}>

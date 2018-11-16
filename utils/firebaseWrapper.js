@@ -32,6 +32,7 @@ export default api = {
     //   name: user's name
     // }
     try {
+      console.log(email);
       const user = await auth.createUserWithEmailAndPassword(email, password);
       await user.updateProfile({
         displayName: name

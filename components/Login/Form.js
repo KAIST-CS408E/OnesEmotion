@@ -7,13 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-export default class Logo extends React.Component {
-
-  state = {
-    username: null,
-    email: null,
-    password: null
-  }
+export default class Form extends React.Component {
 
 	render() {
 
@@ -23,8 +17,8 @@ export default class Logo extends React.Component {
         placeholder= "Name"
         placeholderTextColor= "#ffffff"
         selectionColor='#fff'
-        onChangeText={(value) => this.setState({username: value})}
-        value={this.state.username}
+        onChangeText={(value) => this.props.handleTextChange('username', value)}
+        value={this.props.form.username}
         onSubmitEditing= {()=> this.email.focus()}
         />
     } else {
@@ -41,8 +35,8 @@ export default class Logo extends React.Component {
           selectionColor='#fff'
           keyboardType="email-address"
           ref={(input) => this.email = input}
-          onChangeText={(value) => this.setState({email: value})}
-          value={this.state.email}
+          onChangeText={(value) => this.props.handleTextChange('email', value)}
+          value={this.props.form.email}
           onSubmitEditing= {()=> this.password.focus()}
           />
         <TextInput style={styles.inputBox} 
@@ -51,8 +45,8 @@ export default class Logo extends React.Component {
           secureTextEntry={true}
           placeholderTextColor= "#ffffff"
           ref={(input) => this.password = input}
-          onChangeText={(value) => this.setState({password: value})}
-          value={this.state.password}
+          onChangeText={(value) => this.props.handleTextChange('password', value)}
+          value={this.props.form.password}
           />
 			</View>
 		)
