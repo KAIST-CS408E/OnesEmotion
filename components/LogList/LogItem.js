@@ -27,6 +27,7 @@ class LogItem extends Component {
 
     const { navigate } = this.props.navigation;
     // const page = (myLog ? "MyLog" : "OtherChat");
+    this.props.navigation.setParams({'chatId': id}) // TODO
 
     return (
       <TouchableOpacity

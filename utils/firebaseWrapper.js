@@ -95,7 +95,7 @@ export default api = {
       return null;
     }
   },
-  getUser: async function () {
+  getUser: function () {
     // INPUT
     // null
     // OUTPUT

@@ -12,6 +12,8 @@ import Icons from "./../../assets/Icons";
 
 import { createStackNavigator, createDrawerNavigator, DrawerActions } from 'react-navigation';
 
+import fb from "../../utils/firebaseWrapper";
+
 const EMOTIONS = ["sobad", "bad", "soso", "good", "sogood"];
 
 class LogList extends Component {
@@ -59,8 +61,26 @@ class LogList extends Component {
         date: "18.09.31",
         text: "I played with my sister!"
       }
-    ]
+    ],
+    user: fb.getUser()
   };
+
+  componentDidMount() {
+    const {user} = this.state;
+    const chatList = await fb.getAllChats(user.userId);
+    if (chatList.length == 0) {
+      return
+    }
+    this.setState({
+      logList: chatList.map((chat) => ({
+        key: chat.chatId,
+        selfEmotion: EMOTIONS[0], // TODO: caching
+        crowdEmotion: EMOTIONS[1], // TODO: caching
+        date: chat.createdAt, // TODO: date formatting
+        text: chat.msgList[1].content // TODO: handle too long content
+      }))
+    })
+  }
 
   handlePress = id => {};
 

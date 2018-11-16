@@ -80,12 +80,10 @@ const botQuestions = {
 
 class ChatRoom extends Component {
   state = {
-    currentDialog: [
-      {
-        speaker: "bot",
-        text: "오늘 무슨 일 있었어?"
-      }
-    ],
+    currentDialog: [{
+      speaker: "bot",
+      text: hello
+    }],
     currentQuestion: "q0", // botPushThisQuestion에서만 수정해야함
     nextQuestion: "q1", // botPushThisQuestion에서만 수정해야함
     listOfEmotion: [],
@@ -121,6 +119,14 @@ class ChatRoom extends Component {
       );
     }
   }
+  
+  componentDidMount() {
+    const {chatLog} = this.props;
+    if (chatLog) {
+      return
+    }
+    this.createChatRoom();
+  }
 
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
@@ -143,9 +149,14 @@ class ChatRoom extends Component {
   }
 
   createChatRoom = async () => {
-    const {user} = this.state;
+    const hello = "오늘 무슨 일 있었어?";
     const chatId = await fb.createChat(user.userId);
+    fb.createMessage("bot", chatId, hello)
     this.setState({
+      currentDialog: [{
+        speaker: "bot",
+        text: hello
+      }],
       chatId
     })
   }
