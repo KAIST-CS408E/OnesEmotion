@@ -20,20 +20,20 @@ class CrowdBoxFooter extends Component {
     crowdBoxDialog: [
       {
         speaker: "bot",
-        text: "Calm down! Why don’t you talk to your friend?",
-        profileImageName: "anticipation_option_clicked"
+        text: "바빠서 밥을 잘 챙기지 못하면 너무 비참해.. 간단히라도 꼭 먹어!",
+        profileImageName: "sadness_option_clicked"
       },
       {
         speaker: "bot",
         text:
-          "Well.. how about talking to your friend if you are still disappointed?",
-        profileImageName: "fear_option_clicked"
+          "너한테 화를 낼 필요는 전혀 없어! 자책하지는 말았으면 해!",
+        profileImageName: "sadness_option_clicked"
       },
       {
         speaker: "bot",
         text:
-          "Well.. how about talking to your friend if you are still disappointed?",
-        profileImageName: "fear_option_clicked"
+          "화나는 상황이긴하지만, 자책할 필요는 없어! 열심히 하고있잖아.",
+        profileImageName: "anger_option_clicked"
       }
     ]
   };
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   },
   crowdBoxHeader: {
     width: wp("100%"),
-    height: hp("7%"),
+    height: hp("5%"),
     backgroundColor: Colors.white,
     alignItems: "center",
     // flex: 1,
