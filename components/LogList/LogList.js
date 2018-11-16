@@ -74,7 +74,7 @@ class LogList extends Component {
   renderLogListHeaderLeft = () => (
     <ImageButton
       boxWidth={"20"}
-      imageWidth={"10"}
+      imageWidth={"6"}
       imageName={"menu"}
       onPress={() =>this.props.navigation.dispatch(DrawerActions.openDrawer())}
     />
@@ -83,10 +83,12 @@ class LogList extends Component {
   renderLogListHeaderRight = (myLog) => (
     <ImageButton
       boxWidth={"20"}
-      imageWidth={"10"}
-      imageName={myLog? "add" : null}
+      imageWidth={"6"}
+      imageName={myLog? "add" : "refresh"}
       onPress={
-        () => this.props.navigation.navigate("ChatRoom")
+        myLog
+        ? () => this.props.navigation.navigate("ChatRoom")
+        : () => this.props.navigation.navigate("Story")
       }
     />
   );
