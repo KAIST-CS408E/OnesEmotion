@@ -75,7 +75,8 @@ class MyChat extends React.Component {
   }
 
   render() {
-    const chatLog = sampleDialog;
+    // const chatLog = sampleDialog;
+    const {chatLog} = this.state;
     const navigation = this.props.navigation;
 
     return (

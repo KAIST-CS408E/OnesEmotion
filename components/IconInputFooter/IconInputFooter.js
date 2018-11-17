@@ -70,6 +70,7 @@ class IconInputFooter extends Component {
         >
           {this.state.optionIconNameList.map(iconName => (
             <ImageButton
+              key={iconName}
               boxWidth={"18"}
               imageWidth={"14"}
               imageName={iconName}

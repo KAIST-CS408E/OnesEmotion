@@ -82,7 +82,7 @@ class ChatRoom extends Component {
   state = {
     currentDialog: [{
       speaker: "bot",
-      text: hello
+      text: "오늘 무슨 일 있었어?"
     }],
     currentQuestion: "q0", // botPushThisQuestion에서만 수정해야함
     nextQuestion: "q1", // botPushThisQuestion에서만 수정해야함
@@ -149,8 +149,10 @@ class ChatRoom extends Component {
   }
 
   createChatRoom = async () => {
+    const {user} = this.state;
     const hello = "오늘 무슨 일 있었어?";
     const chatId = await fb.createChat(user.userId);
+    console.log("CHATID", chatId)
     fb.createMessage("bot", chatId, hello)
     this.setState({
       currentDialog: [{

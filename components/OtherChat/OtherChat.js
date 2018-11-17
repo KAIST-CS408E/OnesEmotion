@@ -9,6 +9,8 @@ import {
 
 import { withNavigation, DrawerActions } from "react-navigation";
 
+import fb from '../../utils/firebaseWrapper';
+
 const sampleDialog = [
   { speaker: "bot", text: "오늘 무슨 일 있었어?" },
   { speaker: "user", text: "나 오늘 너무 바빠서 밥을 못먹었어.." },
@@ -42,8 +44,39 @@ const sampleDialog = [
 ];
 
 class OtherChat extends React.Component {
+  state = {
+    chatLog: []
+  }
+
+  componentDidMount() {
+    this.getChatLogs();
+  }
+
+  getChatLogs = async () => {
+    const chatId = this.props.navigation.getParam('chatId') // TODO
+    const {messages} = await fb.getAStory(chatId)
+    this.setState({
+      chatLog: messages.map((m) => {
+        if (m.userId == "bot") {
+          return {
+            speaker: "bot", text: m.content
+          }
+        }
+        if (m.content.indexOf('clicked') != -1) {
+          return {
+            speaker: "userIcon", text: m.content
+          }
+        }
+        return {
+          speaker: "user", text: m.content
+        }
+      })
+    })
+  }
+
   render() {
-    const chatLog = sampleDialog;
+    // const chatLog = sampleDialog;
+    const {chatLog} = this.state;
     const navigation = this.props.navigation;
 
     return (
