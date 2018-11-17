@@ -13,7 +13,6 @@ import Icons from "./../../assets/Icons";
 import { createStackNavigator, createDrawerNavigator, DrawerActions } from 'react-navigation';
 import NoticeBox from '../NoticeBox';
 
-
 const EMOTIONS = ["sobad", "bad", "soso", "good", "sogood"];
 const storyNotice = ['다른 사람들의 이야기', '이 페이지에서는', '다른 사람들의 이야기를 볼 수 있습니다.', '다른 사람의 입장에서', '내 경험을 바탕으로 댓글을 남겨 주세요!'];
 const myLogNotice = ['나의 이야기', '이 페이지에서는', '내 감정을 이야기할 수 있습니다.', '오른쪽 상단의 + 버튼을 클릭하여', '이야기를 시작하세요!'];
@@ -26,42 +25,48 @@ class LogList extends Component {
         selfEmotion: EMOTIONS[0],
         crowdEmotion: EMOTIONS[1],
         date: "18.10.05",
-        text: "I fought with my friend..."
+        text: "I fought with my friend...",
+        backgroundImageName: "background1"
       },
       {
         key: "1",
         selfEmotion: EMOTIONS[3],
         crowdEmotion: EMOTIONS[2],
         date: "18.10.04",
-        text: "My teacher said that i was bad guy..."
+        text: "My teacher said that i was bad guy...",
+        backgroundImageName: "background2"
       },
       {
         key: "2",
         selfEmotion: EMOTIONS[2],
         crowdEmotion: EMOTIONS[4],
         date: "18.10.03",
-        text: "I got the GPA 4.3~"
+        text: "I got the GPA 4.3~",
+        backgroundImageName: "background3"
       },
       {
         key: "3",
         selfEmotion: EMOTIONS[0],
         crowdEmotion: EMOTIONS[1],
         date: "18.10.02",
-        text: "I fought with my best friend..."
+        text: "I fought with my best friend...",
+        backgroundImageName: "background4"
       },
       {
         key: "4",
         selfEmotion: EMOTIONS[1],
         crowdEmotion: EMOTIONS[2],
         date: "18.10.01",
-        text: "I played with my brother!"
+        text: "I played with my brother!",
+        backgroundImageName: "background1"
       },
       {
         key: "5",
         selfEmotion: EMOTIONS[4],
         crowdEmotion: EMOTIONS[4],
         date: "18.09.31",
-        text: "I played with my sister!"
+        text: "I played with my sister!",
+        backgroundImageName: "background2"
       }
     ]
   };
@@ -132,6 +137,7 @@ class LogList extends Component {
         onRemove={this.handleRemove}
         onClick={this.handleClick}
         navigation = {this.props.navigation}
+        backgroundImageName = {item.backgroundImageName}
       />
     ));
 
