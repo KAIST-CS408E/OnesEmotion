@@ -49,6 +49,7 @@ class MyChat extends React.Component {
   }
 
   componentDidMount() {
+    this.getChatLogs();
   }
 
   getChatLogs = async () => {
