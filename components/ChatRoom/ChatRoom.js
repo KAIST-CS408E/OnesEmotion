@@ -244,15 +244,15 @@ class ChatRoom extends Component {
         />
   );
 
-  renderChatRoomHeaderRight = (chatLog) => (
+  renderChatRoomHeaderRight = (myChat) => (
     <ImageButton
       boxWidth={"20"}
       imageWidth={"5"}
       imageName={"cancel"}
       onPress={
-        chatLog
-        ? () => this.props.navigation.navigate("Story")
-        : () => this.props.navigation.navigate("MyLog")}
+        myChat
+        ? () => this.props.navigation.navigate("MyLog")
+        : () => this.props.navigation.navigate("Story")}
     />
   );
 
@@ -517,7 +517,7 @@ class ChatRoom extends Component {
         <Header
           title={chatLog ? "Title 1" : "내가 진행중인 대화"}
           left={this.renderChatRoomHeaderLeft(chatLog)}
-          right={this.renderChatRoomHeaderRight(chatLog)}
+          right={this.renderChatRoomHeaderRight(myChat)}
         />
           <ImageBackground 
             source={Images(backgroundImageName)}
