@@ -53,6 +53,7 @@ class MyChat extends React.Component {
           isCrowdBox={true}
           isStartTop={true}
           navigation={navigation}
+          myChat={true}
         />
       </View>
     );

@@ -30,7 +30,7 @@ class NoticeBox extends Component {
 		const { notice } = this.props;
 
 		return(
-			<View style={{width: wp("100%"), height: 40, justifyContent: 'center', alignItems: 'center', paddingTop: 10}}>
+			<View style={{width: wp("100%"), height: 40, justifyContent: 'center', alignItems: 'center',}}>
 				<TouchableOpacity style={styles.container} onPress={this._showModal}>
 					<Text style={{fontWeight: 'bold'}}>이곳에서 무엇을 할 수 있나요?</Text>
 				</TouchableOpacity>
@@ -95,7 +95,7 @@ var styles = StyleSheet.create({
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#EEEEEE',
+    backgroundColor: '#ECEFF1',
   },
   modalcontainer: {
 		flex: 1,
