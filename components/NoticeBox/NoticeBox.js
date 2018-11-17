@@ -32,7 +32,7 @@ class NoticeBox extends Component {
 		return(
 			<View style={{width: wp("100%"), height: 40, justifyContent: 'center', alignItems: 'center', paddingTop: 10}}>
 				<TouchableOpacity style={styles.container} onPress={this._showModal}>
-					<Text style={{fontWeight: 'bold'}}>어떻게 사용해야 하나요?</Text>
+					<Text style={{fontWeight: 'bold'}}>이곳에서 무엇을 할 수 있나요?</Text>
 				</TouchableOpacity>
 				<Modal isVisible={this.state.isModalVisible}>
 					<View style={styles.modalcontainer}>

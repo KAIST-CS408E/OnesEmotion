@@ -9,7 +9,7 @@ import {
   Button,
   TouchableOpacity
 } from "react-native";
-import { createDrawerNavigator, DrawerItems } from "react-navigation";
+import { createStackNavigator, createDrawerNavigator, DrawerItems } from "react-navigation";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
@@ -31,20 +31,6 @@ class Hidden extends React.Component {
     return null;
   }
 }
-
-// const MidTitle = (props) => (
-// 	<SafeAreaView style={{ flex: 1}}>
-// 		<View style={{ height: 150, backgroundColor: 'white', alignItems: 'center', justifyContent:'center' }}>
-// 			<Image
-//         source={Icons("MyLog")}
-//         style={{height: 120, width: 120, borderRadius: 60}}
-// 			/>
-// 		</View>
-// 		<View>
-// 			<DrawerItems {...props} />
-// 		</View>
-// 	</SafeAreaView>
-// )
 
 class MidTitle extends React.Component {
   render() {
@@ -135,47 +121,31 @@ class MidTitle extends React.Component {
   }
 }
 
-export default (DrawerNav = createDrawerNavigator(
-  {
-    ChatRoom: {
-      screen: ChatRoom
-    },
-    MyLog: {
-      screen: MyLog,
-    },
-    Story: {
-      screen: Story,
-    },
-    OtherChat: {
-      screen: OtherChat,
-      navigationOptions: {
-        drawerLabel: <Hidden />
-      }
-    },
-    Login: {
-      screen: Login,
-      navigationOptions: {
-        drawerLabel: <Hidden />
-      }
-    },
-    Signup: {
-      screen: Signup,
-      navigationOptions: {
-        drawerLabel: <Hidden />
-      }
-    },
-    MyChat: {
-      screen: MyChat,
-      navigationOptions: {
-        drawerLabel: <Hidden />
-      }
-    }
-  },
-  {
-    contentComponent: MidTitle,
-    initialRouteName: "Login"
+const drawer = createStackNavigator({
+  ChatRoom: {screen: ChatRoom},
+  MyLog: {screen: MyLog},
+  Story: {screen: Story},
+  OtherChat: {screen:OtherChat},
+  Login: {screen: Login},
+  Signup: {screen: Signup},
+  MyChat: {screen: MyChat}
+},{
+  initialRouteName: "Login",  
+  headerMode: 'none',
+  navigationOptions: {
+    headerVisible: false,
   }
-));
+}
+);
+
+const DrawerNav = createDrawerNavigator({
+  drawer: {
+    screen: drawer
+  }
+},
+{
+  contentComponent: MidTitle,
+});
 
 const styles = StyleSheet.create({
   menubox: {
@@ -214,3 +184,5 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1
   }
 });
+
+export default DrawerNav;

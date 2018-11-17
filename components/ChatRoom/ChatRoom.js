@@ -10,7 +10,8 @@ import {
   KeyboardAvoidingView,
   DeviceEventEmitter,
   Keyboard,
-  Dimensions
+  Dimensions,
+  ImageBackground
 } from "react-native";
 import Header from "./../Header";
 import TextInputFooter from "./../TextInputFooter";
@@ -25,6 +26,7 @@ import {
 } from "react-native-responsive-screen";
 import Colors from "./../../assets/Colors";
 import Icons from "./../../assets/Icons";
+import Images from "./../../assets/Images";
 import {
   createStackNavigator,
   createDrawerNavigator,
@@ -32,6 +34,7 @@ import {
 } from "react-navigation";
 
 import nlp from "./../../utils/nlp";
+import NoticeBox from '../NoticeBox';
 
 const botQuestions = {
   q0: [
@@ -76,6 +79,13 @@ const botQuestions = {
     "지금까지 말해준 것들을 다른사람들과 공유해도 될까?"
   ]
 };
+
+var num = Math.floor(Math.random() * (4 - 1 + 1)) + 1;
+num += "";
+const imagename = "background" + num;
+
+const myChatNotice = ['새 이야기 시작하기', '챗봇에게 내 이야기를 할 수 있습니다.', '오늘 느낀 상황과 감정을 솔직하게 말해주세요!', '대화 기록은 다른 사람들과 공유할 수 있습니다.', '왼쪽 : [저장], 오른쪽 : [나가기]'];
+const otherChatNotice = ['다른 사람의 이야기', '사람들은 각자 느끼는 감정을 이야기합니다.', '비난과 비판은 삼가고', '내가 느낀 것을 친절히 말해주세요', '따뜻한 댓글은 그들에게 힘이 될 수 있습니다.'];
 
 class ChatRoom extends Component {
   state = {
@@ -507,26 +517,34 @@ class ChatRoom extends Component {
           left={this.renderChatRoomHeaderLeft(chatLog)}
           right={this.renderChatRoomHeaderRight(chatLog)}
         />
-        <ScrollView
-          style={{
-            backgroundColor: Colors.chatRoomBackground,
-            paddingBottom: contentsTopBottomMargin,
-            paddingTop: contentsTopBottomMargin
-          }}
-          ref={ref => (this.scrollView = ref)}
-          onContentSizeChange={(contentWidth, contentHeight) => {
-            isStartTop ? null : this.scrollView.scrollToEnd({ animated: true });
-          }}
-        >
-          {targetDialog.map((dialog, index) => (
-            <ChatElement
-              key={index}
-              speaker={dialog.speaker}
-              text={dialog.text}
-              profileImageName={dialog.speaker == "bot" ? "bot" : "user"}
-            />
-          ))}
-        </ScrollView>
+          <ImageBackground 
+            source={Images(imagename)}
+            style={{flex:1, potision:'absolute'}}
+          >
+          <NoticeBox
+            notice={chatLog ? otherChatNotice : myChatNotice}
+          />
+          <ScrollView
+            style={{
+              backgroundColor: 'rgba(0,0,0,0)',
+              paddingBottom: contentsTopBottomMargin,
+              paddingTop: contentsTopBottomMargin
+            }}
+            ref={ref => (this.scrollView = ref)}
+            onContentSizeChange={(contentWidth, contentHeight) => {
+              isStartTop ? null : this.scrollView.scrollToEnd({ animated: true });
+            }}
+          >
+            {targetDialog.map((dialog, index) => (
+              <ChatElement
+                key={index}
+                speaker={dialog.speaker}
+                text={dialog.text}
+                profileImageName={dialog.speaker == "bot" ? "bot" : "user"}
+              />
+            ))}
+          </ScrollView>
+        </ImageBackground>
         {chatLog ? (
           <View>
             {this.state.isCrowdBox || isCrowdBox ? (
