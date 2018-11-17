@@ -26,7 +26,7 @@ class IconInputFooter extends Component {
       "anticipation_option_unclicked",
       "anger_option_unclicked",
       "disgust_option_unclicked",
-      "sadness_option_unclicked",
+      "sadness_option_unclicked"
     ],
     selectedIconName: ""
   };
@@ -41,13 +41,12 @@ class IconInputFooter extends Component {
       "anticipation",
       "anger",
       "disgust",
-      "sadness",
+      "sadness"
     ];
-    const newList = optionIconNameListOrigin.map(
-      iconName =>
-        iconName == selectedImageName.split("_")[0]
-          ? `${iconName}_option_clicked`
-          : `${iconName}_option_unclicked`
+    const newList = optionIconNameListOrigin.map(iconName =>
+      iconName == selectedImageName.split("_")[0]
+        ? `${iconName}_option_clicked`
+        : `${iconName}_option_unclicked`
     );
     this.setState({
       optionIconNameList: newList,
@@ -68,8 +67,9 @@ class IconInputFooter extends Component {
           }}
           horizontal={true}
         >
-          {this.state.optionIconNameList.map(iconName => (
+          {this.state.optionIconNameList.map((iconName, index) => (
             <ImageButton
+              key={index}
               boxWidth={"18"}
               imageWidth={"14"}
               imageName={iconName}
@@ -117,7 +117,7 @@ class IconInputFooter extends Component {
                     "anticipation_option_unclicked",
                     "anger_option_unclicked",
                     "disgust_option_unclicked",
-                    "sadness_option_unclicked",
+                    "sadness_option_unclicked"
                   ],
                   selectedIconName: ""
                 });
