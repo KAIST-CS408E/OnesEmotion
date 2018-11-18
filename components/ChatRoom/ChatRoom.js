@@ -132,6 +132,11 @@ class ChatRoom extends Component {
         this.keyboardDidHide.bind(this)
       );
     }
+    const {chatLog} = this.props;
+    if (chatLog) {
+      return
+    }
+    this.createChatRoom();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -139,13 +144,13 @@ class ChatRoom extends Component {
     this.setState({chatId});
   }
   
-  componentDidMount() {
-    const {chatLog} = this.props;
-    if (chatLog) {
-      return
-    }
-    this.createChatRoom();
-  }
+  // componentDidMount() {
+  //   const {chatLog} = this.props;
+  //   if (chatLog) {
+  //     return
+  //   }
+  //   this.createChatRoom();
+  // }
 
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
@@ -218,7 +223,8 @@ class ChatRoom extends Component {
       const chatId = await fb.createChat(user.userId, backgroundImageName);
       fb.createMessage("bot", chatId, firstQuestion);
       fb.createMessage(user.userId, chatId, text, caching);
-      this.setState(chatId, myLogInput);
+      this.setState(myLogInput);
+      this.setState({chatId});
     } else {
       fb.createComment(user.userId, chatId, text, `${iconInput.split("_")[0]}_option_clicked`)
       this.setState(forCrowdBox);
@@ -541,7 +547,11 @@ class ChatRoom extends Component {
   };
 
   render() {
-    const { myChat, chatLog, isCrowdBox, isStartTop, backgroundImageName } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
+    const { myChat, chatLog, isCrowdBox, isStartTop } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
+    let {backgroundImageName} = this.props;
+    if (!backgroundImageName) {
+      backgroundImageName = this.state.backgroundImageName;
+    }
     // console.log("In ChatRoom this.state:", this.state);
     this.printDialogAsWellFormed();
     const contentsTopBottomMargin = 8;
