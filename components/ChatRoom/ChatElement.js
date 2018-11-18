@@ -14,8 +14,9 @@ class ChatElement extends Component {
   }
 
   render() {
-    const { speaker, text, profileImageName } = this.props;
+    const { speaker, text, profileImageName, isMyChat } = this.props;
     // console.log("In ChatElement profileImageName: ",profileImageName);
+    console.log("In ChatElement isMyChat: ", isMyChat);
     const isBot = speaker == "bot";
     const isUserIcon = speaker == "userIcon";
     const profileSize = 40;
@@ -88,6 +89,7 @@ class ChatElement extends Component {
                   alignItems: "center",
                   justifyContent: "center",
                   padding: 5,
+                  paddingRight: isMyChat ? 10 : 5,
                   marginRight: marginBetweenPrfileAndText
                 }}
               >
@@ -120,20 +122,22 @@ class ChatElement extends Component {
                   </Text>
                 )}
               </View>
-              <View
-                style={{
-                  width: profileBoxSize,
-                  height: profileBoxSize,
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center"
-                }}
-              >
-                <Image
-                  style={{ width: profileSize, height: profileSize }}
-                  source={Icons(profileImageName)}
-                />
-              </View>
+              {!isMyChat ? (
+                <View
+                  style={{
+                    width: profileBoxSize,
+                    height: profileBoxSize,
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                >
+                  <Image
+                    style={{ width: profileSize, height: profileSize }}
+                    source={Icons(profileImageName)}
+                  />
+                </View>
+              ) : null}
             </View>
           </View>
         )}
@@ -141,6 +145,21 @@ class ChatElement extends Component {
     );
   }
 }
+
+// <View
+//   style={{
+//     width: profileBoxSize,
+//     height: profileBoxSize,
+//     flexDirection: "column",
+//     alignItems: "center",
+//     justifyContent: "center"
+//   }}
+// >
+//   <Image
+//     style={{ width: profileSize, height: profileSize }}
+//     source={Icons(profileImageName)}
+//   />
+// </View>;
 
 const marginBetweenElements = 5;
 

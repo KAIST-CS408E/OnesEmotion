@@ -9,7 +9,7 @@ import {
 
 import { withNavigation, DrawerActions } from "react-navigation";
 
-import fb from '../../utils/firebaseWrapper';
+import fb from "../../utils/firebaseWrapper";
 
 const sampleDialog = [
   { speaker: "bot", text: "오늘 무슨 일 있었어?" },
@@ -47,43 +47,52 @@ class OtherChat extends React.Component {
   state = {
     chatId: null,
     chatLog: []
-  }
+  };
 
   componentDidMount() {
     this.getChatLogs();
   }
 
   getChatLogs = async () => {
-    const chatId = this.props.navigation.getParam('chatId') // TODO
-    const {messages} = await fb.getAStory(chatId)
+    const chatId = this.props.navigation.getParam("chatId"); // TODO
+    const { messages } = await fb.getAStory(chatId);
     this.setState({
       chatId,
-      chatLog: messages.map((m) => {
+      chatLog: messages.map(m => {
         if (m.userId == "bot") {
           return {
-            speaker: "bot", text: m.content
-          }
+            speaker: "bot",
+            text: m.content
+          };
         }
-        if (m.content.indexOf('clicked') != -1) {
+        if (m.content.indexOf("clicked") != -1) {
           return {
-            speaker: "userIcon", text: m.content
-          }
+            speaker: "userIcon",
+            text: m.content
+          };
         }
         return {
-          speaker: "user", text: m.content
-        }
+          speaker: "user",
+          text: m.content
+        };
       })
-    })
-  }
+    });
+  };
 
   render() {
     // const chatLog = sampleDialog;
-    const {chatLog, chatId} = this.state;
+    const { chatLog, chatId } = this.state;
     const navigation = this.props.navigation;
-    console.log("otherChat", chatId)
+    console.log("otherChat", chatId);
     return (
       <View style={styles.container}>
-        <ChatRoom chatId={chatId} chatLog={chatLog} isStartTop={true} navigation={navigation} />
+        <ChatRoom
+          chatId={chatId}
+          chatLog={chatLog}
+          isStartTop={true}
+          navigation={navigation}
+          myChat={false}
+        />
       </View>
     );
   }

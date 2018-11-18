@@ -15,22 +15,28 @@ import Colors from "./../../assets/Colors";
 
 class ButtonInputFooter extends Component {
   state = {
-    text: "Type your answer"
+    text: ""
   };
 
   render() {
-    const { onPress } = this.props; // onPress에서 반드시 yes, no 둘중 뭐를 체크한건지 param으로 받아오도록 해야함.
-    var { navigate } = this.props.navigation;
-
+    const { onPress } = this.props; // onButtonClick에서 반드시 yes, no 둘중 뭐를 체크한건지 param으로 받아오도록 해야함.
     return (
       <View style={styles.container}>
-        <View style={{marginLeft: wp("5%")}}>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate("MyLog")}>
+        <View style={{ marginLeft: wp("5%") }}>
+          <TouchableOpacity
+            onPress={() => {
+              onPress("응 그렇게 해줘");
+            }} //"user", "응 그렇게 해줘", false, true, true
+          >
             <Text style={styles.text}>응 그렇게 해줘</Text>
           </TouchableOpacity>
         </View>
-        <View style={{marginRight: wp("5%")}}>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate("MyLog")}>
+        <View style={{ marginRight: wp("5%") }}>
+          <TouchableOpacity
+            onPress={() => {
+              onPress("아니 괜찮아");
+            }}
+          >
             <Text style={styles.text}>아니 괜찮아</Text>
           </TouchableOpacity>
         </View>
