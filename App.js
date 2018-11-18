@@ -56,13 +56,6 @@ const sampleDialog = [
 // chatLog={sampleDialog}
 
 export default class App extends React.Component {
-  constructor() {
-    super();
-  }
-  
-  // componentDidMount() {
-  //    StatusBar.setHidden(true);
-  // }
 
   render() {
     return (

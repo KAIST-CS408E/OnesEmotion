@@ -48,7 +48,7 @@ class OtherChat extends React.Component {
 
     return (
       <View style={styles.container}>
-        <ChatRoom chatLog={chatLog} isStartTop={true} navigation={navigation} />
+        <ChatRoom chatLog={chatLog} isStartTop={true} navigation={navigation} myChat={false}/>
       </View>
     );
   }
