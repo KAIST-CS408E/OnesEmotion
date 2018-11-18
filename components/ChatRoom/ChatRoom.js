@@ -442,40 +442,31 @@ class ChatRoom extends Component {
   analyzeEmotion = (emotion1, emotion2) => {
     if (this.isIncludes(["즐거움", "신뢰"], emotion1, emotion2)) {
       //사랑
-      const resultDialog = [
-        `너 사랑을 느끼고 있구나!`,
-        "너는 어떤 것 같아?"
-      ];
+      const resultDialog = [`내가 볼때 너, 사랑을 느끼고 있는 것 같아!`, "어떻게 생각해?"];
       return resultDialog;
     }
     if (this.isIncludes(["신뢰", "공포"], emotion1, emotion2)) {
       //순종
       const resultDialog = [
-        `오늘과 같은 상황에서의 너는 조금 순종적인 것 같아.`,
-        "너도 그런 것 같니?"
+        "두 가지 감정을 봤을 때, 아까 말해준 상황에서 네가 조금 순종적이었던 것 같아.",
+        "내 생각이 맞니?"
       ];
       return resultDialog;
     }
     if (this.isIncludes(["공포", "놀라움"], emotion1, emotion2)) {
       //두려움
-      const resultDialog = [
-        `너 조금 두려워 보여..`,
-        "너는 어떻게 생각해?"
-      ];
+      const resultDialog = [`잠깐 생각해봤는데, 아까 말해준 상황에서 네가 두려움을 느꼈던 것 같아.`, "정말로 그랬니?"];
       return resultDialog;
     }
     if (this.isIncludes(["놀라움", "슬픔"], emotion1, emotion2)) {
       //난감
-      const resultDialog = [
-        `아.. 되게 난감했겠구나.`,
-        "혹시 그러니?"
-      ];
+      const resultDialog = [`다시 생각해보니까 너 되게 난감했을 것 같아.`, "정말 그랬어?"];
       return resultDialog;
     }
     if (this.isIncludes(["슬픔", "혐오"], emotion1, emotion2)) {
       //자책
       const resultDialog = [
-        `음.. 내가 보기에 너 지금 되게 자책하고 있는 것 같아`,
+        `네가 말해준 감정들을 보니까, 너 지금 자책하고 있는 것 같아.`,
         "어떻게 생각해?"
       ];
       return resultDialog;
@@ -483,24 +474,24 @@ class ChatRoom extends Component {
     if (this.isIncludes(["혐오", "화남"], emotion1, emotion2)) {
       //경멸
       const resultDialog = [
-        `뭔가 경멸하고 있는 것 처럼 보이네`,
-        "너는 어떻게 생각해?"
+        `네 말을 듣고 생각해보니까, 너 뭔가 경멸하고 있었던 것  같기도 해.`,
+        "내 생각이 맞니?"
       ];
       return resultDialog;
     }
     if (this.isIncludes(["화남", "설렘"], emotion1, emotion2)) {
       //공격적인 상태
       const resultDialog = [
-        `조심스럽지만 너가 조금 공격적인 것 같아.`,
-        "너는 어떻게 생각해?"
+        `조심스럽지만, 아까 상황에서 네가 조금 공격적이었던 것 같아.`,
+        "어떻게 생각해?"
       ];
       return resultDialog;
     }
     if (this.isIncludes(["즐거움", "설렘"], emotion1, emotion2)) {
       //낙천적인 상태
       const resultDialog = [
-        `음 내가 생각하기엔 너가 느끼는 감정은 낙천적인 상태와 관련이 있는것 같아!`,
-        "너는 어떻게 생각해?"
+        `문득 든 생각인데 너 정말 긍정적이구나! `,
+        "너도 그렇게 생각하니?"
       ];
       return resultDialog;
     }
