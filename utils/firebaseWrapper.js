@@ -41,7 +41,6 @@ export default api = {
     //   name: user's name
     // }
     try {
-      console.log(email);
       const user = await auth.createUserWithEmailAndPassword(email, password);
       await user.updateProfile({
         displayName: name
@@ -162,7 +161,7 @@ export default api = {
       return null
     }
   },
-  createMessage: async function (userId, chatId, content) {
+  createMessage: async function (userId, chatId, content, caching) {
     // INPUT
     // userId: user's identifier
     // chatId: chatroom's identifier
@@ -170,6 +169,11 @@ export default api = {
     // OUTPUT
     // messageId : message's identifier
     try {
+      if (caching) {
+        db.collection('chats').doc(chatId).update({
+          summary: content
+        });
+      }
       const doc = await db.collection('chats').doc(chatId).collection('msgs').add({
         userId: userId,
         content: content,
@@ -237,26 +241,31 @@ export default api = {
         allChatIds.push(chat.id);
       })
       const allChats = await Promise.all(allChatIds.map(async (chatId) => {
-        const msgs = await db.collection('chats').doc(chatId).collection('msgs').get()
-        const msgList = [];
-        msgs.forEach((msg) => {
-          message = msg.data()
-          msgList.push({
-            messageId: msg.id,
-            userId: message.userId,
-            createdAt: message.createdAt,
-            content: message.content
-          })
-        });
+        // const msgs = await db.collection('chats').doc(chatId).collection('msgs').get()
+        // const msgList = [];
+        // msgs.forEach((msg) => {
+        //   message = msg.data()
+        //   msgList.push({
+        //     messageId: msg.id,
+        //     userId: message.userId,
+        //     createdAt: message.createdAt,
+        //     content: message.content
+        //   })
+        // });
+        // msgList.sort(this.orderByCreatedAtDesc)
         const chatInfoDoc = await db.collection('chats').doc(chatId).get()
         const chatInfo = chatInfoDoc.data();
         return {
           chatId: chatId,
           userId: chatInfo.userId,
+          summary: chatInfo.summary,
+          userEmotion: chatInfo.userEmotion,
+          othersEmotion: chatInfo.othersEmotion,
           createdAt: chatInfo.createdAt,
-          messages: msgList
+          // messages: msgList
         }
       }));
+      allChats.sort(this.orderByCreatedAt)
       return allChats;
     } catch (e) {
       console.log(e.toString());
@@ -290,11 +299,14 @@ export default api = {
           content: message.content
         })
       });
+      msgList.sort(this.orderByCreatedAtDesc);
       const chatInfoDoc = await db.collection('chats').doc(chatId).get()
       const chatInfo = chatInfoDoc.data();
       return {
         chatId: chatId,
         userId: chatInfo.userId,
+        userEmotion: chatInfo.userEmotion,
+        othersEmotion: chatInfo.othersEmotion,
         createdAt: chatInfo.createdAt,
         messages: msgList
       }
@@ -331,48 +343,56 @@ export default api = {
       const allStoryIds = [];
       const storyList = await db.collection('chats').get()
       storyList.forEach((chat) => {
+        const chatInfo = chat.data()
+        if (chatInfo.userId == userId) {
+          return;
+        }
         allStoryIds.push(chat.id);
       })
       const allStories = await Promise.all(allStoryIds.map(async (chatId) => {
-        const msgs = await db.collection('chats').doc(chatId).collection('msgs').get()
-        const msgList = [];
-        msgs.forEach((msg) => {
-          message = msg.data()
-          msgList.push({
-            messageId: msg.id,
-            userId: message.userId,
-            createdAt: message.createdAt,
-            content: message.content
-          })
-        });
-        const comments = await db.collection('chats').doc(chatId).collection('comments').get()
-        const commentList = [];
-        comments.forEach((comment) => {
-          cmnt = comment.data()
-          commentList.push({
-            commentId: cmnt.id,
-            userId: cmnt.userId,
-            content: cmnt.content,
-            emotion: cmnt.emotion,
-            like: cmnt.like,
-            report: cmnt.report,
-            createdAt: cmnt.createdAt
-          })
-        });
+        // const msgs = await db.collection('chats').doc(chatId).collection('msgs').get()
+        // const msgList = [];
+        // msgs.forEach((msg) => {
+        //   message = msg.data()
+        //   msgList.push({
+        //     messageId: msg.id,
+        //     userId: message.userId,
+        //     createdAt: message.createdAt,
+        //     content: message.content
+        //   })
+        // });
+        // msgList.sort(this.orderByCreatedAtDesc);
+        // const comments = await db.collection('chats').doc(chatId).collection('comments').get()
+        // const commentList = [];
+        // comments.forEach((comment) => {
+        //   cmnt = comment.data()
+        //   commentList.push({
+        //     commentId: cmnt.id,
+        //     userId: cmnt.userId,
+        //     content: cmnt.content,
+        //     emotion: cmnt.emotion,
+        //     like: cmnt.like,
+        //     report: cmnt.report,
+        //     createdAt: cmnt.createdAt
+        //   })
+        // });
+        // commentList.sort(this.orderByCreatedAtDesc);
         // caching comment length(totalComments)
-        await db.collection('chats').doc(chatId).update({
-          totalComments: commentList.length 
-        })
+        // await db.collection('chats').doc(chatId).update({
+        //   totalComments: commentList.length 
+        // })
         const chatInfoDoc = await db.collection('chats').doc(chatId).get()
         const chatInfo = chatInfoDoc.data();
         return {
           chatId: chatId,
           userId: chatInfo.userId,
+          summary: chatInfo.summary,
           createdAt: chatInfo.createdAt,
-          messages: msgList,
-          comments: commentList
+          // messages: msgList,
+          // comments: commentList
         }
       }));
+      allStories.sort(this.orderByCreatedAt);
       return allStories;
     } catch (e) {
       console.log(e.toString());
@@ -415,6 +435,7 @@ export default api = {
           content: message.content
         })
       });
+      msgList.sort(this.orderByCreatedAtDesc);
       const comments = await db.collection('chats').doc(chatId).collection('comments').get()
       const commentList = [];
       comments.forEach((comment) => {
@@ -429,6 +450,7 @@ export default api = {
           createdAt: cmnt.createdAt
         })
       });
+      commentList.sort(this.orderByCreatedAtDesc);
       const chatInfoDoc = await db.collection('chats').doc(chatId).get()
       const chatInfo = chatInfoDoc.data();
       return {
@@ -487,6 +509,7 @@ export default api = {
           content: message.content
         })
       });
+      msgList.sort(this.orderByCreatedAtDesc)
       const comments = await db.collection('chats').doc(chatId).collection('comments').get()
       const commentList = [];
       comments.forEach((comment) => {
@@ -501,6 +524,7 @@ export default api = {
           createdAt: cmnt.createdAt
         })
       });
+      commentList.sort(this.orderByCreatedAtDesc);
       // caching comment length(totalComments)
       await db.collection('chats').doc(chatId).update({
         totalComments: commentList.length 
@@ -515,7 +539,8 @@ export default api = {
         comments: commentList
       }
     }));
-    return allStories;
+    allStories.sort(this.orderByCreatedAt);
+    return allStories
   },
   createComment: async function (userId, chatId, content, emotion) {
     // INPUT
@@ -526,6 +551,9 @@ export default api = {
     // OUTPUT
     // commentId
     try {
+      await db.collection('chats').doc(chatId).update({
+        othersEmotion: emotion
+      });
       const doc = await db.collection('chats').doc(chatId).collection('comments').add({
         userId: userId,
         content: content,
@@ -586,5 +614,23 @@ export default api = {
       console.log(e.toString());
       return null
     }
+  },
+  orderByCreatedAt: function (a, b) {
+    if (!a.createdAt) {
+      return true
+    }
+    if (!b.createdAt) {
+      return false
+    }
+    return a.createdAt.toDate() <= b.createdAt.toDate()
+  },
+  orderByCreatedAtDesc: function (a, b) {
+    if (!a.createdAt) {
+      return false
+    }
+    if (!b.createdAt) {
+      return true
+    }
+    return a.createdAt.toDate() >= b.createdAt.toDate()
   }
 }

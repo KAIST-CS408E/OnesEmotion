@@ -89,7 +89,7 @@ class ChatRoom extends Component {
   state = {
     currentDialog: [{
       speaker: "bot",
-      text: hello
+      text: "오늘 무슨 일 있었어?"
     }],
     currentQuestion: "q0", // botPushThisQuestion에서만 수정해야함
     nextQuestion: "q1", // botPushThisQuestion에서만 수정해야함
@@ -128,6 +128,11 @@ class ChatRoom extends Component {
       );
     }
   }
+
+  componentWillReceiveProps(nextProps) {
+    const {chatId} = nextProps;
+    this.setState({chatId});
+  }
   
   componentDidMount() {
     const {chatLog} = this.props;
@@ -158,6 +163,7 @@ class ChatRoom extends Component {
   }
 
   createChatRoom = async () => {
+    const {user} = this.state;
     const hello = "오늘 무슨 일 있었어?";
     const chatId = await fb.createChat(user.userId);
     fb.createMessage("bot", chatId, hello)
@@ -203,7 +209,8 @@ class ChatRoom extends Component {
     };
     // this.setState(isMyLog ? myLogInput : forCrowdBox);
     if (isMyLog) {
-      fb.createMessage(user.userId, chatId, text);
+      const caching = this.state.currentQuestion == 'q0';
+      fb.createMessage(user.userId, chatId, text, caching);
       this.setState(myLogInput);
     } else {
       fb.createComment(user.userId, chatId, text, `${iconInput.split("_")[0]}_option_clicked`)
