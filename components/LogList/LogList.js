@@ -138,7 +138,13 @@ class LogList extends Component {
   }
 
   handleRemove = key => {
-    const nextLogList = this.state.logList.filter(item => item.key !== key);
+    const nextLogList = this.state.logList.filter(item => {
+      const deletion = item.key !== key
+      if (deletion) {
+        fb.removeChat(item.key);
+      }
+      return deletion
+    });
     this.setState({
       logList: nextLogList
     });
