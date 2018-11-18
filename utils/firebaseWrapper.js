@@ -48,6 +48,7 @@ export default api = {
       })
       console.log("READ");
       await db.collection('users').doc(user.uid).set({
+        userId: user.uid,
         email: email,
         name: name,
         gender: gender,
@@ -123,20 +124,11 @@ export default api = {
   getUserInfo: async function () {
     try {
       const user = await this.isUserLoggedIn();
-<<<<<<< HEAD
-      console.log("READ");
-      const userDoc = await db.collection('users').doc(user.userId).get();
-      const userInfo = userDoc.data();
-      return {
-        userId: user.uid,
-        name: user.displayName,
-=======
       const userDoc = await db.collection('users').doc(user.userId).get();
       const userInfo = userDoc.data()
       return {
         userId: userInfo.userId,
         name: userInfo.name,
->>>>>>> c95e1c50b179f9f7c7e395d5b2673143efe26400
         gender: userInfo.gender,
         usericon: userInfo.userIcon
       }

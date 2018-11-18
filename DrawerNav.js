@@ -31,29 +31,19 @@ import fb from "./utils/firebaseWrapper";
 
 class MidTitle extends React.Component {
   state = {
-<<<<<<< HEAD
     user: fb.getUser(),
     recommandationList: []
-=======
-    user: null
->>>>>>> c95e1c50b179f9f7c7e395d5b2673143efe26400
   }
 
 	componentWillMount() {
 		this.autoLogin()
-<<<<<<< HEAD
   }
   
-=======
-	}
-
->>>>>>> c95e1c50b179f9f7c7e395d5b2673143efe26400
   componentDidMount() {
     this.getUser()
   }
 	
 	autoLogin = async function () {
-<<<<<<< HEAD
 		const user = await fb.getUserInfo()
 		if (user) {
       this.props.navigation.navigate('Story')
@@ -62,10 +52,7 @@ class MidTitle extends React.Component {
   }
 
   getUser = async function () {
-    let {user} = this.state;
-    if (!user) {
-      user = await fb.getUserInfo();
-    }
+    const user = this.state.user || await fb.getUserInfo();
     const recommandationList = await fb.recommandStories(user.userId);
     this.setState({user, recommandationList});
   }
@@ -75,18 +62,6 @@ class MidTitle extends React.Component {
       return text.slice(0, 18) + '...'
     }
     return text
-=======
-		const isLoggedIn = await fb.isUserLoggedIn()
-		if (isLoggedIn) {
-			this.props.navigation.navigate('Story')
-		}
-	}
-
-  getUser = async () => {
-    const user = await fb.getUserInfo();
-    this.setState({user});
-    console.log("usericon: ", user.usericon);
->>>>>>> c95e1c50b179f9f7c7e395d5b2673143efe26400
   }
 	
   render() {

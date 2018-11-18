@@ -144,24 +144,9 @@ class ChatRoom extends Component {
     this.setState({chatId});
   }
   
-<<<<<<< HEAD
-  // componentDidMount() {
-  //   const {chatLog} = this.props;
-  //   if (chatLog) {
-  //     return
-  //   }
-  //   this.createChatRoom();
-  // }
-=======
   componentDidMount() {
-    const {chatLog} = this.props;
-    if (chatLog) {
-      return
-    }
-    this.createChatRoom();
-    this.getUser()
+    this.getUser();
   }
->>>>>>> c95e1c50b179f9f7c7e395d5b2673143efe26400
 
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
@@ -311,16 +296,10 @@ class ChatRoom extends Component {
       imageWidth={"5"}
       imageName={"cancel"}
       onPress={
-<<<<<<< HEAD
-        myChat
-        ? () => this.props.navigation.navigate("MyLog", {update: true})
-        : () => this.props.navigation.navigate("Story")}
-=======
         chatLog
         ? () => this.props.navigation.goBack()
         : () => this.props.navigation.navigate("MyLog")
       }
->>>>>>> c95e1c50b179f9f7c7e395d5b2673143efe26400
     />
   );
 
