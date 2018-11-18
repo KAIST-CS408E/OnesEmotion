@@ -36,6 +36,7 @@ import {
 import fb from "../../utils/firebaseWrapper";
 import nlp from "./../../utils/nlp";
 import NoticeBox from '../NoticeBox';
+import getBackgroundImageName from "../../assets/Images/getBackgroundImageName";
 
 const botQuestions = {
   q0: [
@@ -104,10 +105,14 @@ class ChatRoom extends Component {
     user: fb.getUser(),
     chatId: null,
     backgroundImageName: "",
+    firstQuestion: null
   };
 
   componentWillMount() {
-    this.setState({backgroundImageName:this.props.backgroundImageName})
+    const backgroundImageName = this.props.navigation.getParam('backgroundImageName')
+    if (backgroundImageName) {
+      this.setState({backgroundImageName})
+    }
     try {
       this.keyboardDidShowListener = Keyboard.addListener(
         "keyboardDidShow",
@@ -165,19 +170,19 @@ class ChatRoom extends Component {
   createChatRoom = async () => {
     const {user} = this.state;
     const hello = "오늘 무슨 일 있었어?";
-    const chatId = await fb.createChat(user.userId);
-    fb.createMessage("bot", chatId, hello)
+    const backgroundImage = getBackgroundImageName()
     this.setState({
       currentDialog: [{
         speaker: "bot",
         text: hello
       }],
-      chatId
+      backgroundImageName: backgroundImage,
+      firstQuestion: hello
     })
   }
 
   handleTextInput = async (speaker, text, iconInput, isMyLog) => {
-    const {user, chatId} = this.state;
+    const {user, firstQuestion, backgroundImageName} = this.state;
     //crowdbox면 this.state.currentDialog를 답변 하나만 있는 상태로 초기화!
     const myLogInput = {
       //when is not MyLog and don't have iconInput
@@ -210,8 +215,10 @@ class ChatRoom extends Component {
     // this.setState(isMyLog ? myLogInput : forCrowdBox);
     if (isMyLog) {
       const caching = this.state.currentQuestion == 'q0';
+      const chatId = await fb.createChat(user.userId, backgroundImageName);
+      fb.createMessage("bot", chatId, firstQuestion);
       fb.createMessage(user.userId, chatId, text, caching);
-      this.setState(myLogInput);
+      this.setState(chatId, myLogInput);
     } else {
       fb.createComment(user.userId, chatId, text, `${iconInput.split("_")[0]}_option_clicked`)
       this.setState(forCrowdBox);
@@ -534,14 +541,14 @@ class ChatRoom extends Component {
   };
 
   render() {
-    const { myChat, chatLog, isCrowdBox, isStartTop } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
+    const { myChat, chatLog, isCrowdBox, isStartTop, backgroundImageName } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
     // console.log("In ChatRoom this.state:", this.state);
     this.printDialogAsWellFormed();
     const contentsTopBottomMargin = 8;
     const targetDialog = chatLog ? chatLog : this.state.currentDialog;
     var { navigate } = this.props.navigation;
     const navigation = this.props.navigation;
-    const backgroundImageName = navigation.getParam('backgroundImageName');
+    // const backgroundImageName = navigation.getParam('backgroundImageName');
 
 
 

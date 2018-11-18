@@ -33,8 +33,8 @@ class LogItem extends Component {
       <TouchableOpacity
         onPress={() =>
           myLog
-            ? this.props.navigation.navigate("MyChat", {chatId: id})
-            : this.props.navigation.navigate("OtherChat", {chatId: id})
+            ? this.props.navigation.navigate("MyChat", {chatId: id, backgroundImageName})
+            : this.props.navigation.navigate("OtherChat", {chatId: id, backgroundImageName})
         }
         onLongPress={() => onRemove(id)}
       >

@@ -26,7 +26,6 @@ import MyChat from "./components/MyChat";
 import Story from "./components/Story";
 import ChatRoom from "./components/ChatRoom";
 import OtherChat from "./components/OtherChat";
-import getBackgroundImageName from "./assets/Images/getBackgroundImageName";
 
 import fb from "./utils/firebaseWrapper";
 
@@ -72,7 +71,7 @@ class MidTitle extends React.Component {
         </View>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => this.props.navigation.navigate("ChatRoom", {backgroundImageName: getBackgroundImageName()})}
+          onPress={() => this.props.navigation.navigate("ChatRoom")}
         >
           <Image style={styles.icon} source={Icons("chat")} />
           <Text style={styles.title}>새로운 이야기 시작하기</Text>
