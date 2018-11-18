@@ -546,7 +546,7 @@ class ChatRoom extends Component {
   };
 
   getUser = async () => {
-    const user = await fb.getUserInfo();
+    const user = this.state.user || await fb.getUserInfo();
     this.setState({user});
     console.log("usericon: ", user.usericon);
   }
