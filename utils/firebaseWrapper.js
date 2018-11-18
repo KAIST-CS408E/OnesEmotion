@@ -2,8 +2,8 @@
 const firebase = require("firebase");
 require("firebase/firestore");
 
-import { FIREBASE_APP_NAME, FIREBASE_API_KEY, FIREBASE_SENDER_ID } from '../configs/firebaseConfigs';
-console.ignoredYellowBox = ['Warning:'];
+import { FIREBASE_APP_NAME, FIREBASE_API_KEY, FIREBASE_SENDER_ID } from '../configs/firebaseConfigs2';
+
 firebase.initializeApp({
   apiKey: FIREBASE_API_KEY,
   authDomain: `${FIREBASE_APP_NAME}.firebaseapp.com`,
@@ -21,6 +21,7 @@ db.settings({
 var arrived = false
 var userObject = null;
 auth.onAuthStateChanged((user) => {
+  console.log("READ");
   if (user) {
     arrived = true
     userObject = user;
@@ -30,7 +31,7 @@ auth.onAuthStateChanged((user) => {
 // 'api' functions (e.g. api.logout())
 // For all functions, if they fail to run, return 'null'
 export default api = {
-  signup: async function (name, email, password) {
+  signup: async function (name, email, password, gender, usericon) {
     // INPUT
     // name: user's name
     // email: user's email
@@ -45,9 +46,12 @@ export default api = {
       await user.updateProfile({
         displayName: name
       })
+      console.log("READ");
       await db.collection('users').doc(user.uid).set({
         email: email,
         name: name,
+        gender: gender,
+        userIcon: usericon,
         createdAt: new Date()
       })
       return {
@@ -110,6 +114,23 @@ export default api = {
       return {
         userId: user.uid,
         name: user.displayName
+      }
+    } catch (e) {
+      console.log(e.toString());
+      return null;
+    }
+  },
+  getUserInfo: async function () {
+    try {
+      const user = await this.isUserLoggedIn();
+      console.log("READ");
+      const userDoc = await db.collection('users').doc(user.userId).get();
+      const userInfo = userDoc.data();
+      return {
+        userId: user.uid,
+        name: user.displayName,
+        gender: userInfo.gender,
+        usericon: userInfo.userIcon
       }
     } catch (e) {
       console.log(e.toString());
@@ -244,6 +265,7 @@ export default api = {
     // }, ...]
     try {
       const allChatIds = [];
+      console.log("READ");
       const chatList = await db.collection('users').doc(userId).collection('chats').get()
       chatList.forEach((chat) => {
         allChatIds.push(chat.id);
@@ -261,6 +283,7 @@ export default api = {
         //   })
         // });
         // msgList.sort(this.orderByCreatedAtDesc)
+        console.log("READ");
         const chatInfoDoc = await db.collection('chats').doc(chatId).get()
         const chatInfo = chatInfoDoc.data();
         if (!chatInfo) {
@@ -301,6 +324,7 @@ export default api = {
     //             }, ...]
     // }
     try {
+      console.log("READ");
       const msgs = await db.collection('chats').doc(chatId).collection('msgs').get()
       const msgList = [];
       msgs.forEach((msg) => {
@@ -313,6 +337,7 @@ export default api = {
         })
       });
       msgList.sort(this.orderByCreatedAtDesc);
+      console.log("READ");
       const chatInfoDoc = await db.collection('chats').doc(chatId).get()
       const chatInfo = chatInfoDoc.data();
       return {
@@ -354,6 +379,7 @@ export default api = {
     // }, ...]
     try {
       const allStoryIds = [];
+      console.log("READ");
       const storyList = await db.collection('chats').get()
       storyList.forEach((chat) => {
         const chatInfo = chat.data()
@@ -394,6 +420,7 @@ export default api = {
         // await db.collection('chats').doc(chatId).update({
         //   totalComments: commentList.length 
         // })
+        console.log("READ");
         const chatInfoDoc = await db.collection('chats').doc(chatId).get()
         const chatInfo = chatInfoDoc.data();
         return {
@@ -439,6 +466,7 @@ export default api = {
     //            }, ...]
     // }
     try {
+      console.log("READ");
       const msgs = await db.collection('chats').doc(chatId).collection('msgs').get()
       const msgList = [];
       msgs.forEach((msg) => {
@@ -451,6 +479,7 @@ export default api = {
         })
       });
       msgList.sort(this.orderByCreatedAtDesc);
+      console.log("READ");
       const comments = await db.collection('chats').doc(chatId).collection('comments').get()
       const commentList = [];
       comments.forEach((comment) => {
@@ -466,6 +495,7 @@ export default api = {
         })
       });
       commentList.sort(this.orderByCreatedAtDesc);
+      console.log("READ");
       const chatInfoDoc = await db.collection('chats').doc(chatId).get()
       const chatInfo = chatInfoDoc.data();
       return {
@@ -504,60 +534,72 @@ export default api = {
     //              createdAt: comment's created datetime
     //            }, ...]
     // }, ...]
-    const allStoryIds = [];
-    const storyList = await db.collection('chats').get()
-    storyList.forEach((chat) => {
-      if (chat.totalComments > 1) {
-        return;
-      }
-      allStoryIds.push(chat.id);
-    })
-    let allStories = await Promise.all(allStoryIds.map(async (chatId) => {
-      // const msgs = await db.collection('chats').doc(chatId).collection('msgs').get()
-      // const msgList = [];
-      // msgs.forEach((msg) => {
-      //   message = msg.data()
-      //   msgList.push({
-      //     messageId: msg.id,
-      //     userId: message.userId,
-      //     createdAt: message.createdAt,
-      //     content: message.content
-      //   })
-      // });
-      // msgList.sort(this.orderByCreatedAtDesc)
-      // const comments = await db.collection('chats').doc(chatId).collection('comments').get()
-      // const commentList = [];
-      // comments.forEach((comment) => {
-      //   cmnt = comment.data()
-      //   commentList.push({
-      //     commentId: cmnt.id,
-      //     userId: cmnt.userId,
-      //     content: cmnt.content,
-      //     emotion: cmnt.emotion,
-      //     like: cmnt.like,
-      //     report: cmnt.report,
-      //     createdAt: cmnt.createdAt
-      //   })
-      // });
-      // commentList.sort(this.orderByCreatedAtDesc);
-      // // caching comment length(totalComments)
-      // await db.collection('chats').doc(chatId).update({
-      //   totalComments: commentList.length 
-      // })
-      const chatInfoDoc = await db.collection('chats').doc(chatId).get()
-      const chatInfo = chatInfoDoc.data();
-      return {
-        chatId: chatId,
-        userId: chatInfo.userId,
-        backgroundImage: chatInfo.backgroundImage,
-        createdAt: chatInfo.createdAt,
-        // messages: msgList,
-        // comments: commentList
-      }
-    }));
-    allStories = allStories.filter((chat) => chat !== null);
-    allStories.sort(this.orderByCreatedAt);
-    return allStories
+    try {
+      const allStoryIds = [];
+      console.log("READ");
+      const storyList = await db.collection('chats').get()
+      storyList.forEach((chat) => {
+        const chatInfo = chat.data()
+        if (chatInfo.userId == userId) {
+          return;
+        }
+        if (chat.totalComments > 1) {
+          return;
+        }
+        allStoryIds.push(chat.id);
+      })
+      let allStories = await Promise.all(allStoryIds.map(async (chatId) => {
+        // const msgs = await db.collection('chats').doc(chatId).collection('msgs').get()
+        // const msgList = [];
+        // msgs.forEach((msg) => {
+        //   message = msg.data()
+        //   msgList.push({
+        //     messageId: msg.id,
+        //     userId: message.userId,
+        //     createdAt: message.createdAt,
+        //     content: message.content
+        //   })
+        // });
+        // msgList.sort(this.orderByCreatedAtDesc)
+        // const comments = await db.collection('chats').doc(chatId).collection('comments').get()
+        // const commentList = [];
+        // comments.forEach((comment) => {
+        //   cmnt = comment.data()
+        //   commentList.push({
+        //     commentId: cmnt.id,
+        //     userId: cmnt.userId,
+        //     content: cmnt.content,
+        //     emotion: cmnt.emotion,
+        //     like: cmnt.like,
+        //     report: cmnt.report,
+        //     createdAt: cmnt.createdAt
+        //   })
+        // });
+        // commentList.sort(this.orderByCreatedAtDesc);
+        // // caching comment length(totalComments)
+        // await db.collection('chats').doc(chatId).update({
+        //   totalComments: commentList.length 
+        // })
+        console.log("READ");
+        const chatInfoDoc = await db.collection('chats').doc(chatId).get()
+        const chatInfo = chatInfoDoc.data();
+        return {
+          chatId: chatId,
+          userId: chatInfo.userId,
+          summary: chatInfo.summary,
+          backgroundImage: chatInfo.backgroundImage,
+          createdAt: chatInfo.createdAt,
+          // messages: msgList,
+          // comments: commentList
+        }
+      }));
+      allStories = allStories.filter((chat) => (chat !== null && chat.summary));
+      allStories.sort(this.orderByCreatedAt);
+      return allStories.slice(0, 5);
+    } catch (e) {
+      console.log(e.toString());
+      return []
+    }
   },
   createComment: async function (userId, chatId, content, emotion) {
     // INPUT
@@ -605,6 +647,7 @@ export default api = {
     // OUTPUT
     // Object {}
     try {
+      console.log("READ");
       const commentDoc = await db.collection('chats').doc(chatId).collection('comments').doc(commentId).get()
       const commentInfo = commentDoc.data()
       return db.collection('chats').doc(chatId).collection('comments').doc(commentId).update({

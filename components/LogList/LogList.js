@@ -94,7 +94,7 @@ class LogList extends Component {
   }
 
   getChatList = async () => {
-    let user = this.state.user || await fb.isUserLoggedIn();
+    let user = this.state.user || await fb.getUserInfo();
     const {myLog} = this.props;
     if (myLog) {
       const chatList = await fb.getAllChats(user.userId);
@@ -143,6 +143,9 @@ class LogList extends Component {
 
   handleRemove = key => {
     const {myLog} = this.props;
+    if (!myLog) {
+      return
+    }
     const nextLogList = this.state.logList.filter(item => {
       const keeping = item.key !== key
       if (!keeping && myLog) {

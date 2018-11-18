@@ -173,7 +173,6 @@ class ChatRoom extends Component {
   }
 
   createChatRoom = async () => {
-    const {user} = this.state;
     const hello = "오늘 무슨 일 있었어?";
     const backgroundImage = getBackgroundImageName()
     this.setState({

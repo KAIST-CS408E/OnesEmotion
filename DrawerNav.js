@@ -36,19 +36,56 @@ class Hidden extends React.Component {
 }
 
 class MidTitle extends React.Component {
+  state = {
+    user: fb.getUser(),
+    recommandationList: []
+  }
 
 	componentWillMount() {
 		this.autoLogin()
-	}
+  }
+  
+  componentDidMount() {
+    this.getUser()
+  }
 	
 	autoLogin = async function () {
-		const isLoggedIn = await fb.isUserLoggedIn()
-		if (isLoggedIn) {
-			this.props.navigation.navigate('Story')
-		}
-	}
+		const user = await fb.getUserInfo()
+		if (user) {
+      this.props.navigation.navigate('Story')
+      this.setState({user})
+    }
+  }
+
+  getUser = async function () {
+    let {user} = this.state;
+    if (!user) {
+      user = await fb.getUserInfo();
+    }
+    const recommandationList = await fb.recommandStories(user.userId);
+    this.setState({user, recommandationList});
+  }
+  
+  toShort = (text) => {
+    if (text.length > 20) {
+      return text.slice(0, 18) + '...'
+    }
+    return text
+  }
 	
   render() {
+    const {recommandationList} = this.state;
+    const recommandations = recommandationList.map((recommandation) => (
+      <TouchableOpacity
+        key={recommandation.chatId}
+        style={styles.button}
+        onPress={() => this.props.navigation.navigate("OtherChat", {chatId: recommandation.chatId})}
+      >
+        <Image style={styles.icon} source={Icons("emphaty")} />
+        <Text style={styles.title}>{this.toShort(recommandation.summary)}</Text>
+      </TouchableOpacity>
+    ))
+
     return (
       <SafeAreaView style={{ flex: 1, width: wp("65%")}}>
         <View
@@ -97,7 +134,8 @@ class MidTitle extends React.Component {
           </Text>
         </View>
         <ScrollView>
-          <TouchableOpacity
+          {recommandations}
+          {/* <TouchableOpacity
             style={styles.button}
             onPress={() => this.props.navigation.navigate("OtherChat")}
           >
@@ -131,7 +169,7 @@ class MidTitle extends React.Component {
           >
             <Image style={styles.icon} source={Icons("emphaty")} />
             <Text style={styles.title}>Title 5</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </ScrollView>
       </SafeAreaView>
     );
