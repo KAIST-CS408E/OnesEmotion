@@ -4,7 +4,8 @@ import {
   Text, 
   View,
   StatusBar,
-  TouchableOpacity
+  TouchableOpacity,
+  ToastAndroid
 } from 'react-native';
 
 import {
@@ -28,10 +29,31 @@ export default class Login extends React.Component {
     password: ''
   }
 
-  login = () => {
+  login = async () => {
     try {
       const {email, password} = this.state;
-      fb.login(email, password);
+      const {error} = await fb.login(email, password);
+      if (error) {
+        let message;
+        switch (error) {
+          case 'auth/invalid-email':
+          message = "유효하지 않은 이메일 입니다.";
+          break;
+          case 'auth/user-disabled':
+          message = "비활성화된 계정입니다.";
+          break;
+          case 'auth/user-not-found':
+          message = "존재 하지 않는 계정입니다.";
+          break;
+          case 'auth/wrong-password':
+          message = "비밀번호가 다릅니다.";
+          break;
+          default:
+          message = "유효하지 않은 계정입니다.";
+        }
+        ToastAndroid.show(message, ToastAndroid.LONG);
+        return;
+      }
       this.props.navigation.navigate("Story")
     } catch (e) {
       console.log(e);

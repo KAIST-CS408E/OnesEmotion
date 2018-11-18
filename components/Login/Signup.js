@@ -4,7 +4,8 @@ import {
   Text, 
   View,
   StatusBar,
-  TouchableOpacity
+  TouchableOpacity,
+  ToastAndroid
 } from 'react-native';
 
 import {
@@ -34,7 +35,7 @@ export default class Signup extends React.Component {
     usericon: ''
   }
 
-  signup = () => {
+  signup = async () => {
     try {
       const {username, email, password, gender} = this.state;
       var usericon;
@@ -45,7 +46,28 @@ export default class Signup extends React.Component {
         usericon = getManIcon()
         this.setState({usericon: getManIcon()})
       }
-      fb.signup(username, email, password, gender, usericon);
+      const {error} = await fb.signup(username, email, password, gender, usericon);
+      let message;
+      if (error) {
+        switch (error) {
+          case 'auth/email-already-in-use':
+          message = "이미 사용 중인 이메일 입니다.";
+          break;
+          case 'auth/invalid-email':
+          message = "유효하지 않은 이메일 입니다.";
+          break;
+          case 'auth/operation-not-allowed':
+          message = "사용할 수 없는 정보입니다.";
+          break;
+          case 'auth/weak-password':
+          message = "위험한 비밀번호입니다. 6자 이상 입력해주세요."
+          break;
+          default:
+          message = "유효하지 않은 정보입니다.";
+        }
+        ToastAndroid.show(message, ToastAndroid.LONG);
+        return;
+      }
       this.props.navigation.navigate("Story")
     } catch (e) {
       console.log(e);

@@ -61,7 +61,7 @@ export default api = {
       }
     } catch (e) {
       console.log(e.toString());
-      return null;
+      return {error: e.code};
     }
   },
   login: async function (email, password) {
@@ -75,6 +75,7 @@ export default api = {
     // }
     try {
       const user = await auth.signInWithEmailAndPassword(email, password);
+      console.log(user);
       if (!user) {
         return null
       }
@@ -84,7 +85,7 @@ export default api = {
       }
     } catch (e) {
       console.log(e.toString());
-      return null;
+      return {error: e.code};
     }
   },
   logout: async function () {
