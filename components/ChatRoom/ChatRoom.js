@@ -132,16 +132,20 @@ class ChatRoom extends Component {
         this.keyboardDidHide.bind(this)
       );
     }
-    const {chatLog} = this.props;
-    if (chatLog) {
+    const {done} = this.props;
+    if (done) {
       return
     }
     this.createChatRoom();
   }
 
   componentWillReceiveProps(nextProps) {
-    const {chatId} = nextProps;
-    this.setState({chatId});
+    const {chatId, isFinished} = nextProps;
+    if (isFinished) {
+      this.setState({chatId, isFinished, isCrowdBox: true})
+    } else {
+      this.setState({chatId, isFinished});
+    }
   }
   
   componentDidMount() {
@@ -218,8 +222,8 @@ class ChatRoom extends Component {
       let {chatId} = this.state;
       if (firstQuestion) {
         chatId = await fb.createChat(user.userId, backgroundImageName);
-        fb.createMessage("bot", chatId, firstQuestion);
         this.setState({chatId, firstQuestion: null});
+        fb.createMessage("bot", chatId, firstQuestion);
       }
       fb.createMessage(user.userId, chatId, text, caching);
       this.setState(myLogInput);
@@ -298,7 +302,7 @@ class ChatRoom extends Component {
       onPress={
         chatLog
         ? () => this.props.navigation.goBack()
-        : () => this.props.navigation.navigate("MyLog")
+        : () => this.props.navigation.navigate("MyLog", {update: true})
       }
     />
   );
@@ -527,6 +531,9 @@ class ChatRoom extends Component {
           isIconInput: isItLastItem ? isIconInput : this.state.isIconInput,
           isFinished: isItLastItem ? isFinished : this.state.isFinished
         });
+        if (this.state.isFinished) {
+          fb.closeChat();
+        }
       }, firstTimeIntervalFiexd + this.getRandomInt(1500, 1950) * timeOffset);
       timeOffset += 1;
     });

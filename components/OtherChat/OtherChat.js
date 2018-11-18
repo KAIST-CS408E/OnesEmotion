@@ -46,7 +46,8 @@ const sampleDialog = [
 class OtherChat extends React.Component {
   state = {
     chatId: null,
-    chatLog: []
+    chatLog: [],
+    comments: []
   }
 
   componentDidMount() {
@@ -55,7 +56,7 @@ class OtherChat extends React.Component {
 
   getChatLogs = async () => {
     const chatId = this.props.navigation.getParam('chatId') // TODO
-    const {messages} = await fb.getAStory(chatId)
+    const {messages, comments, isFinished} = await fb.getAStory(chatId)
     this.setState({
       chatId,
       chatLog: messages.map((m) => {
@@ -72,18 +73,25 @@ class OtherChat extends React.Component {
         return {
           speaker: "user", text: m.content
         }
-      })
+      }),
+      comments,
+      isFinished
     })
   }
 
   render() {
     // const chatLog = sampleDialog;
-    const {chatLog, chatId} = this.state;
+    const {chatLog, chatId, comments, isFinished} = this.state;
     const navigation = this.props.navigation;
-    console.log("otherChat", chatId)
     return (
       <View style={styles.container}>
-        <ChatRoom chatId={chatId} chatLog={chatLog} isStartTop={true} navigation={navigation} />
+        <ChatRoom done={true} 
+                  chatId={chatId} 
+                  chatLog={chatLog} 
+                  comments={comments} 
+                  isFinished={isFinished}
+                  isStartTop={true} 
+                  navigation={navigation} />
       </View>
     );
   }

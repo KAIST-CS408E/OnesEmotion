@@ -82,7 +82,8 @@ class LogList extends Component {
       //   text: "I played with my sister!"
       // }
     ],
-    user: fb.getUser()
+    user: fb.getUser(),
+    update: true
   };
 
   componentDidMount() {
@@ -92,6 +93,11 @@ class LogList extends Component {
   componentWillReceiveProps(nextProps) {
     this.getChatList()
   }
+
+  // shouldComponentUpdate() {
+  //   const {update} = this.state;
+  //   return update;    
+  // }
 
   getChatList = async () => {
     let user = this.state.user || await fb.getUserInfo();
@@ -129,7 +135,8 @@ class LogList extends Component {
         })
       });
       this.setState({
-        logList: logList
+        logList: logList,
+        update: false
       })
     }
   }

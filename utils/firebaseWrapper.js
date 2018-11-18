@@ -169,13 +169,24 @@ export default api = {
         userId: userId,
         totalComments: 0,
         createdAt: new Date(),
-        backgroundImage: backgroundImage
+        backgroundImage: backgroundImage,
+        isFinished: false
       });
       const chatId = chat.id;
       await db.collection('users').doc(userId).collection('chats').doc(chatId).set({})
       return chatId
     } catch (e) {
       console.log(e.toString());
+      return null;
+    }
+  },
+  closeChat: function (chatId) {
+    try {
+      return db.collection('chats').doc(chatId).update({
+        isFinished: true
+      });
+    } catch (e) {
+      console.log(e.toString())
       return null;
     }
   },
@@ -297,6 +308,7 @@ export default api = {
           userEmotion: chatInfo.userEmotion,
           othersEmotion: chatInfo.othersEmotion,
           backgroundImage: chatInfo.backgroundImage,
+          isFinished: chatInfo.isFinished,
           createdAt: chatInfo.createdAt,
           // messages: msgList
         }
@@ -346,6 +358,7 @@ export default api = {
         userId: chatInfo.userId,
         userEmotion: chatInfo.userEmotion,
         othersEmotion: chatInfo.othersEmotion,
+        isFinished: chatInfo.isFinished,
         createdAt: chatInfo.createdAt,
         messages: msgList
       }
@@ -429,6 +442,7 @@ export default api = {
           userId: chatInfo.userId,
           summary: chatInfo.summary,
           backgroundImage: chatInfo.backgroundImage,
+          isFinished: chatInfo.isFinished,
           createdAt: chatInfo.createdAt,
           // messages: msgList,
           // comments: commentList
@@ -503,6 +517,7 @@ export default api = {
         chatId: chatId,
         userId: chatInfo.userId,
         createdAt: chatInfo.createdAt,
+        isFinished: chatInfo.isFinished,
         messages: msgList,
         comments: commentList
       }
@@ -589,6 +604,7 @@ export default api = {
           userId: chatInfo.userId,
           summary: chatInfo.summary,
           backgroundImage: chatInfo.backgroundImage,
+          isFinished: chatInfo.isFinished,
           createdAt: chatInfo.createdAt,
           // messages: msgList,
           // comments: commentList
