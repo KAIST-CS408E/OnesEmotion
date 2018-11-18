@@ -35,7 +35,7 @@ import {
 
 import fb from "../../utils/firebaseWrapper";
 import nlp from "./../../utils/nlp";
-import NoticeBox from '../NoticeBox';
+import NoticeBox from "../NoticeBox";
 import getBackgroundImageName from "../../assets/Images/getBackgroundImageName";
 
 const botQuestions = {
@@ -72,32 +72,62 @@ const botQuestions = {
     "다시 입력해줘!"
   ],
   q7: [
-    "조심스럽지만, 지금 말해준 것들 다른 사람들과 공유해도 될까?",
-    "잘 모르고 있는걸 수 있으니까!"
+    // 순서대로임!!!
+    "그렇구나.",
+    "조심스럽지만, 너가 동의한다면 지금 말해준 상황을 다른 사람들과 공유해도 될까?",
+    "그들의 입장에서 너의 상황에 어떤 감정을 느꼈는지 물어보자!"
   ],
   q8: [
     // 순서대로임!!!
     "잘 들었어!",
-    "지금까지 말해준 것들을 다른사람들과 공유해도 될까?"
-  ]
+    "다른 사람들과 지금 이 내용을 공유한다면 너가 느낀 감정이 상황에 적합한지 알 수 있을거야.",
+    "너가 동의해준다면 그들에게 물어볼게, 어떻게 생각해?"
+  ],
+  q9: [
+    "좋아. 좋은 답변들이 모아지면 알려줄게!",
+    "지금 대화는 메뉴의 '내 이야기 보기'와 '다른 사람들의 이야기 보기'에서 확인할 수 있어."
+  ],
+  q10: ["알겠어!", "지금 대화는 메뉴의 '내 이야기 보기'에서 확인할 수 있어."]
 };
 
-const myChatNotice = ['새 이야기 시작하기', '챗봇에게 내 이야기를 할 수 있습니다.', '오늘 느낀 상황과 감정을 솔직하게 말해주세요!', '대화 기록은 다른 사람들과 공유할 수 있습니다.', ' 왼쪽 : [저장], 오른쪽 : [나가기]' ];
-const otherChatNotice = ['다른 사람의 이야기', '사람들은 각자 느끼는 감정을 이야기합니다.', '비난과 비판은 삼가고', '내가 느낀 것을 친절히 말해주세요', '따뜻한 댓글은 그들에게 힘이 될 수 있습니다.'];
-const myLogNotice = ['나의 이야기', '내가 썼던 글에 남겨진', '사람들의 댓글을 볼 수 있습니다.', '도움이 되는 댓글에는', '[고마워요] 버튼을 눌러보세요.'];
+const myChatNotice = [
+  "새 이야기 시작하기",
+  "챗봇에게 내 이야기를 할 수 있습니다.",
+  "오늘 느낀 상황과 감정을 솔직하게 말해주세요!",
+  "대화 기록은 다른 사람들과 공유할 수 있습니다.",
+  " 왼쪽 : [저장], 오른쪽 : [나가기]"
+];
+const otherChatNotice = [
+  "다른 사람의 이야기",
+  "사람들은 각자 느끼는 감정을 이야기합니다.",
+  "비난과 비판은 삼가고",
+  "내가 느낀 것을 친절히 말해주세요",
+  "따뜻한 댓글은 그들에게 힘이 될 수 있습니다."
+];
+const myLogNotice = [
+  "나의 이야기",
+  "내가 썼던 글에 남겨진",
+  "사람들의 댓글을 볼 수 있습니다.",
+  "도움이 되는 댓글에는",
+  "[고마워요] 버튼을 눌러보세요."
+];
 
 class ChatRoom extends Component {
   state = {
-    currentDialog: [{
-      speaker: "bot",
-      text: "오늘 무슨 일 있었어?"
-    }],
+    currentDialog: [
+      {
+        speaker: "bot",
+        text: "오늘 무슨 일 있었어?"
+      }
+    ],
     currentQuestion: "q0", // botPushThisQuestion에서만 수정해야함
     nextQuestion: "q1", // botPushThisQuestion에서만 수정해야함
     listOfEmotion: [],
     isCrowdBox: false,
     isTextInput: true,
     isIconInput: false,
+    isButtonInput: false,
+    buttonInputAns: "",
     isFinished: false,
     isOnceAgained: false,
     visibleHeight: hp("100%"),
@@ -109,9 +139,11 @@ class ChatRoom extends Component {
   };
 
   componentWillMount() {
-    const backgroundImageName = this.props.navigation.getParam('backgroundImageName')
+    const backgroundImageName = this.props.navigation.getParam(
+      "backgroundImageName"
+    );
     if (backgroundImageName) {
-      this.setState({backgroundImageName})
+      this.setState({ backgroundImageName });
     }
     try {
       this.keyboardDidShowListener = Keyboard.addListener(
@@ -132,18 +164,18 @@ class ChatRoom extends Component {
         this.keyboardDidHide.bind(this)
       );
     }
-    const {chatLog} = this.props;
+    const { chatLog } = this.props;
     if (chatLog) {
-      return
+      return;
     }
     this.createChatRoom();
   }
 
   componentWillReceiveProps(nextProps) {
-    const {chatId} = nextProps;
-    this.setState({chatId});
+    const { chatId } = nextProps;
+    this.setState({ chatId });
   }
-  
+
   componentDidMount() {
     this.getUser();
   }
@@ -170,19 +202,21 @@ class ChatRoom extends Component {
 
   createChatRoom = async () => {
     const hello = "오늘 무슨 일 있었어?";
-    const backgroundImage = getBackgroundImageName()
+    const backgroundImage = getBackgroundImageName();
     this.setState({
-      currentDialog: [{
-        speaker: "bot",
-        text: hello
-      }],
+      currentDialog: [
+        {
+          speaker: "bot",
+          text: hello
+        }
+      ],
       backgroundImageName: backgroundImage,
       firstQuestion: hello
-    })
-  }
+    });
+  };
 
   handleTextInput = async (speaker, text, iconInput, isMyLog) => {
-    const {user, firstQuestion, backgroundImageName} = this.state;
+    const { user, firstQuestion, backgroundImageName } = this.state;
     //crowdbox면 this.state.currentDialog를 답변 하나만 있는 상태로 초기화!
     const myLogInput = {
       //when is not MyLog and don't have iconInput
@@ -193,6 +227,7 @@ class ChatRoom extends Component {
       isCrowdBox: false,
       isTextInput: false,
       isIconInput: false,
+      isButtonInput: false,
       isFinished: false
     };
     const forCrowdBox = {
@@ -210,21 +245,27 @@ class ChatRoom extends Component {
       isCrowdBox: true,
       isTextInput: false,
       isIconInput: false,
+      isButtonInput: false,
       isFinished: false
     };
     // this.setState(isMyLog ? myLogInput : forCrowdBox);
     if (isMyLog) {
       const caching = !!this.state.firstQuestion;
-      let {chatId} = this.state;
+      let { chatId } = this.state;
       if (firstQuestion) {
         chatId = await fb.createChat(user.userId, backgroundImageName);
         fb.createMessage("bot", chatId, firstQuestion);
-        this.setState({chatId, firstQuestion: null});
+        this.setState({ chatId, firstQuestion: null });
       }
       fb.createMessage(user.userId, chatId, text, caching);
       this.setState(myLogInput);
     } else {
-      fb.createComment(user.userId, chatId, text, `${iconInput.split("_")[0]}_option_clicked`)
+      fb.createComment(
+        user.userId,
+        chatId,
+        text,
+        `${iconInput.split("_")[0]}_option_clicked`
+      );
       this.setState(forCrowdBox);
     }
     //check user input here
@@ -243,9 +284,9 @@ class ChatRoom extends Component {
   };
 
   handleIconInput = (speaker, iconInput, isMyLog) => {
-    const {user, chatId} = this.state;
+    const { user, chatId } = this.state;
     // console.log("In ChatRoom handleIconInput iconInput: ", iconInput);
-    fb.createEmotion(user.userId, chatId, iconInput)
+    fb.createEmotion(user.userId, chatId, iconInput);
     this.setState({
       currentDialog: [
         ...this.state.currentDialog,
@@ -255,6 +296,7 @@ class ChatRoom extends Component {
       isCrowdBox: false,
       isTextInput: false,
       isIconInput: false,
+      isButtonInput: false,
       isFinished: false
     });
     //add bot question here
@@ -262,6 +304,26 @@ class ChatRoom extends Component {
       ...this.state.listOfEmotion,
       iconInput
     ]);
+  };
+
+  handleButtonInput = buttonAnswer => {
+    this.setState({
+      currentDialog: [
+        ...this.state.currentDialog,
+        { speaker: "user", text: buttonAnswer },
+        { speaker: "bot", text: "..." }
+      ],
+      isCrowdBox: false,
+      isTextInput: false,
+      isIconInput: false,
+      isButtonInput: false,
+      isFinished: false
+    });
+    this.botPushThisQuestion(
+      this.state.nextQuestion,
+      this.state.listOfEmotion,
+      buttonAnswer
+    );
   };
 
   examplePress = () => {
@@ -284,21 +346,17 @@ class ChatRoom extends Component {
     );
   };
 
-  renderChatRoomHeaderLeft = (chatLog) => (
-    chatLog
-      ? null
-      : null
-  );
+  renderChatRoomHeaderLeft = chatLog => (chatLog ? null : null);
 
-  renderChatRoomHeaderRight = (chatLog) => (
+  renderChatRoomHeaderRight = chatLog => (
     <ImageButton
       boxWidth={"20"}
       imageWidth={"5"}
       imageName={"cancel"}
       onPress={
         chatLog
-        ? () => this.props.navigation.goBack()
-        : () => this.props.navigation.navigate("MyLog")
+          ? () => this.props.navigation.goBack()
+          : () => this.props.navigation.navigate("MyLog")
       }
     />
   );
@@ -314,6 +372,76 @@ class ChatRoom extends Component {
     if (iconName.includes("sadness")) return "슬픔";
   };
 
+  makeKoreanChunk1 = koreanIconName => {
+    if (koreanIconName == "즐거움") {
+      const chunk = "즐거움 이";
+      return chunk;
+    }
+    if (koreanIconName == "신뢰") {
+      const chunk = "신뢰";
+      return chunk;
+    }
+    if (koreanIconName == "공포") {
+      const chunk = "공포";
+      return chunk;
+    }
+    if (koreanIconName == "놀라움") {
+      const chunk = "놀라움 이";
+      return chunk;
+    }
+    if (koreanIconName == "설렘") {
+      const chunk = "설렘 이";
+      return chunk;
+    }
+    if (koreanIconName == "화남") {
+      const chunk = "화남 이";
+      return chunk;
+    }
+    if (koreanIconName == "혐오") {
+      const chunk = "혐오";
+      return chunk;
+    }
+    if (koreanIconName == "슬픔") {
+      const chunk = "슬픔 이";
+      return chunk;
+    }
+  };
+
+  makeKoreanChunk2 = koreanIconName => {
+    if (koreanIconName == "즐거움") {
+      const chunk = "즐거움을 ";
+      return chunk;
+    }
+    if (koreanIconName == "신뢰") {
+      const chunk = "신뢰를 ";
+      return chunk;
+    }
+    if (koreanIconName == "공포") {
+      const chunk = "공포를 ";
+      return chunk;
+    }
+    if (koreanIconName == "놀라움") {
+      const chunk = "놀라움을 ";
+      return chunk;
+    }
+    if (koreanIconName == "설렘") {
+      const chunk = "설렘을 ";
+      return chunk;
+    }
+    if (koreanIconName == "화남") {
+      const chunk = "화남을 ";
+      return chunk;
+    }
+    if (koreanIconName == "혐오") {
+      const chunk = "혐오를 ";
+      return chunk;
+    }
+    if (koreanIconName == "슬픔") {
+      const chunk = "슬픔을 ";
+      return chunk;
+    }
+  };
+
   isIncludes = (emotionList, emotion1, emotion2) => {
     if (emotionList.includes(emotion1) && emotionList.includes(emotion2)) {
       return true;
@@ -323,28 +451,68 @@ class ChatRoom extends Component {
 
   analyzeEmotion = (emotion1, emotion2) => {
     if (this.isIncludes(["즐거움", "신뢰"], emotion1, emotion2)) {
-      return "사랑";
+      //사랑
+      const resultDialog = [
+        `내가 볼때 너, 사랑을 느끼고 있는 것 같아!`,
+        "어떻게 생각해?"
+      ];
+      return resultDialog;
     }
     if (this.isIncludes(["신뢰", "공포"], emotion1, emotion2)) {
-      return "순종";
+      //순종
+      const resultDialog = [
+        "두 가지 감정을 봤을 때, 아까 말해준 상황에서 네가 조금 순종적이었던 것 같아.",
+        "내 생각이 맞니?"
+      ];
+      return resultDialog;
     }
     if (this.isIncludes(["공포", "놀라움"], emotion1, emotion2)) {
-      return "두려움";
+      //두려움
+      const resultDialog = [
+        `잠깐 생각해봤는데, 아까 말해준 상황에서 네가 두려움을 느꼈던 것 같아.`,
+        "정말로 그랬니?"
+      ];
+      return resultDialog;
     }
     if (this.isIncludes(["놀라움", "슬픔"], emotion1, emotion2)) {
-      return "난감";
+      //난감
+      const resultDialog = [
+        `다시 생각해보니까 너 되게 난감했을 것 같아.`,
+        "정말 그랬어?"
+      ];
+      return resultDialog;
     }
     if (this.isIncludes(["슬픔", "혐오"], emotion1, emotion2)) {
-      return "자책";
+      //자책
+      const resultDialog = [
+        `네가 말해준 감정들을 보니까, 너 지금 자책하고 있는 것 같아.`,
+        "어떻게 생각해?"
+      ];
+      return resultDialog;
     }
     if (this.isIncludes(["혐오", "화남"], emotion1, emotion2)) {
-      return "경멸";
+      //경멸
+      const resultDialog = [
+        `네 말을 듣고 생각해보니까, 너 뭔가 경멸하고 있었던 것  같기도 해.`,
+        "내 생각이 맞니?"
+      ];
+      return resultDialog;
     }
     if (this.isIncludes(["화남", "설렘"], emotion1, emotion2)) {
-      return "공격적인 상태";
+      //공격적인 상태
+      const resultDialog = [
+        `조심스럽지만, 아까 상황에서 네가 조금 공격적이었던 것 같아.`,
+        "어떻게 생각해?"
+      ];
+      return resultDialog;
     }
     if (this.isIncludes(["즐거움", "설렘"], emotion1, emotion2)) {
-      return "낙천적인 상태";
+      //낙천적인 상태
+      const resultDialog = [
+        `문득 든 생각인데 너 정말 긍정적이구나! `,
+        "너도 그렇게 생각하니?"
+      ];
+      return resultDialog;
     }
   };
 
@@ -360,8 +528,8 @@ class ChatRoom extends Component {
     return Math.floor(Math.random() * (max - min)) + min;
   };
 
-  botPushThisQuestion = (thisQuestion, listOfEmotion = null) => {
-    const {user, chatId} = this.state;
+  botPushThisQuestion = (thisQuestion, listOfEmotion, buttonAnswer = null) => {
+    const { user, chatId } = this.state;
     console.log("thisQuestion: ", thisQuestion);
     let nextQuestion = [];
     let thisQuestionText = "";
@@ -386,9 +554,9 @@ class ChatRoom extends Component {
       thisQuestionText = isIconInputNothing
         ? botQuestions.q7 //인풋이 없으면 q2위치가 q7이 되어야 함.
         : [
-            `너가 느낀 감정은 ${this.iconNameToKorean(
-              latestIconInput
-            )}(이)구나. 혹시 이유가 뭐야?`
+            `너가 느낀 감정은 ${this.makeKoreanChunk1(
+              this.iconNameToKorean(latestIconInput)
+            )}구나. 혹시 이유가 뭐야?`
             // botQuestions.q2[botQuestions.q2.length - 1]
           ];
       nextQuestion = isIconInputNothing ? "q7" : "q3";
@@ -436,9 +604,9 @@ class ChatRoom extends Component {
         : [
             `${this.iconNameToKorean(
               latestIconInput
-            )}도 느꼈구나. ${this.iconNameToKorean(
-              latestIconInput
-            )}(을)를 느낀 이유는 뭐야?`
+            )}도 느꼈구나. ${this.makeKoreanChunk2(
+              this.iconNameToKorean(latestIconInput)
+            )}느낀 이유는 뭐야?`
           ];
       nextQuestion = isIconInputNothing ? "q8" : "q4a";
     }
@@ -454,10 +622,7 @@ class ChatRoom extends Component {
         this.iconNameToKorean(listOfEmotion[1])
       );
       thisQuestionText = analyzedEmotion
-        ? [
-            `음 내가 생각하기엔 너가 느끼는 감정은 ${analyzedEmotion}(와)과 관련이 있는것 같아!`,
-            "너는 어떻게 생각해?"
-          ]
+        ? analyzedEmotion
         : isBadEmotion
         ? botQuestions.q5
         : botQuestions.q8;
@@ -490,16 +655,26 @@ class ChatRoom extends Component {
     }
     if (thisQuestion == "q7") {
       thisQuestionText = botQuestions.q7;
-      nextQuestion = null;
+      nextQuestion = "end";
     }
     if (thisQuestion == "q8") {
       thisQuestionText = botQuestions.q8;
+      nextQuestion = "end";
+    }
+    if (thisQuestion == "end") {
+      thisQuestionText =
+        buttonAnswer == "응 그렇게 해줘" ? botQuestions.q9 : botQuestions.q10;
       nextQuestion = null;
     }
-    const isFinished = nextQuestion == "q7" || this.state.nextQuestion == "q8";
+    const isFinished = nextQuestion === null;
     const isIconInput =
-      !isFinished && (thisQuestion == "q1" || thisQuestion == "q3");
-    const isTextInput = !isFinished && !isIconInput;
+      !isFinished && (thisQuestion === "q1" || thisQuestion === "q3");
+    const isButtonInput =
+      !isFinished &&
+      !isIconInput &&
+      (thisQuestion === "q7" || thisQuestion === "q8");
+    const isTextInput = !isFinished && !isIconInput && !isButtonInput;
+
     // console.log("In ChatRoom botPushThisQuestion isFinished:", isFinished);
 
     const isAfterCheckingMeaningful =
@@ -525,11 +700,15 @@ class ChatRoom extends Component {
           nextQuestion: isItLastItem ? nextQuestion : this.state.nextQuestion, // botPushThisQuestion에서만 수정해야함
           isTextInput: isItLastItem ? isTextInput : this.state.isTextInput,
           isIconInput: isItLastItem ? isIconInput : this.state.isIconInput,
+          isButtonInput: isItLastItem
+            ? isButtonInput
+            : this.state.isButtonInput,
           isFinished: isItLastItem ? isFinished : this.state.isFinished
         });
       }, firstTimeIntervalFiexd + this.getRandomInt(1500, 1950) * timeOffset);
       timeOffset += 1;
     });
+    this.scrollView.scrollToEnd({ animated: true });
   };
 
   // meaningless = async (text) => {
@@ -546,14 +725,14 @@ class ChatRoom extends Component {
   };
 
   getUser = async () => {
-    const user = this.state.user || await fb.getUserInfo();
-    this.setState({user});
+    const user = this.state.user || (await fb.getUserInfo());
+    this.setState({ user });
     console.log("usericon: ", user.usericon);
-  }
+  };
 
   render() {
     const { myChat, chatLog, isCrowdBox, isStartTop } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
-    let {backgroundImageName} = this.props;
+    let { backgroundImageName } = this.props;
     if (!backgroundImageName) {
       backgroundImageName = this.state.backgroundImageName;
     }
@@ -563,9 +742,8 @@ class ChatRoom extends Component {
     const targetDialog = chatLog ? chatLog : this.state.currentDialog;
     var { navigate } = this.props.navigation;
     const navigation = this.props.navigation;
+    const isNewChat = navigation.getParam("isNewChat");
     // const backgroundImageName = navigation.getParam('backgroundImageName');
-
-
 
     return (
       <View
@@ -573,69 +751,86 @@ class ChatRoom extends Component {
           height: this.state.visibleHeight
         }}
       >
-        <Header
-          title={chatLog ? "Title 1" : "내가 진행중인 대화"}
-          left={this.renderChatRoomHeaderLeft(chatLog)}
-          right={this.renderChatRoomHeaderRight(chatLog)}
-        />
-          <ImageBackground 
-            source={Images(backgroundImageName)}
-            style={{flex:1, }}
-          >
+        <ImageBackground
+          source={Images(backgroundImageName)}
+          style={styles.backgroundImage}
+        >
+          <Header
+            title={chatLog ? "다른 사람의 이야기" : "내가 진행중인 대화"}
+            left={this.renderChatRoomHeaderLeft(chatLog)}
+            right={this.renderChatRoomHeaderRight(chatLog)}
+          />
+
           <NoticeBox
-            notice={chatLog ? (myChat ? myLogNotice : otherChatNotice) : myChatNotice}
+            notice={
+              chatLog ? (myChat ? myLogNotice : otherChatNotice) : myChatNotice
+            }
           />
           <ScrollView
             style={{
-              backgroundColor: 'rgba(0,0,0,0)',
+              backgroundColor: "rgba(0,0,0,0)",
               paddingBottom: contentsTopBottomMargin,
               paddingTop: contentsTopBottomMargin
             }}
             ref={ref => (this.scrollView = ref)}
             onContentSizeChange={(contentWidth, contentHeight) => {
-              isStartTop ? null : this.scrollView.scrollToEnd({ animated: true });
+              isStartTop
+                ? null
+                : this.scrollView.scrollToEnd({ animated: true });
             }}
           >
             {targetDialog.map((dialog, index) => (
               <ChatElement
                 key={index}
                 speaker={dialog.speaker}
+                isMyChat={myChat || isNewChat}
                 text={dialog.text}
-                profileImageName={dialog.speaker == "bot" ? "bot" : (this.state.user? this.state.user.usericon : "user")}
+                profileImageName={
+                  dialog.speaker == "bot"
+                    ? "bot"
+                    : this.state.user
+                    ? this.state.user.usericon
+                    : "user"
+                }
               />
             ))}
           </ScrollView>
+          {chatLog ? (
+            <View>
+              {this.state.isCrowdBox || isCrowdBox ? (
+                <CrowdBoxFooter
+                  isCrowdBox={isCrowdBox}
+                  userInputDialog={this.state.currentDialog[0]}
+                />
+              ) : (
+                <TextInputFooter
+                  onPress={this.handleTextInput}
+                  isIconOptionBox={true}
+                  isMyLog={false}
+                />
+              )}
+            </View>
+          ) : (
+            <View>
+              {this.state.isTextInput && !this.state.isFinished ? (
+                <TextInputFooter
+                  onPress={this.handleTextInput}
+                  isIconOptionBox={false}
+                  isMyLog={true}
+                />
+              ) : null}
+              {this.state.isIconInput && !this.state.isFinished ? (
+                <IconInputFooter
+                  onPress={this.handleIconInput}
+                  isMyLog={true}
+                />
+              ) : null}
+              {this.state.isButtonInput && !this.state.isFinished ? (
+                <ButtonInputFooter onPress={this.handleButtonInput} />
+              ) : null}
+            </View>
+          )}
         </ImageBackground>
-        {chatLog ? (
-          <View>
-            {this.state.isCrowdBox || isCrowdBox ? (
-              <CrowdBoxFooter
-                isCrowdBox={isCrowdBox}
-                userInputDialog={this.state.currentDialog[0]}
-              />
-            ) : (
-              <TextInputFooter
-                onPress={this.handleTextInput}
-                isIconOptionBox={true}
-                isMyLog={false}
-              />
-            )}
-          </View>
-        ) : (
-          <View>
-            {this.state.isTextInput & !this.state.isFinished ? (
-              <TextInputFooter
-                onPress={this.handleTextInput}
-                isIconOptionBox={false}
-                isMyLog={true}
-              />
-            ) : null}
-            {this.state.isIconInput & !this.state.isFinished ? (
-              <IconInputFooter onPress={this.handleIconInput} isMyLog={true} />
-            ) : null}
-            {this.state.isFinished ? <ButtonInputFooter navigation={navigation} /> : null}
-          </View>
-        )}
       </View>
     );
   }
@@ -648,6 +843,10 @@ const styles = StyleSheet.create({
   icon: {
     width: 24,
     height: 24
+  },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: "cover" // or 'stretch'
   }
 });
 
