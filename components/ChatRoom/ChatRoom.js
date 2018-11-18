@@ -140,6 +140,7 @@ class ChatRoom extends Component {
       return
     }
     this.createChatRoom();
+    this.getUser()
   }
 
   componentWillUnmount() {
@@ -279,15 +280,16 @@ class ChatRoom extends Component {
       : null
   );
 
-  renderChatRoomHeaderRight = (myChat) => (
+  renderChatRoomHeaderRight = (chatLog) => (
     <ImageButton
       boxWidth={"20"}
       imageWidth={"5"}
       imageName={"cancel"}
       onPress={
-        myChat
-        ? () => this.props.navigation.navigate("MyLog")
-        : () => this.props.navigation.navigate("Story")}
+        chatLog
+        ? () => this.props.navigation.goBack()
+        : () => this.props.navigation.navigate("MyLog")
+      }
     />
   );
 
@@ -533,6 +535,12 @@ class ChatRoom extends Component {
     });
   };
 
+  getUser = async () => {
+    const user = await fb.getUserInfo();
+    this.setState({user});
+    console.log("usericon: ", user.usericon);
+  }
+
   render() {
     const { myChat, chatLog, isCrowdBox, isStartTop } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
     // console.log("In ChatRoom this.state:", this.state);
@@ -554,7 +562,7 @@ class ChatRoom extends Component {
         <Header
           title={chatLog ? "Title 1" : "내가 진행중인 대화"}
           left={this.renderChatRoomHeaderLeft(chatLog)}
-          right={this.renderChatRoomHeaderRight(myChat)}
+          right={this.renderChatRoomHeaderRight(chatLog)}
         />
           <ImageBackground 
             source={Images(backgroundImageName)}
@@ -579,7 +587,7 @@ class ChatRoom extends Component {
                 key={index}
                 speaker={dialog.speaker}
                 text={dialog.text}
-                profileImageName={dialog.speaker == "bot" ? "bot" : "user"}
+                profileImageName={dialog.speaker == "bot" ? "bot" : (this.state.user? this.state.user.usericon : "user")}
               />
             ))}
           </ScrollView>

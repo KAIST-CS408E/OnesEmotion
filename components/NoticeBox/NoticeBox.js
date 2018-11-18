@@ -55,39 +55,6 @@ class NoticeBox extends Component {
 		);
 	}
 }
-// 	constructor(){
-// 		super()
-// 		this.state={
-// 			showMe:true
-// 		}
-// 	}
-
-// 	render(){
-// 		return (
-// 			<View style={styles.container}>
-// 				<Modal visible={this.state.showMe}
-// 				onRequestClose={()=>console.warn("this is a close request")}>
-// 					<View style={styles.modalView}>
-// 						<Text>hey, Modal is open now</Text>
-// 						<TouchableOpacity onPress={()=>{this.setState({
-// 							showMe:false
-// 						})}
-// 						}>
-// 						<Text style={styles.closeText}>Close Modal</Text>
-// 						</TouchableOpacity>
-// 					</View>
-// 				</Modal>
-// 				<TouchableOpacity onPress={()=>{
-// 					this.setState({
-// 						showMe:true
-// 					})
-// 					}}>
-// 					<Text style={styles.closeText}>Open Modal</Text>
-// 				</TouchableOpacity>
-// 			</View>
-// 		);
-// 	}
-// }
 
 var styles = StyleSheet.create({
 	container: {

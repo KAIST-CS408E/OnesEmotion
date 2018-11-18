@@ -30,7 +30,7 @@ auth.onAuthStateChanged((user) => {
 // 'api' functions (e.g. api.logout())
 // For all functions, if they fail to run, return 'null'
 export default api = {
-  signup: async function (name, email, password) {
+  signup: async function (name, email, password, gender, usericon) {
     // INPUT
     // name: user's name
     // email: user's email
@@ -48,6 +48,8 @@ export default api = {
       await db.collection('users').doc(user.uid).set({
         email: email,
         name: name,
+        gender: gender,
+        userIcon: usericon,
         createdAt: new Date()
       })
       return {
@@ -116,12 +118,31 @@ export default api = {
       return null;
     }
   },
+  getUserInfo: async function () {
+    try {
+      const user = await this.isUserLoggedIn();
+      const userDoc = await db.collection('users').doc(user.userId).get();
+      const userInfo = userDoc.data()
+      return {
+        userId: userInfo.userId,
+        name: userInfo.name,
+        gender: userInfo.gender,
+        usericon: userInfo.userIcon
+      }
+    } catch (e) {
+      console.log(e.toString());
+      return null;
+    }
+  },
   isUserLoggedIn: function () {
     return new Promise(function(resolve, reject) {
       setInterval(function() {
         if (arrived) {
           if (userObject) {
-            resolve(true)
+            resolve({
+              userId: userObject.uid,
+              name: userObject.displayName
+            })
           } else {
             resolve(false)
           }

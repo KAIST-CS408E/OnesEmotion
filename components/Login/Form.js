@@ -5,6 +5,7 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  Picker
 } from 'react-native';
 
 export default class Form extends React.Component {
@@ -15,14 +16,27 @@ export default class Form extends React.Component {
       name_button = <TextInput style={styles.inputBox} 
         underlineColorAndroid= 'rgba(0, 0, 0, 0)'
         placeholder= "Name"
-        placeholderTextColor= "#ffffff"
+        placeholderTextColor= "#E0E0E0"
         selectionColor='#fff'
         onChangeText={(value) => this.props.handleTextChange('username', value)}
         value={this.props.form.username}
         onSubmitEditing= {()=> this.email.focus()}
         />
+      gender_button = <View style={styles.calendarFilterContainer}>
+      <Picker
+        selectedValue={this.props.form.gender}
+        placeholder= "Gender"
+        onValueChange={(itemValue, itemIndex) => this.props.handleTextChange('gender', itemValue)}
+        style={{ color:'white', height: 50, width: 260}}
+        itemStyle={{ backgroundColor: "grey", color: "blue", fontSize:17 }}>
+        <Picker.Item label="Choose your gender" value='basic' />
+        <Picker.Item label="Male" value="male" />
+        <Picker.Item label="Female" value="female" />
+      </Picker>
+      </View>
     } else {
       name_button = null
+      gender_button = null
     }
 
 		return(
@@ -48,6 +62,7 @@ export default class Form extends React.Component {
           onChangeText={(value) => this.props.handleTextChange('password', value)}
           value={this.props.form.password}
           />
+        {gender_button}
 			</View>
 		)
 	}
@@ -81,5 +96,13 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: '#ffffff',
     textAlign: 'center'
-  }
+  },
+  calendarFilterContainer: {
+    marginVertical: 10,
+    paddingHorizontal: 16,
+    alignSelf: 'flex-end',
+    width: 300,
+    backgroundColor: '#757575',
+    borderRadius: 25,
+  },
 });

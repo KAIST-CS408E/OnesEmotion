@@ -15,25 +15,30 @@ import {
 import ChatElement from "./../ChatRoom/ChatElement";
 import Colors from "./../../assets/Colors";
 
+import getManIcon from "./../../assets/Icons/getManIcon";
+
 class CrowdBoxFooter extends Component {
   state = {
     crowdBoxDialog: [
       {
         speaker: "bot",
         text: "바빠서 밥을 잘 챙기지 못하면 너무 비참해.. 간단히라도 꼭 먹어!",
-        profileImageName: "sadness_option_clicked"
+        profileImageName: getManIcon(),
+        crowdEmotion: 'surprise_option_clicked'
       },
       {
         speaker: "bot",
         text:
           "너한테 화를 낼 필요는 전혀 없어! 자책하지는 말았으면 해!",
-        profileImageName: "sadness_option_clicked"
+        profileImageName: getManIcon(),
+        crowdEmotion: 'surprise_option_clicked',
       },
       {
         speaker: "bot",
         text:
           "화나는 상황이긴하지만, 자책할 필요는 없어! 열심히 하고있잖아.",
-        profileImageName: "anger_option_clicked"
+        profileImageName: getManIcon(),
+        crowdEmotion: 'surprise_option_clicked'
       }
     ]
   };
@@ -52,7 +57,7 @@ class CrowdBoxFooter extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.crowdBoxHeader}>
-          <Text style={styles.crowdBoxHeaderText}>Crowd's thoughts</Text>
+          <Text style={styles.crowdBoxHeaderText}>다른 사람들의 댓글</Text>
         </View>
         <View style={{ flex: 1 }}>
           <ScrollView
@@ -72,6 +77,7 @@ class CrowdBoxFooter extends Component {
                 speaker={dialog.speaker}
                 text={dialog.text}
                 profileImageName={dialog.profileImageName}
+                crowdEmotion={dialog.crowdEmotion}
               />
             ))}
             {isCrowdBox ? null : (
@@ -88,7 +94,7 @@ class CrowdBoxFooter extends Component {
   }
 }
 
-const crowdBoxHeaderText = 20;
+const crowdBoxHeaderText = 15;
 const crowdBoxHeaderBox = 2 * crowdBoxHeaderText;
 
 const styles = StyleSheet.create({
@@ -96,7 +102,7 @@ const styles = StyleSheet.create({
     width: wp("100%"),
     height: hp("40%"),
     // marginTop: 10,
-    backgroundColor: Colors.headerGrey,
+    backgroundColor: "#E0E0E0",
     alignItems: "center",
     // flex: 1,
     flexDirection: "column",
@@ -105,16 +111,17 @@ const styles = StyleSheet.create({
   crowdBoxHeader: {
     width: wp("100%"),
     height: hp("5%"),
-    backgroundColor: Colors.white,
+    backgroundColor: "#212121",
     alignItems: "center",
     // flex: 1,
     flexDirection: "row",
-    justifyContent: "center"
+    justifyContent: "center",
+    opacity: 0.7,
   },
   crowdBoxHeaderText: {
     fontSize: crowdBoxHeaderText,
     fontWeight: "bold",
-    color: Colors.headerGrey,
+    color: 'white',
     height: crowdBoxHeaderBox,
     textAlignVertical: "center"
   }

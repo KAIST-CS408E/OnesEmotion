@@ -30,17 +30,18 @@ import getBackgroundImageName from "./assets/Images/getBackgroundImageName";
 
 import fb from "./utils/firebaseWrapper";
 
-class Hidden extends React.Component {
-  render() {
-    return null;
-  }
-}
-
 class MidTitle extends React.Component {
+  state = {
+    user: null
+  }
 
 	componentWillMount() {
 		this.autoLogin()
 	}
+
+  componentDidMount() {
+    this.getUser()
+  }
 	
 	autoLogin = async function () {
 		const isLoggedIn = await fb.isUserLoggedIn()
@@ -48,6 +49,12 @@ class MidTitle extends React.Component {
 			this.props.navigation.navigate('Story')
 		}
 	}
+
+  getUser = async () => {
+    const user = await fb.getUserInfo();
+    this.setState({user});
+    console.log("usericon: ", user.usericon);
+  }
 	
   render() {
     return (
@@ -61,7 +68,7 @@ class MidTitle extends React.Component {
           }}
         >
           <Image
-            source={Icons("MyLog")}
+            source={Icons(this.state.user? this.state.user.usericon : "Logo")}
             style={{
               height: 120,
               width: 120,

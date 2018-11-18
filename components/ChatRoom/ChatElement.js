@@ -15,6 +15,7 @@ class ChatElement extends Component {
 
   render() {
     const { speaker, text, profileImageName } = this.props;
+    const { crowdEmotion } = this.props;
     // console.log("In ChatElement profileImageName: ",profileImageName);
     const isBot = speaker == "bot";
     const isUserIcon = speaker == "userIcon";
@@ -71,6 +72,22 @@ class ChatElement extends Component {
                   {text}
                 </Text>
               </View>
+              {crowdEmotion ? (
+                <View
+                  style={{
+                    width: profileBoxSize,
+                    height: profileBoxSize,
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginTop: 5
+                  }}
+                >
+                  <Image
+                    style={{ width: profileSize, height: profileSize }}
+                    source={Icons(crowdEmotion)}
+                  />
+                </View>) : null }
             </View>
           </View>
         ) : (
