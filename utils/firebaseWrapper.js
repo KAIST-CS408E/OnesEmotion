@@ -300,7 +300,7 @@ export default api = {
           // messages: msgList
         }
       }));
-      allChats = allChats.filter((chat) => chat !== null);
+      allChats = allChats.filter((chat) => (chat !== null) && chat.userId);
       allChats.sort(this.orderByCreatedAt)
       return allChats;
     } catch (e) {
@@ -433,7 +433,7 @@ export default api = {
           // comments: commentList
         }
       }));
-      allStories = allStories.filter((chat) => chat !== null);
+      allStories = allStories.filter((chat) => (chat !== null) && chat.userId);
       allStories.sort(this.orderByCreatedAt);
       return allStories;
     } catch (e) {
@@ -593,7 +593,7 @@ export default api = {
           // comments: commentList
         }
       }));
-      allStories = allStories.filter((chat) => (chat !== null && chat.summary));
+      allStories = allStories.filter((chat) => ((chat !== null) && chat.summary && chat.userId));
       allStories.sort(this.orderByCreatedAt);
       return allStories.slice(0, 5);
     } catch (e) {
