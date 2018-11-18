@@ -86,68 +86,74 @@ class LogList extends Component {
   };
 
   componentDidMount() {
-    this.getChatList()
+    this.getChatList();
   }
 
   componentWillReceiveProps(nextProps) {
-    this.getChatList()
+    this.getChatList();
   }
 
   getChatList = async () => {
-    let user = this.state.user || await fb.getUserInfo();
-    const {myLog} = this.props;
+    let user = this.state.user || (await fb.getUserInfo());
+    const { myLog } = this.props;
     if (myLog) {
       const chatList = await fb.getAllChats(user.userId);
       if (chatList.length == 0) {
-        return
+        return;
       }
       this.setState({
-        logList: chatList.map((chat) => ({
+        logList: chatList.map(chat => ({
           key: chat.chatId,
           selfEmotion: chat.userEmotion, // TODO: emotion name matching
           crowdEmotion: chat.othersEmotion, // TODO: emotion name matching
           date: datetime.toString(chat.createdAt.toDate()),
-          text: this.toShort(chat.summary ? chat.summary : "채팅 요약 캐싱 전 로그입니다."),
+          text: this.toShort(
+            chat.summary ? chat.summary : "채팅 요약 캐싱 전 로그입니다."
+          ),
           backgroundImageName: chat.backgroundImage
         }))
-      })
+      });
     } else {
       const chatList = await fb.getAllStories(user.userId);
       if (chatList.length == 0) {
-        return
+        return;
       }
       let logList = [];
-      chatList.forEach((chat) => {
+      chatList.forEach(chat => {
         if (!chat.createdAt) {
-          return
+          return;
         }
         logList.push({
           key: chat.chatId,
-          date: datetime.toString(chat.createdAt? chat.createdAt.toDate() : new Date()),
-          text: this.toShort(chat.summary ? chat.summary : "채팅 요약 캐싱 전 로그입니다."),
+          date: datetime.toString(
+            chat.createdAt ? chat.createdAt.toDate() : new Date()
+          ),
+          text: this.toShort(
+            chat.summary ? chat.summary : "채팅 요약 캐싱 전 로그입니다."
+          ),
           backgroundImageName: chat.backgroundImage
-        })
+        });
       });
       this.setState({
         logList: logList
-      })
+      });
     }
-  }
+  };
 
-  toShort = (text) => {
+  toShort = text => {
     if (text.length > 30) {
-      return text.slice(0, 28) + '...'
+      return text.slice(0, 28) + "...";
     }
-    return text
-  }
+    return text;
+  };
 
   handleRemove = key => {
-    const {myLog} = this.props;
+    const { myLog } = this.props;
     if (!myLog) {
-      return
+      return;
     }
     const nextLogList = this.state.logList.filter(item => {
-      const keeping = item.key !== key
+      const keeping = item.key !== key;
       if (!keeping && myLog) {
         fb.removeChat(item.key);
       }
@@ -227,6 +233,7 @@ class LogList extends Component {
         />
         <NoticeBox notice={myLog ? myLogNotice : storyNotice} />
         <ScrollView>{contents}</ScrollView>
+        <Modal />
       </View>
     );
   }
