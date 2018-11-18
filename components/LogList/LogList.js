@@ -89,6 +89,10 @@ class LogList extends Component {
     this.getChatList()
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.getChatList()
+  }
+
   getChatList = async () => {
     let user = this.state.user || await fb.isUserLoggedIn();
     const {myLog} = this.props;
@@ -138,12 +142,13 @@ class LogList extends Component {
   }
 
   handleRemove = key => {
+    const {myLog} = this.props;
     const nextLogList = this.state.logList.filter(item => {
-      const deletion = item.key !== key
-      if (deletion) {
+      const keeping = item.key !== key
+      if (!keeping && myLog) {
         fb.removeChat(item.key);
       }
-      return deletion
+      return keeping;
     });
     this.setState({
       logList: nextLogList

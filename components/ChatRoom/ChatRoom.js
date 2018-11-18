@@ -302,7 +302,7 @@ class ChatRoom extends Component {
       imageName={"cancel"}
       onPress={
         myChat
-        ? () => this.props.navigation.navigate("MyLog")
+        ? () => this.props.navigation.navigate("MyLog", {update: true})
         : () => this.props.navigation.navigate("Story")}
     />
   );

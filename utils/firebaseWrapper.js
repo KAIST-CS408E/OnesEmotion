@@ -139,7 +139,10 @@ export default api = {
     // OUTPUT
     // chatId: chatroom's identifier
     try {
-      console.log("createChat", userId, backgroundImage)
+      if (!userId) {
+        console.log("creatChat(): No userId")
+        return null;
+      }
       const chat = await db.collection('chats').add({
         userId: userId,
         totalComments: 0,
@@ -260,6 +263,9 @@ export default api = {
         // msgList.sort(this.orderByCreatedAtDesc)
         const chatInfoDoc = await db.collection('chats').doc(chatId).get()
         const chatInfo = chatInfoDoc.data();
+        if (!chatInfo) {
+          return null;
+        }
         return {
           chatId: chatId,
           userId: chatInfo.userId,
@@ -271,11 +277,12 @@ export default api = {
           // messages: msgList
         }
       }));
+      allChats = allChats.filter((chat) => chat !== null);
       allChats.sort(this.orderByCreatedAt)
       return allChats;
     } catch (e) {
       console.log(e.toString());
-      return null;
+      return [];
     }
   },
   getAChat: async function (chatId) {
@@ -355,7 +362,7 @@ export default api = {
         }
         allStoryIds.push(chat.id);
       })
-      const allStories = await Promise.all(allStoryIds.map(async (chatId) => {
+      let allStories = await Promise.all(allStoryIds.map(async (chatId) => {
         // const msgs = await db.collection('chats').doc(chatId).collection('msgs').get()
         // const msgList = [];
         // msgs.forEach((msg) => {
@@ -399,11 +406,12 @@ export default api = {
           // comments: commentList
         }
       }));
+      allStories = allStories.filter((chat) => chat !== null);
       allStories.sort(this.orderByCreatedAt);
       return allStories;
     } catch (e) {
       console.log(e.toString());
-      return null;
+      return [];
     }
   },
   getAStory: async function (chatId) {
@@ -504,7 +512,7 @@ export default api = {
       }
       allStoryIds.push(chat.id);
     })
-    const allStories = await Promise.all(allStoryIds.map(async (chatId) => {
+    let allStories = await Promise.all(allStoryIds.map(async (chatId) => {
       // const msgs = await db.collection('chats').doc(chatId).collection('msgs').get()
       // const msgList = [];
       // msgs.forEach((msg) => {
@@ -547,6 +555,7 @@ export default api = {
         // comments: commentList
       }
     }));
+    allStories = allStories.filter((chat) => chat !== null);
     allStories.sort(this.orderByCreatedAt);
     return allStories
   },
@@ -573,7 +582,7 @@ export default api = {
       return doc.id
     } catch (e) {
       console.log(e.toString());
-      return null;
+      return [];
     }
   },
   removeComment: async function (chatId, commentId) {
