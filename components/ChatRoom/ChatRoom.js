@@ -219,12 +219,15 @@ class ChatRoom extends Component {
     };
     // this.setState(isMyLog ? myLogInput : forCrowdBox);
     if (isMyLog) {
-      const caching = this.state.currentQuestion == 'q0';
-      const chatId = await fb.createChat(user.userId, backgroundImageName);
-      fb.createMessage("bot", chatId, firstQuestion);
+      const caching = !!this.state.firstQuestion;
+      let {chatId} = this.state;
+      if (firstQuestion) {
+        chatId = await fb.createChat(user.userId, backgroundImageName);
+        fb.createMessage("bot", chatId, firstQuestion);
+        this.setState({chatId, firstQuestion: null});
+      }
       fb.createMessage(user.userId, chatId, text, caching);
       this.setState(myLogInput);
-      this.setState({chatId});
     } else {
       fb.createComment(user.userId, chatId, text, `${iconInput.split("_")[0]}_option_clicked`)
       this.setState(forCrowdBox);

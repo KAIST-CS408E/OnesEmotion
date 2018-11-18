@@ -121,7 +121,10 @@ export default api = {
       setInterval(function() {
         if (arrived) {
           if (userObject) {
-            resolve(true)
+            resolve({
+              userId: userObject.uid,
+              name: userObject.displayName
+            })
           } else {
             resolve(false)
           }

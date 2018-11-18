@@ -90,7 +90,7 @@ class LogList extends Component {
   }
 
   getChatList = async () => {
-    const {user} = this.state;
+    let user = this.state.user || await fb.isUserLoggedIn();
     const {myLog} = this.props;
     if (myLog) {
       const chatList = await fb.getAllChats(user.userId);
@@ -161,7 +161,7 @@ class LogList extends Component {
       onPress={
         myLog
           ? () => this.props.navigation.navigate("ChatRoom")
-          : () => this.props.navigation.navigate("Story")
+          : () => this.getChatList()
       }
     />
   );
