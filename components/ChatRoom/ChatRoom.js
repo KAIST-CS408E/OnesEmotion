@@ -119,6 +119,11 @@ class ChatRoom extends Component {
       );
     }
   }
+
+  componentWillReceiveProps(nextProps) {
+    const {chatId} = nextProps;
+    this.setState({chatId});
+  }
   
   componentDidMount() {
     const {chatLog} = this.props;
@@ -152,7 +157,6 @@ class ChatRoom extends Component {
     const {user} = this.state;
     const hello = "오늘 무슨 일 있었어?";
     const chatId = await fb.createChat(user.userId);
-    console.log("CHATID", chatId)
     fb.createMessage("bot", chatId, hello)
     this.setState({
       currentDialog: [{
@@ -196,7 +200,8 @@ class ChatRoom extends Component {
     };
     // this.setState(isMyLog ? myLogInput : forCrowdBox);
     if (isMyLog) {
-      fb.createMessage(user.userId, chatId, text);
+      const caching = this.state.currentQuestion == 'q0';
+      fb.createMessage(user.userId, chatId, text, caching);
       this.setState(myLogInput);
     } else {
       fb.createComment(user.userId, chatId, text, `${iconInput.split("_")[0]}_option_clicked`)

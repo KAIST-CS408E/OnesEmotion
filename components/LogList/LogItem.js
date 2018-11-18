@@ -13,11 +13,6 @@ class LogItem extends Component {
     return nextProps.text !== this.props.text;
   }
 
-  componentWillMount() {
-    const {id} = this.props;
-    this.props.navigation.setParams({chatId: id}) // TODO
-  }
-
   render() {
     const {
       myLog,
@@ -37,8 +32,8 @@ class LogItem extends Component {
       <TouchableOpacity
         onPress={() =>
           myLog
-            ? this.props.navigation.navigate("MyChat")
-            : this.props.navigation.navigate("OtherChat")
+            ? this.props.navigation.navigate("MyChat", {chatId: id})
+            : this.props.navigation.navigate("OtherChat", {chatId: id})
         }
       >
         <ImageBackground 

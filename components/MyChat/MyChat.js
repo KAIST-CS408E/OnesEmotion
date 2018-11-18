@@ -45,6 +45,7 @@ const sampleDialog = [
 
 class MyChat extends React.Component {
   state = {
+    chatId: null,
     chatLog: []
   }
 
@@ -56,6 +57,7 @@ class MyChat extends React.Component {
     const chatId = this.props.navigation.getParam('chatId')
     const {messages} = await fb.getAChat(chatId)
     this.setState({
+      chatId,
       chatLog: messages.map((m) => {
         if (m.userId == "bot") {
           return {
@@ -76,13 +78,14 @@ class MyChat extends React.Component {
 
   render() {
     // const chatLog = sampleDialog;
-    const {chatLog} = this.state;
+    const {chatLog, chatId} = this.state;
     const navigation = this.props.navigation;
 
     return (
       <View style={styles.container}>
         <ChatRoom
           chatLog={chatLog}
+          chatId={chatId}
           isCrowdBox={true}
           isStartTop={true}
           navigation={navigation}
