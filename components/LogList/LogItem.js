@@ -87,9 +87,9 @@ const itemBoxHeight = hp("25%");
 const myLogWidthSide = wp("25%");
 const myLogWidthMiddle = wp("50%");
 const storyWidthMiddle = wp("100%");
-const imageSizeSelfEmotion = (itemBoxHeight * 2) / 5;
-const imageSizeCrowdEmotion = itemBoxHeight / 3;
-const imageSizeCrowd = itemBoxHeight / 4;
+const imageSizeSelfEmotion = (itemBoxHeight * 2) / 7;
+const imageSizeCrowdEmotion = itemBoxHeight / 5;
+const imageSizeCrowd = itemBoxHeight / 6;
 
 const styles = StyleSheet.create({
   itemBox: {

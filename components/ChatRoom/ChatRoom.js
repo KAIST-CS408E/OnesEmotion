@@ -144,6 +144,7 @@ class ChatRoom extends Component {
     this.setState({chatId});
   }
   
+<<<<<<< HEAD
   // componentDidMount() {
   //   const {chatLog} = this.props;
   //   if (chatLog) {
@@ -151,6 +152,16 @@ class ChatRoom extends Component {
   //   }
   //   this.createChatRoom();
   // }
+=======
+  componentDidMount() {
+    const {chatLog} = this.props;
+    if (chatLog) {
+      return
+    }
+    this.createChatRoom();
+    this.getUser()
+  }
+>>>>>>> c95e1c50b179f9f7c7e395d5b2673143efe26400
 
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
@@ -294,15 +305,22 @@ class ChatRoom extends Component {
       : null
   );
 
-  renderChatRoomHeaderRight = (myChat) => (
+  renderChatRoomHeaderRight = (chatLog) => (
     <ImageButton
       boxWidth={"20"}
       imageWidth={"5"}
       imageName={"cancel"}
       onPress={
+<<<<<<< HEAD
         myChat
         ? () => this.props.navigation.navigate("MyLog", {update: true})
         : () => this.props.navigation.navigate("Story")}
+=======
+        chatLog
+        ? () => this.props.navigation.goBack()
+        : () => this.props.navigation.navigate("MyLog")
+      }
+>>>>>>> c95e1c50b179f9f7c7e395d5b2673143efe26400
     />
   );
 
@@ -548,6 +566,12 @@ class ChatRoom extends Component {
     });
   };
 
+  getUser = async () => {
+    const user = await fb.getUserInfo();
+    this.setState({user});
+    console.log("usericon: ", user.usericon);
+  }
+
   render() {
     const { myChat, chatLog, isCrowdBox, isStartTop } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
     let {backgroundImageName} = this.props;
@@ -573,7 +597,7 @@ class ChatRoom extends Component {
         <Header
           title={chatLog ? "Title 1" : "내가 진행중인 대화"}
           left={this.renderChatRoomHeaderLeft(chatLog)}
-          right={this.renderChatRoomHeaderRight(myChat)}
+          right={this.renderChatRoomHeaderRight(chatLog)}
         />
           <ImageBackground 
             source={Images(backgroundImageName)}
@@ -598,7 +622,7 @@ class ChatRoom extends Component {
                 key={index}
                 speaker={dialog.speaker}
                 text={dialog.text}
-                profileImageName={dialog.speaker == "bot" ? "bot" : "user"}
+                profileImageName={dialog.speaker == "bot" ? "bot" : (this.state.user? this.state.user.usericon : "user")}
               />
             ))}
           </ScrollView>

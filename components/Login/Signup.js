@@ -17,6 +17,9 @@ import Logo from './Logo';
 import Form from './Form';
 import fb from '../../utils/firebaseWrapper';
 
+import getGirlIcon from "../../assets/Icons/getGirlIcon";
+import getManIcon from "../../assets/Icons/getManIcon";
+
 export default class Signup extends React.Component {
 
   goBack(){
@@ -26,13 +29,23 @@ export default class Signup extends React.Component {
   state = {
     username: '',
     email: '',
-    password: ''
+    password: '',
+    gender: '',
+    usericon: ''
   }
 
   signup = () => {
     try {
-      const {username, email, password} = this.state;
-      fb.signup(username, email, password);
+      const {username, email, password, gender} = this.state;
+      var usericon;
+      if (gender == 'female') {
+        usericon = getGirlIcon()
+        this.setState({usericon: usericon})
+      }else {
+        usericon = getManIcon()
+        this.setState({usericon: getManIcon()})
+      }
+      fb.signup(username, email, password, gender, usericon);
       this.props.navigation.navigate("Story")
     } catch (e) {
       console.log(e);
@@ -47,11 +60,11 @@ export default class Signup extends React.Component {
   }
 
 	render() {
-    const {username, email, password} = this.state;
+    const {username, email, password, gender} = this.state;
 		return(
 				<View style={styles.container}>
 					<Logo/>
-					<Form type="Signup" handleTextChange={this.handleTextChange} form={{username, email, password}}/>
+					<Form type="Signup" handleTextChange={this.handleTextChange} form={{username, email, password, gender}}/>
           <TouchableOpacity style={styles.button} onPress={this.signup}>
             <Text style={styles.buttonText}>Signup</Text>
           </TouchableOpacity>
@@ -105,3 +118,7 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   }
 });
+
+
+
+
