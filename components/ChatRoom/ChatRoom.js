@@ -756,7 +756,7 @@ class ChatRoom extends Component {
           style={styles.backgroundImage}
         >
           <Header
-            title={chatLog ? "다른 사람의 이야기" : "내가 진행중인 대화"}
+            title={chatLog ? myChat ? "나의 이야기" : "다른 사람의 이야기" : "내가 진행중인 대화"}
             left={this.renderChatRoomHeaderLeft(chatLog)}
             right={this.renderChatRoomHeaderRight(chatLog)}
           />
