@@ -7,7 +7,8 @@ import {
   Text,
   TouchableHighlight,
   Button,
-  TouchableOpacity
+  TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { createStackNavigator, createDrawerNavigator, DrawerItems } from "react-navigation";
 import {
@@ -82,41 +83,43 @@ class MidTitle extends React.Component {
             답변이 필요한 이야기들
           </Text>
         </View>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => this.props.navigation.navigate("OtherChat")}
-        >
-          <Image style={styles.icon} source={Icons("emphaty")} />
-          <Text style={styles.title}>Title 1</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => this.props.navigation.navigate("OtherChat")}
-        >
-          <Image style={styles.icon} source={Icons("emphaty")} />
-          <Text style={styles.title}>Title 2</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => this.props.navigation.navigate("OtherChat")}
-        >
-          <Image style={styles.icon} source={Icons("emphaty")} />
-          <Text style={styles.title}>Title 3</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => this.props.navigation.navigate("OtherChat")}
-        >
-          <Image style={styles.icon} source={Icons("emphaty")} />
-          <Text style={styles.title}>Title 4</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => this.props.navigation.navigate("OtherChat")}
-        >
-          <Image style={styles.icon} source={Icons("emphaty")} />
-          <Text style={styles.title}>Title 5</Text>
-        </TouchableOpacity>
+        <ScrollView>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => this.props.navigation.navigate("OtherChat")}
+          >
+            <Image style={styles.icon} source={Icons("emphaty")} />
+            <Text style={styles.title}>Title 1</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => this.props.navigation.navigate("OtherChat")}
+          >
+            <Image style={styles.icon} source={Icons("emphaty")} />
+            <Text style={styles.title}>Title 2</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => this.props.navigation.navigate("OtherChat")}
+          >
+            <Image style={styles.icon} source={Icons("emphaty")} />
+            <Text style={styles.title}>Title 3</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => this.props.navigation.navigate("OtherChat")}
+          >
+            <Image style={styles.icon} source={Icons("emphaty")} />
+            <Text style={styles.title}>Title 4</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => this.props.navigation.navigate("OtherChat")}
+          >
+            <Image style={styles.icon} source={Icons("emphaty")} />
+            <Text style={styles.title}>Title 5</Text>
+          </TouchableOpacity>
+        </ScrollView>
       </SafeAreaView>
     );
   }

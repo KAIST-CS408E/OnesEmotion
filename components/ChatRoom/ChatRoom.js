@@ -236,12 +236,7 @@ class ChatRoom extends Component {
   renderChatRoomHeaderLeft = (chatLog) => (
     chatLog
       ? null
-      : <ImageButton
-          boxWidth={"20"}
-          imageWidth={"7"}
-          imageName={"save"}
-          onPress={() => this.props.navigation.navigate("MyLog")}
-        />
+      : null
   );
 
   renderChatRoomHeaderRight = (myChat) => (
