@@ -26,9 +26,10 @@ class TextInputFooter extends Component {
       "anticipation_option_unclicked",
       "anger_option_unclicked",
       "disgust_option_unclicked",
-      "sadness_option_unclicked",
+      "sadness_option_unclicked"
     ],
-    selectedIconName: ""
+    selectedIconName: "",
+    height: 0
   };
 
   handleOptionSelect = selectedImageName => {
@@ -41,13 +42,12 @@ class TextInputFooter extends Component {
       "anticipation",
       "anger",
       "disgust",
-      "sadness",
+      "sadness"
     ];
-    const newList = optionIconNameListOrigin.map(
-      iconName =>
-        iconName == selectedImageName.split("_")[0]
-          ? `${iconName}_option_clicked`
-          : `${iconName}_option_unclicked`
+    const newList = optionIconNameListOrigin.map(iconName =>
+      iconName == selectedImageName.split("_")[0]
+        ? `${iconName}_option_clicked`
+        : `${iconName}_option_unclicked`
     );
     this.setState({
       optionIconNameList: newList,
@@ -84,17 +84,41 @@ class TextInputFooter extends Component {
 
   render() {
     const { onPress, isIconOptionBox, isMyLog } = this.props;
-    // console.log("In TextInputFooter isIconOptionBox:", isIconOptionBox);
+    const textInputBoxOffset = 10;
+    const textInputMaxHeight = hp("15%");
+    const textInputMinHeight = TextInputHeight;
+    const height = this.state.height;
+    // console.log("In TextInputFooter height:", height);
 
     return (
-      <View>
+      <View
+        style={{
+          maxHeight: textInputMaxHeight + textInputBoxOffset,
+          minHeight: textInputMinHeight + textInputBoxOffset
+        }}
+      >
         {isIconOptionBox ? this.renderIconOptionBox(isMyLog) : null}
-        <View style={styles.container}>
+        <View
+          style={{
+            width: wp("100%"),
+            height: height + textInputBoxOffset,
+            minHeight: textInputMinHeight + textInputBoxOffset,
+            maxHeight: textInputMaxHeight + textInputBoxOffset,
+            backgroundColor: Colors.headerGrey,
+            alignItems: "center",
+            // flex: 1,
+            flexDirection: "row",
+            justifyContent: "space-around"
+          }}
+        >
           <View
             style={{
-              height: "auto",
-              height: TextInputHeight,
+              width: wp("80%"),
+              height: height,
+              minHeight: textInputMinHeight,
               backgroundColor: Colors.white,
+              maxHeight: textInputMaxHeight,
+              marginLeft: wp("1%"),
               borderRadius: 15,
               flexDirection: "column",
               alignItems: "center",
@@ -103,14 +127,23 @@ class TextInputFooter extends Component {
           >
             <TextInput
               style={{
-                width: wp("80%"),
+                width: wp("75%"),
+                height: height,
+                minHeight: textInputMinHeight,
+                paddingRight: 10,
+                borderRadius: 15,
+                maxHeight: textInputMaxHeight,
                 marginLeft: 10,
                 fontSize: 15
               }}
+              multiline={true}
               onChangeText={text => this.setState({ text })}
+              onContentSizeChange={event => {
+                this.setState({ height: event.nativeEvent.contentSize.height });
+              }}
               value={this.state.text}
               underlineColorAndroid="transparent"
-              placeholder="Type your answer"
+              placeholder="내용을 입력해주세요."
               placeholderTextColor={Colors.headerGrey}
               autoCapitalize="none"
             />
@@ -147,7 +180,7 @@ class TextInputFooter extends Component {
                     "anticipation_option_unclicked",
                     "anger_option_unclicked",
                     "disgust_option_unclicked",
-                    "sadness_option_unclicked",
+                    "sadness_option_unclicked"
                   ],
                   selectedIconName: ""
                 });
@@ -178,15 +211,7 @@ const TextInputBoxHeight = 44;
 const TextInputHeight = TextInputBoxHeight * 0.8;
 
 const styles = StyleSheet.create({
-  container: {
-    width: wp("100%"),
-    height: TextInputBoxHeight,
-    backgroundColor: Colors.headerGrey,
-    alignItems: "center",
-    // flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-around"
-  },
+  container: {},
   iconOptionBoxContainer: {
     alignItems: "center",
     backgroundColor: Colors.white,
