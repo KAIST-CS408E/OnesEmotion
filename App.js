@@ -4,9 +4,9 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
-import nlp from './utils/nlp';
 
 import DrawerNav from './DrawerNav';
+import fb from './utils/firebaseWrapper';
 
 const myLog = true; //true for MyLog and false for Story
 const story = false;
@@ -56,13 +56,6 @@ const sampleDialog = [
 // chatLog={sampleDialog}
 
 export default class App extends React.Component {
-  constructor() {
-    super();
-  }
-  
-  // componentDidMount() {
-  //    StatusBar.setHidden(true);
-  // }
 
   render() {
     return (

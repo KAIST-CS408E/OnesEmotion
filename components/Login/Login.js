@@ -15,6 +15,7 @@ import {
 
 import Logo from './Logo';
 import Form from './Form';
+import fb from '../../utils/firebaseWrapper';
 
 export default class Login extends React.Component {
 
@@ -22,17 +23,40 @@ export default class Login extends React.Component {
   //   Actions.signup()
   // }
 
+  state = {
+    email: '',
+    password: ''
+  }
+
+  login = () => {
+    try {
+      const {email, password} = this.state;
+      fb.login(email, password);
+      this.props.navigation.navigate("Story")
+    } catch (e) {
+      console.log(e);
+      return
+    }
+  }
+
+  handleTextChange = (field, value) => {
+    const obj = {};
+    obj[field] = value;
+    this.setState(obj);
+  }
+
 	render() {
+    const {email, password} = this.state;
 		return(
 				<View style={styles.container}>
 					<Logo/>
-					<Form type="Login"/>
-          <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.navigate("Story")}>
+					<Form type="Login" handleTextChange={this.handleTextChange} form={{email, password}}/>
+          <TouchableOpacity style={styles.button} onPress={this.login}>
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
 					<View style={styles.signupTextCont}>
 						<Text style={styles.signupText}>Don't have an account yet? </Text>
-						<TouchableOpacity onPress={() => this.props.navigation.navigate("Signup")}>
+						<TouchableOpacity onPress={()=>this.props.navigation.navigate('Signup')}>
               <Text style={styles.signupButton}>Signup</Text>
             </TouchableOpacity>
 					</View>

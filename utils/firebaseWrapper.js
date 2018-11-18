@@ -18,6 +18,15 @@ db.settings({
   timestampsInSnapshots: true
 })
 
+var arrived = false
+var userObject = null;
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    arrived = true
+    userObject = user;
+  }
+})
+
 // 'api' functions (e.g. api.logout())
 // For all functions, if they fail to run, return 'null'
 export default api = {
@@ -32,6 +41,7 @@ export default api = {
     //   name: user's name
     // }
     try {
+      console.log(email);
       const user = await auth.createUserWithEmailAndPassword(email, password);
       await user.updateProfile({
         displayName: name
@@ -85,7 +95,7 @@ export default api = {
       return null;
     }
   },
-  getUser: async function () {
+  getUser: function () {
     // INPUT
     // null
     // OUTPUT
@@ -95,6 +105,9 @@ export default api = {
     // }
     try {
       const user = auth.currentUser;
+      if (!user) {
+        return null;
+      }
       return {
         userId: user.uid,
         name: user.displayName
@@ -103,6 +116,20 @@ export default api = {
       console.log(e.toString());
       return null;
     }
+  },
+  isUserLoggedIn: function () {
+    return new Promise(function(resolve, reject) {
+      setInterval(function() {
+        if (arrived) {
+          if (userObject) {
+            resolve(true)
+          } else {
+            resolve(false)
+          }
+          return
+        }
+      }, 10);
+    });
   },
   createChat: async function (userId) {
     // INPUT

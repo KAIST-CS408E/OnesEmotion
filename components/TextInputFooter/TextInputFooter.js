@@ -68,9 +68,9 @@ class TextInputFooter extends Component {
           }}
           horizontal={true}
         >
-          {this.state.optionIconNameList.map(iconName => (
+          {this.state.optionIconNameList.map((iconName, index) => (
             <ImageButton
-              key={iconName}
+              key={index}
               boxWidth={"18"}
               imageWidth={"14"}
               imageName={iconName}

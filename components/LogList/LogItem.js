@@ -22,22 +22,25 @@ class LogItem extends Component {
       selfEmotion,
       crowdEmotion,
       onRemove,
-      onClick
+      onClick,
+      backgroundImageName,
     } = this.props;
 
     const { navigate } = this.props.navigation;
     // const page = (myLog ? "MyLog" : "OtherChat");
+    this.props.navigation.setParams({'chatId': id}) // TODO
 
     return (
       <TouchableOpacity
         onPress={() =>
           myLog
-            ? this.props.navigation.navigate("MyChat")
-            : this.props.navigation.navigate("OtherChat")
+            ? this.props.navigation.navigate("MyChat", {backgroundImageName: backgroundImageName})
+            : this.props.navigation.navigate("OtherChat", {backgroundImageName: backgroundImageName})
         }
+        onLongPress={() => onRemove(id)}
       >
         <ImageBackground 
-          source={Images("background2")}
+          source={Images(backgroundImageName)}
           style={styles.itemBox}
         >
           {myLog ? (

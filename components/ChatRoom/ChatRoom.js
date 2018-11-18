@@ -10,7 +10,8 @@ import {
   KeyboardAvoidingView,
   DeviceEventEmitter,
   Keyboard,
-  Dimensions
+  Dimensions,
+  ImageBackground
 } from "react-native";
 import Header from "./../Header";
 import TextInputFooter from "./../TextInputFooter";
@@ -25,13 +26,16 @@ import {
 } from "react-native-responsive-screen";
 import Colors from "./../../assets/Colors";
 import Icons from "./../../assets/Icons";
+import Images from "./../../assets/Images";
 import {
   createStackNavigator,
   createDrawerNavigator,
   DrawerActions
 } from "react-navigation";
 
+import fb from "../../utils/firebaseWrapper";
 import nlp from "./../../utils/nlp";
+import NoticeBox from '../NoticeBox';
 
 const botQuestions = {
   q0: [
@@ -77,14 +81,16 @@ const botQuestions = {
   ]
 };
 
+const myChatNotice = ['새 이야기 시작하기', '챗봇에게 내 이야기를 할 수 있습니다.', '오늘 느낀 상황과 감정을 솔직하게 말해주세요!', '대화 기록은 다른 사람들과 공유할 수 있습니다.', ' 왼쪽 : [저장], 오른쪽 : [나가기]' ];
+const otherChatNotice = ['다른 사람의 이야기', '사람들은 각자 느끼는 감정을 이야기합니다.', '비난과 비판은 삼가고', '내가 느낀 것을 친절히 말해주세요', '따뜻한 댓글은 그들에게 힘이 될 수 있습니다.'];
+const myLogNotice = ['나의 이야기', '내가 썼던 글에 남겨진', '사람들의 댓글을 볼 수 있습니다.', '도움이 되는 댓글에는', '[고마워요] 버튼을 눌러보세요.'];
+
 class ChatRoom extends Component {
   state = {
-    currentDialog: [
-      {
-        speaker: "bot",
-        text: "오늘 무슨 일 있었어?"
-      }
-    ],
+    currentDialog: [{
+      speaker: "bot",
+      text: hello
+    }],
     currentQuestion: "q0", // botPushThisQuestion에서만 수정해야함
     nextQuestion: "q1", // botPushThisQuestion에서만 수정해야함
     listOfEmotion: [],
@@ -93,10 +99,15 @@ class ChatRoom extends Component {
     isIconInput: false,
     isFinished: false,
     isOnceAgained: false,
-    visibleHeight: hp("100%")
+    visibleHeight: hp("100%"),
+    // get user info
+    user: fb.getUser(),
+    chatId: null,
+    backgroundImageName: "",
   };
 
   componentWillMount() {
+    this.setState({backgroundImageName:this.props.backgroundImageName})
     try {
       this.keyboardDidShowListener = Keyboard.addListener(
         "keyboardDidShow",
@@ -116,6 +127,14 @@ class ChatRoom extends Component {
         this.keyboardDidHide.bind(this)
       );
     }
+  }
+  
+  componentDidMount() {
+    const {chatLog} = this.props;
+    if (chatLog) {
+      return
+    }
+    this.createChatRoom();
   }
 
   componentWillUnmount() {
@@ -138,7 +157,21 @@ class ChatRoom extends Component {
     });
   }
 
+  createChatRoom = async () => {
+    const hello = "오늘 무슨 일 있었어?";
+    const chatId = await fb.createChat(user.userId);
+    fb.createMessage("bot", chatId, hello)
+    this.setState({
+      currentDialog: [{
+        speaker: "bot",
+        text: hello
+      }],
+      chatId
+    })
+  }
+
   handleTextInput = async (speaker, text, iconInput, isMyLog) => {
+    const {user, chatId} = this.state;
     //crowdbox면 this.state.currentDialog를 답변 하나만 있는 상태로 초기화!
     const myLogInput = {
       //when is not MyLog and don't have iconInput
@@ -168,7 +201,14 @@ class ChatRoom extends Component {
       isIconInput: false,
       isFinished: false
     };
-    this.setState(isMyLog ? myLogInput : forCrowdBox);
+    // this.setState(isMyLog ? myLogInput : forCrowdBox);
+    if (isMyLog) {
+      fb.createMessage(user.userId, chatId, text);
+      this.setState(myLogInput);
+    } else {
+      fb.createComment(user.userId, chatId, text, `${iconInput.split("_")[0]}_option_clicked`)
+      this.setState(forCrowdBox);
+    }
     //check user input here
     let nextQuestionFixed = this.state.nextQuestion;
     !nlp.isNotEmpty(text) ? (nextQuestionFixed = "q61") : null; //모든 답변은 내용이 있어야 함.
@@ -185,7 +225,9 @@ class ChatRoom extends Component {
   };
 
   handleIconInput = (speaker, iconInput, isMyLog) => {
+    const {user, chatId} = this.state;
     // console.log("In ChatRoom handleIconInput iconInput: ", iconInput);
+    fb.createEmotion(user.userId, chatId, iconInput)
     this.setState({
       currentDialog: [
         ...this.state.currentDialog,
@@ -227,23 +269,18 @@ class ChatRoom extends Component {
   renderChatRoomHeaderLeft = (chatLog) => (
     chatLog
       ? null
-      : <ImageButton
-          boxWidth={"20"}
-          imageWidth={"7"}
-          imageName={"save"}
-          onPress={() => this.props.navigation.navigate("MyLog")}
-        />
+      : null
   );
 
-  renderChatRoomHeaderRight = (chatLog) => (
+  renderChatRoomHeaderRight = (myChat) => (
     <ImageButton
       boxWidth={"20"}
       imageWidth={"5"}
       imageName={"cancel"}
       onPress={
-        chatLog
-        ? () => this.props.navigation.navigate("Story")
-        : () => this.props.navigation.navigate("MyLog")}
+        myChat
+        ? () => this.props.navigation.navigate("MyLog")
+        : () => this.props.navigation.navigate("Story")}
     />
   );
 
@@ -305,6 +342,7 @@ class ChatRoom extends Component {
   };
 
   botPushThisQuestion = (thisQuestion, listOfEmotion = null) => {
+    const {user, chatId} = this.state;
     console.log("thisQuestion: ", thisQuestion);
     let nextQuestion = [];
     let thisQuestionText = "";
@@ -453,6 +491,7 @@ class ChatRoom extends Component {
       // console.log(text);
       const isItLastItem = index == thisQuestionText.length - 1;
       setTimeout(() => {
+        fb.createMessage("bot", chatId, text);
         this.setState({
           currentDialog: [
             ...this.state.currentDialog,
@@ -488,13 +527,16 @@ class ChatRoom extends Component {
   };
 
   render() {
-    const { chatLog, isCrowdBox, isStartTop } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
+    const { myChat, chatLog, isCrowdBox, isStartTop } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
     // console.log("In ChatRoom this.state:", this.state);
     this.printDialogAsWellFormed();
     const contentsTopBottomMargin = 8;
     const targetDialog = chatLog ? chatLog : this.state.currentDialog;
     var { navigate } = this.props.navigation;
     const navigation = this.props.navigation;
+    const backgroundImageName = navigation.getParam('backgroundImageName');
+
+
 
     return (
       <View
@@ -505,28 +547,36 @@ class ChatRoom extends Component {
         <Header
           title={chatLog ? "Title 1" : "내가 진행중인 대화"}
           left={this.renderChatRoomHeaderLeft(chatLog)}
-          right={this.renderChatRoomHeaderRight(chatLog)}
+          right={this.renderChatRoomHeaderRight(myChat)}
         />
-        <ScrollView
-          style={{
-            backgroundColor: Colors.chatRoomBackground,
-            paddingBottom: contentsTopBottomMargin,
-            paddingTop: contentsTopBottomMargin
-          }}
-          ref={ref => (this.scrollView = ref)}
-          onContentSizeChange={(contentWidth, contentHeight) => {
-            isStartTop ? null : this.scrollView.scrollToEnd({ animated: true });
-          }}
-        >
-          {targetDialog.map((dialog, index) => (
-            <ChatElement
-              key={index}
-              speaker={dialog.speaker}
-              text={dialog.text}
-              profileImageName={dialog.speaker == "bot" ? "bot" : "user"}
-            />
-          ))}
-        </ScrollView>
+          <ImageBackground 
+            source={Images(backgroundImageName)}
+            style={{flex:1, }}
+          >
+          <NoticeBox
+            notice={chatLog ? (myChat ? myLogNotice : otherChatNotice) : myChatNotice}
+          />
+          <ScrollView
+            style={{
+              backgroundColor: 'rgba(0,0,0,0)',
+              paddingBottom: contentsTopBottomMargin,
+              paddingTop: contentsTopBottomMargin
+            }}
+            ref={ref => (this.scrollView = ref)}
+            onContentSizeChange={(contentWidth, contentHeight) => {
+              isStartTop ? null : this.scrollView.scrollToEnd({ animated: true });
+            }}
+          >
+            {targetDialog.map((dialog, index) => (
+              <ChatElement
+                key={index}
+                speaker={dialog.speaker}
+                text={dialog.text}
+                profileImageName={dialog.speaker == "bot" ? "bot" : "user"}
+              />
+            ))}
+          </ScrollView>
+        </ImageBackground>
         {chatLog ? (
           <View>
             {this.state.isCrowdBox || isCrowdBox ? (
