@@ -561,7 +561,7 @@ class ChatRoom extends Component {
             )}구나. 혹시 이유가 뭐야?`
             // botQuestions.q2[botQuestions.q2.length - 1]
           ];
-      nextQuestion = isIconInputNothing ? "q7" : "q3";
+      nextQuestion = isIconInputNothing ? "end" : "q3";
       // console.log(
       //   "In ChatRoom botPushThisQuestion if q2 nextQuestion:",
       //   nextQuestion
