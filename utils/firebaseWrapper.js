@@ -505,7 +505,7 @@ export default api = {
       // });
       // msgList.sort(this.orderByIndex);
       console.log("READ");
-      const comments = await db.collection('chats').doc(chatId).collection('comments').orderBy("createdAt", "desc").get()
+      const comments = await db.collection('chats').doc(chatId).collection('comments').get()
       const commentList = [];
       comments.forEach((comment) => {
         cmnt = comment.data()

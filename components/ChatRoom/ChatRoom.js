@@ -176,6 +176,7 @@ class ChatRoom extends Component {
 
   componentWillReceiveProps(nextProps) {
     const {chatId, state, chatLog} = nextProps;
+    this.getCommentList(chatId)
     const isBoolean = (value) => {
       if (value === true || value === false) {
         return true
@@ -203,11 +204,12 @@ class ChatRoom extends Component {
 
   componentDidMount() {
     this.getUser();
-    this.getCommentList(this.props.chatId);
   }
 
   getCommentList = async chatId => {
-    const commentOfThisChat = await fb.getAStory(chatId).comments;
+    const userInputDialog = this.state.currentDialog[0]
+    const story = await fb.getAStory(chatId);
+    const commentOfThisChat = story.comments;
     let thisIsAlreadyCommentedWithThisUser = false;
     console.log("commentOfThisChat: ", commentOfThisChat);
     //이미 코멘트 달았는지 확인
@@ -748,7 +750,7 @@ class ChatRoom extends Component {
       const isItFirstItem = index == 0;
       const isItLastItem = index == thisQuestionText.length - 1;
       setTimeout(async () => {
-        fb.createMessage("bot", chatId, text);
+        // fb.createMessage("bot", chatId, text);
         this.setState({
           currentDialog: isItLastItem
             ? [
