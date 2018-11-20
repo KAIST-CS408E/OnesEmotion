@@ -82,7 +82,9 @@ class LogList extends Component {
       //   text: "I played with my sister!"
       // }
     ],
-    user: fb.getUser()
+    user: fb.getUser(),
+    isRemoveModalVisible: false,
+    removeTargetKey: -1
   };
 
   componentDidMount() {
@@ -147,13 +149,13 @@ class LogList extends Component {
     return text;
   };
 
-  handleRemove = key => {
+  handleRemove = () => {
     const { myLog } = this.props;
     if (!myLog) {
       return;
     }
     const nextLogList = this.state.logList.filter(item => {
-      const keeping = item.key !== key;
+      const keeping = item.key !== this.state.removeTargetKey;
       if (!keeping && myLog) {
         fb.removeChat(item.key);
       }
@@ -162,6 +164,10 @@ class LogList extends Component {
     this.setState({
       logList: nextLogList
     });
+  };
+
+  handleModalVisible = () => {
+    this.setState({ isRemoveModalVisible: false, removeTargetKey: -1 });
   };
 
   renderLogListHeaderLeft = () => (
@@ -218,7 +224,13 @@ class LogList extends Component {
         text={item.text}
         selfEmotion={item.selfEmotion}
         crowdEmotion={item.crowdEmotion}
-        onRemove={this.handleRemove}
+        onLongPress={() => {
+          this.setState({
+            isRemoveModalVisible: true,
+            removeTargetKey: item.key
+          });
+          console.log("onLongPressed", this.state);
+        }}
         navigation={this.props.navigation}
         backgroundImageName={item.backgroundImageName}
       />
@@ -233,7 +245,12 @@ class LogList extends Component {
         />
         <NoticeBox notice={myLog ? myLogNotice : storyNotice} />
         <ScrollView>{contents}</ScrollView>
-        <Modal />
+        {this.state.isRemoveModalVisible ? (
+          <Modal
+            onYes={this.handleRemove}
+            handleModalVisible={this.handleModalVisible}
+          />
+        ) : null}
       </View>
     );
   }
