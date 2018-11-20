@@ -176,8 +176,7 @@ class ChatRoom extends Component {
 
   componentWillReceiveProps(nextProps) {
     const {chatId, state, chatLog} = nextProps;
-    console.log("Console ChatRoom isFinished: ",state.isFinished)
-    console.log("Console ChatRoom state: ",state)
+    this.getCommentList(chatId)
     const isBoolean = (value) => {
       if (value === true || value === false) {
         return true
@@ -205,39 +204,40 @@ class ChatRoom extends Component {
 
   componentDidMount() {
     this.getUser();
-    // this.getCommentList(this.props.chatId);
   }
 
-  // getCommentList = async chatId => {
-  //   const commentOfThisChat = await fb.getAStory(chatId).comments;
-  //   let thisIsAlreadyCommentedWithThisUser = false;
-  //   console.log("commentOfThisChat: ", commentOfThisChat);
-  //   //이미 코멘트 달았는지 확인
-  //   commentOfThisChat.forEach((commentObject, index) => {
-  //     commentObject.userId == this.props.userId
-  //       ? (thisIsAlreadyCommentedWithThisUser = true)
-  //       : null;
-  //   });
-  //   let thisCrowdBoxDialog = commentOfThisChat.map((commentObject, index) => ({
-  //     speaker: commentObject.userId == this.props.userId ? "user" : "bot",
-  //     text: commentObject.content,
-  //     profileImageName: commentObject.profileImageName,
-  //     crowdEmotion: commentObject.emotion
-  //   }));
-  //   this.props.isCrowdBox
-  //     ? null
-  //     : thisCrowdBoxDialog.push({
-  //         speaker: "user",
-  //         text: userInputDialog.text,
-  //         profileImageName: userInputDialog.profileImageName,
-  //         crowdEmotion: commentObject.emotion
-  //       });
-  //   this.crowdBoxDialog = thisCrowdBoxDialog;
-  //   this.setState({
-  //     crowdBoxDialog: thisCrowdBoxDialog,
-  //     isAlreadyCommentedWithThisUser: thisIsAlreadyCommentedWithThisUser
-  //   });
-  // };
+  getCommentList = async chatId => {
+    const userInputDialog = this.state.currentDialog[0]
+    const story = await fb.getAStory(chatId);
+    const commentOfThisChat = story.comments;
+    let thisIsAlreadyCommentedWithThisUser = false;
+    console.log("commentOfThisChat: ", commentOfThisChat);
+    //이미 코멘트 달았는지 확인
+    commentOfThisChat.forEach((commentObject, index) => {
+      commentObject.userId == this.props.userId
+        ? (thisIsAlreadyCommentedWithThisUser = true)
+        : null;
+    });
+    let thisCrowdBoxDialog = commentOfThisChat.map((commentObject, index) => ({
+      speaker: commentObject.userId == this.props.userId ? "user" : "bot",
+      text: commentObject.content,
+      profileImageName: commentObject.profileImageName,
+      crowdEmotion: commentObject.emotion
+    }));
+    this.props.isCrowdBox
+      ? null
+      : thisCrowdBoxDialog.push({
+          speaker: "user",
+          text: userInputDialog.text,
+          profileImageName: userInputDialog.profileImageName,
+          crowdEmotion: commentObject.emotion
+        });
+    this.crowdBoxDialog = thisCrowdBoxDialog;
+    this.setState({
+      crowdBoxDialog: thisCrowdBoxDialog,
+      isAlreadyCommentedWithThisUser: thisIsAlreadyCommentedWithThisUser
+    });
+  };
 
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
