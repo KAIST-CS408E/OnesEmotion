@@ -235,9 +235,10 @@ class ChatRoom extends Component {
       //when is not MyLog
       currentDialog: [
         {
-          speaker: "user",
-          text: text,
-          profileImageName: `${iconInput.split("_")[0]}_option_clicked`
+          speaker: "user", 
+          text: text, 
+          profileImageName: user.usericon,
+          crowdEmotion: `${iconInput.split("_")[0]}_option_clicked`
         }
       ],
       currentQuestion: null,
@@ -732,7 +733,7 @@ class ChatRoom extends Component {
   };
 
   render() {
-    const { myChat, chatLog, isCrowdBox, isStartTop } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
+    const { myChat, chatLog, isCrowdBox, isStartTop, chatId } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
     let { backgroundImageName } = this.props;
     if (!backgroundImageName) {
       backgroundImageName = this.state.backgroundImageName;
@@ -806,6 +807,8 @@ class ChatRoom extends Component {
             <View>
               {this.state.isCrowdBox || isCrowdBox ? (
                 <CrowdBoxFooter
+                  chatId={chatId}
+                  userId={this.state.user.userId}
                   isCrowdBox={isCrowdBox}
                   userInputDialog={this.state.currentDialog[0]}
                 />
@@ -852,7 +855,7 @@ const styles = StyleSheet.create({
     height: 24
   },
   backgroundImage: {
-    flex: 1,
+    flex: 1
   }
 });
 
