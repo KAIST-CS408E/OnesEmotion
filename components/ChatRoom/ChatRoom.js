@@ -136,7 +136,9 @@ class ChatRoom extends Component {
     user: fb.getUser(),
     chatId: null,
     backgroundImageName: "",
-    firstQuestion: null
+    firstQuestion: null,
+    crowdBoxDialog: [],
+    isAlreadyCommentedWithThisUser: false,
   };
 
   componentWillMount() {
@@ -201,12 +203,19 @@ class ChatRoom extends Component {
 
   componentDidMount() {
     this.getUser();
-    this.getCommentList(this.props.chatId); 
+    this.getCommentList(this.props.chatId);
   }
 
   getCommentList = async chatId => {
     const commentOfThisChat = await fb.getAStory(chatId).comments;
+    let thisIsAlreadyCommentedWithThisUser = false;
     console.log("commentOfThisChat: ", commentOfThisChat);
+    //이미 코멘트 달았는지 확인
+    commentOfThisChat.forEach((commentObject, index) => {
+      commentObject.userId == this.props.userId
+        ? (thisIsAlreadyCommentedWithThisUser = true)
+        : null;
+    });
     let thisCrowdBoxDialog = commentOfThisChat.map((commentObject, index) => ({
       speaker: commentObject.userId == this.props.userId ? "user" : "bot",
       text: commentObject.content,
@@ -221,8 +230,11 @@ class ChatRoom extends Component {
           profileImageName: userInputDialog.profileImageName,
           crowdEmotion: commentObject.emotion
         });
-    this.crowdBoxDialog = thisCrowdBoxDialog
-    // this.setState({ crowdBoxDialog: thisCrowdBoxDialog });
+    this.crowdBoxDialog = thisCrowdBoxDialog;
+    this.setState({
+      crowdBoxDialog: thisCrowdBoxDialog,
+      isAlreadyCommentedWithThisUser: thisIsAlreadyCommentedWithThisUser
+    });
   };
 
   componentWillUnmount() {
@@ -722,10 +734,7 @@ class ChatRoom extends Component {
     const isFinished = nextQuestion === null;
     const isIconInput =
       !isFinished && (thisQuestion === "q1" || thisQuestion === "q3");
-    const isButtonInput =
-      !isFinished &&
-      !isIconInput &&
-      (nextQuestion == "end");
+    const isButtonInput = !isFinished && !isIconInput && nextQuestion == "end";
     const isTextInput = !isFinished && !isIconInput && !isButtonInput;
 
     // console.log("In ChatRoom botPushThisQuestion isFinished:", isFinished);
@@ -883,7 +892,9 @@ class ChatRoom extends Component {
           </ScrollView>
           {chatLog && this.state.isFinished ? (
             <View>
-              {this.state.isCrowdBox || isCrowdBox || this.crowdBoxDialog ? (
+              {this.state.isCrowdBox ||
+              isCrowdBox ||
+              this.state.isAlreadyCommentedWithThisUser ? (
                 <CrowdBoxFooter
                   chatId={chatId}
                   userId={this.state.user.userId}
