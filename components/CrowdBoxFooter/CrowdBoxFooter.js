@@ -50,11 +50,12 @@ class CrowdBoxFooter extends Component {
   // crowdEmotion={userInputDialog.crowdEmotion}
 
   componentDidMount = () => {
+    const {userId, chatId, userInputDialog, crowdBoxDialog} = this.props
     // this.getCommentList(this.props.chatId); // load saved crowd comments
-    this.setState({ crowdBoxDialog: this.props.crowdBoxDialog });
+    this.setState({ crowdBoxDialog: crowdBoxDialog });
     this.setNewComment(
-      this.props.userId,
-      this.props.chatId,
+      userId,
+      chatId,
       userInputDialog.text,
       userInputDialog.crowdEmotion,
       userInputDialog.profileImageName
