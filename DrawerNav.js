@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import { createStackNavigator, createDrawerNavigator, DrawerItems } from "react-navigation";
+import { createStackNavigator, createDrawerNavigator, DrawerItems, NavigationActions, StackActions } from "react-navigation";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
@@ -20,6 +20,9 @@ import Icons from "./assets/Icons";
 
 import Login from "./components/Login/Login";
 import Signup from "./components/Login/Signup";
+
+import Splash from "./components/Splash";
+import Loading from "./components/Loading";
 
 import MyLog from "./components/MyLog";
 import MyChat from "./components/MyChat";
@@ -32,7 +35,8 @@ import fb from "./utils/firebaseWrapper";
 class MidTitle extends React.Component {
   state = {
     user: fb.getUser(),
-    recommandationList: []
+    recommandationList: [],
+    isAppBooted : true,
   }
 
 	componentWillMount() {
@@ -42,12 +46,32 @@ class MidTitle extends React.Component {
   componentDidMount() {
     this.getUser()
   }
+
+  middleWare = (resetAction) => {
+      this.state.isAppBooted ? this.props.navigation.dispatch(resetAction) : null
+      this.setState({isAppBooted:false})
+  }
 	
 	autoLogin = async function () {
 		const user = await fb.getUserInfo()
+    const resetAction1 = StackActions.reset({
+      index: 0,
+      actions: [
+        NavigationActions.navigate({ routeName: 'Story'})
+      ]
+    })
+    const resetAction2 = StackActions.reset({
+      index: 0,
+      actions: [
+        NavigationActions.navigate({ routeName: 'Login'})
+      ]
+    })
+
 		if (user) {
-      this.props.navigation.navigate('Story')
+      this.middleWare(resetAction1)
       this.setState({user})
+    } else {
+      this.middleWare(resetAction2)
     }
   }
 
@@ -126,41 +150,6 @@ class MidTitle extends React.Component {
         </View>
         <ScrollView>
           {recommandations}
-          {/* <TouchableOpacity
-            style={styles.button}
-            onPress={() => this.props.navigation.navigate("OtherChat")}
-          >
-            <Image style={styles.icon} source={Icons("emphaty")} />
-            <Text style={styles.title}>Title 1</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => this.props.navigation.navigate("OtherChat")}
-          >
-            <Image style={styles.icon} source={Icons("emphaty")} />
-            <Text style={styles.title}>Title 2</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => this.props.navigation.navigate("OtherChat")}
-          >
-            <Image style={styles.icon} source={Icons("emphaty")} />
-            <Text style={styles.title}>Title 3</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => this.props.navigation.navigate("OtherChat")}
-          >
-            <Image style={styles.icon} source={Icons("emphaty")} />
-            <Text style={styles.title}>Title 4</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => this.props.navigation.navigate("OtherChat")}
-          >
-            <Image style={styles.icon} source={Icons("emphaty")} />
-            <Text style={styles.title}>Title 5</Text>
-          </TouchableOpacity> */}
         </ScrollView>
       </SafeAreaView>
     );
@@ -174,9 +163,11 @@ const drawer = createStackNavigator({
   OtherChat: {screen:OtherChat},
   Login: {screen: Login},
   Signup: {screen: Signup},
-  MyChat: {screen: MyChat}
+  MyChat: {screen: MyChat},
+  Splash: {screen: Splash},
+  Loading: {screen: Loading}
 },{
-  initialRouteName: "Login",  
+  initialRouteName: "Splash",  
   headerMode: 'none',
   navigationOptions: {
     headerVisible: false,

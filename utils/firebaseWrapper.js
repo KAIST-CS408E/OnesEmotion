@@ -487,6 +487,7 @@ export default api = {
     //              like: like count
     //              report: report count
     //              createdAt: comment's created datetime
+    //              profileImageName: name of user's profile image
     //            }, ...]
     // }
     try {
@@ -515,7 +516,8 @@ export default api = {
           emotion: cmnt.emotion,
           like: cmnt.like,
           report: cmnt.report,
-          createdAt: cmnt.createdAt
+          createdAt: cmnt.createdAt,
+          profileImageName: cmnt.profileImageName,
         })
       });
       db.collection('chats').doc(chatId).update({
@@ -598,12 +600,13 @@ export default api = {
       return []
     }
   },
-  createComment: async function (userId, chatId, content, emotion) {
+  createComment: async function (userId, chatId, content, emotion, profileImageName) {
     // INPUT
     // userId: user's identifier
     // chatId: chatroom's identifier
     // content: content of the comment
     // emotion: emotion of the comment
+    // profileImageName: name of user's profile image
     // OUTPUT
     // commentId
     try {
@@ -616,7 +619,8 @@ export default api = {
         emotion: emotion,
         like: 0,
         report: 0,
-        createdAt: new Date()
+        createdAt: new Date(),
+        profileImageName: profileImageName
       });
       return doc.id
     } catch (e) {
