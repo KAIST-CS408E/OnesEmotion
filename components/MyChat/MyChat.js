@@ -46,7 +46,7 @@ const sampleDialog = [
 class MyChat extends React.Component {
   state = {
     chatId: null,
-    chatLog: []
+    state: null
   }
 
   componentDidMount() {
@@ -55,38 +55,23 @@ class MyChat extends React.Component {
 
   getChatLogs = async () => {
     const chatId = this.props.navigation.getParam('chatId')
-    const {messages, state} = await fb.getAChat(chatId)
+    const {state} = await fb.getAChat(chatId)
     this.setState({
       chatId,
-      chatLog: messages.map((m) => {
-        if (m.userId == "bot") {
-          return {
-            speaker: "bot", text: m.content
-          }
-        }
-        if (m.content.indexOf('clicked') != -1) {
-          return {
-            speaker: "userIcon", text: m.content
-          }
-        }
-        return {
-          speaker: "user", text: m.content
-        }
-      }),
       state
     })
   }
 
   render() {
     // const chatLog = sampleDialog;
-    const {chatLog, chatId, state} = this.state;
+    const {chatId, state} = this.state;
     const navigation = this.props.navigation;
 
     return (
       <View style={styles.container}>
         <ChatRoom
           done={true}
-          chatLog={chatLog}
+          chatLog={state ? state.currentDialog : []}
           chatId={chatId}
           state={state}
           isCrowdBox={true}

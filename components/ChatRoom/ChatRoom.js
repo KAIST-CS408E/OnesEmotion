@@ -179,9 +179,13 @@ class ChatRoom extends Component {
       }
       return null
     }
+    if (!state) {
+      this.setState({chatId, currentDialog: chatLog ? chatLog : this.state.currentDialog})
+      return
+    }
     this.setState({
       chatId,
-      currentDialog: chatLog,
+      currentDialog: chatLog ? chatLog : this.state.currentDialog,
       currentQuestion: state.currentQuestion || this.state.currentQuestion,
       nextQuestion: state.nextQuestion || this.state.nextQuestion,
       listOfEmotion: state.listOfEmotion || this.state.listOfEmotion,
@@ -269,17 +273,17 @@ class ChatRoom extends Component {
     // this.setState(isMyLog ? myLogInput : forCrowdBox);
     if (isMyLog) {
       this.setState(myLogInput);
-      const caching = !!this.state.firstQuestion;
-      let { chatId } = this.state;
-      if (firstQuestion) {
-        chatId = await fb.createChat(user.userId, backgroundImageName);
-        this.setState({chatId, firstQuestion: null});
-        fb.createMessage("bot", chatId, firstQuestion, false, null);
-      }
-      await fb.createMessage(user.userId, chatId, text, caching, myLogInput);
+      // const caching = !!this.state.firstQuestion;
+      // let { chatId } = this.state;
+      // if (firstQuestion) {
+      //   chatId = await fb.createChat(user.userId, backgroundImageName, this.state);
+      //   this.setState({chatId, firstQuestion: null});
+      //   // fb.createMessage("bot", chatId, firstQuestion, false, null);
+      // }
+      // await fb.createMessage(user.userId, chatId, text, caching, myLogInput);
     } else {
       this.setState(forCrowdBox);
-      fb.createComment(user.userId, chatId, text, `${iconInput.split("_")[0]}_option_clicked`)
+      // fb.createComment(user.userId, chatId, text, `${iconInput.split("_")[0]}_option_clicked`)
     }
     //check user input here
     let nextQuestionFixed = this.state.nextQuestion;
@@ -312,7 +316,7 @@ class ChatRoom extends Component {
       isFinished: false
     }
     this.setState(nextState);
-    await fb.createEmotion(user.userId, chatId, iconInput, nextState);
+    // await fb.createEmotion(user.userId, chatId, iconInput, nextState);
     //add bot question here
     this.botPushThisQuestion(this.state.nextQuestion, [
       ...this.state.listOfEmotion,
@@ -370,10 +374,17 @@ class ChatRoom extends Component {
       onPress={
         chatLog
           ? () => this.props.navigation.goBack()
-          : () => this.props.navigation.navigate("MyLog")
+          : () => this.finishChat()
+          // : () => this.props.navigation.navigate("MyLog")
       }
     />
   );
+
+  finishChat = async () => {
+    const {user, backgroundImageName} = this.state;
+    fb.createChat(user.userId, backgroundImageName, this.state);
+    this.props.navigation.navigate("MyLog")
+  }
 
   iconNameToKorean = iconName => {
     if (iconName.includes("joy")) return "즐거움";
@@ -543,7 +554,7 @@ class ChatRoom extends Component {
   };
 
   botPushThisQuestion = (thisQuestion, listOfEmotion, buttonAnswer = null) => {
-    const { user, chatId } = this.state;
+    let { user, chatId, backgroundImageName } = this.state;
     console.log("thisQuestion: ", thisQuestion);
     let nextQuestion = [];
     let thisQuestionText = "";
@@ -698,7 +709,7 @@ class ChatRoom extends Component {
     thisQuestionText.map((text, index) => {
       // console.log(text);
       const isItLastItem = index == thisQuestionText.length - 1;
-      setTimeout(() => {
+      setTimeout(async () => {
         const nextState = {
           currentDialog: [
             ...this.state.currentDialog,
@@ -719,7 +730,11 @@ class ChatRoom extends Component {
           isFinished: isItLastItem ? isFinished : this.state.isFinished
         }
         this.setState(nextState);
-        await fb.createMessage("bot", chatId, text, false, nextState);
+        // fb.createMessage("bot", chatId, text, false, nextState);
+        // if (nextState.isFinished)
+        if (nextState.isFinished) {
+          fb.createChat(user.userId, backgroundImageName, this.state);
+        }
       }, firstTimeIntervalFiexd + this.getRandomInt(1500, 1950) * timeOffset);
       timeOffset += 1;
     });
@@ -868,7 +883,7 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     flex: 1,
-    resizeMode: "cover" // or 'stretch'
+    // resizeMode: "cover" // or 'stretch'
   }
 });
 
