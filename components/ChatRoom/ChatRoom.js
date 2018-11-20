@@ -407,8 +407,8 @@ class ChatRoom extends Component {
   );
 
   finishChat = async () => {
-    const {user, backgroundImageName, chatId} = this.state;
-    if (!chatId) {
+    const {user, backgroundImageName, chatId, currentDialog} = this.state;
+    if (!chatId && currentDialog.length > 1) {
       fb.createChat(user.userId, backgroundImageName, this.state);
     }
     this.props.navigation.goBack()
