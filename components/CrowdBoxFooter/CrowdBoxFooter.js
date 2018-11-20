@@ -50,36 +50,37 @@ class CrowdBoxFooter extends Component {
   // crowdEmotion={userInputDialog.crowdEmotion}
 
   componentDidMount = () => {
-    const {userInputDialog} = this.props;
-    this.getCommentList(this.props.chatId); // load saved crowd comments
+    const {userId, chatId, userInputDialog, crowdBoxDialog} = this.props
+    // this.getCommentList(this.props.chatId); // load saved crowd comments
+    this.setState({ crowdBoxDialog: crowdBoxDialog });
     this.setNewComment(
-      this.props.userId,
-      this.props.chatId,
+      userId,
+      chatId,
       userInputDialog.text,
       userInputDialog.crowdEmotion,
       userInputDialog.profileImageName
     );
   };
 
-  getCommentList = async chatId => {
-    const commentOfThisChat = await fb.getAStory(chatId).comments;
-    console.log("commentOfThisChat: ", commentOfThisChat);
-    let thisCrowdBoxDialog = commentOfThisChat.map((commentObject, index) => ({
-      speaker: commentObject.userId == this.props.userId ? "user" : "bot",
-      text: commentObject.content,
-      profileImageName: commentObject.profileImageName,
-      crowdEmotion: commentObject.emotion
-    }));
-    this.props.isCrowdBox
-      ? null
-      : thisCrowdBoxDialog.push({
-          speaker: "user",
-          text: userInputDialog.text,
-          profileImageName: userInputDialog.profileImageName,
-          crowdEmotion: commentObject.emotion
-        });
-    this.setState({ crowdBoxDialog: thisCrowdBoxDialog });
-  };
+  // getCommentList = async chatId => {
+  //   const commentOfThisChat = await fb.getAStory(chatId).comments;
+  //   console.log("commentOfThisChat: ", commentOfThisChat);
+  //   let thisCrowdBoxDialog = commentOfThisChat.map((commentObject, index) => ({
+  //     speaker: commentObject.userId == this.props.userId ? "user" : "bot",
+  //     text: commentObject.content,
+  //     profileImageName: commentObject.profileImageName,
+  //     crowdEmotion: commentObject.emotion
+  //   }));
+  //   this.props.isCrowdBox
+  //     ? null
+  //     : thisCrowdBoxDialog.push({
+  //         speaker: "user",
+  //         text: userInputDialog.text,
+  //         profileImageName: userInputDialog.profileImageName,
+  //         crowdEmotion: commentObject.emotion
+  //       });
+  //   this.setState({ crowdBoxDialog: thisCrowdBoxDialog });
+  // };
 
   setNewComment = (userId, chatId, content, emotion, profileImageName) => {
     fb.createComment(userId, chatId, content, emotion, profileImageName);
