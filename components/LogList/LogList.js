@@ -229,7 +229,6 @@ class LogList extends Component {
             isRemoveModalVisible: true,
             removeTargetKey: item.key
           });
-          console.log("onLongPressed", this.state);
         }}
         navigation={this.props.navigation}
         backgroundImageName={item.backgroundImageName}
@@ -245,7 +244,7 @@ class LogList extends Component {
         />
         <NoticeBox notice={myLog ? myLogNotice : storyNotice} />
         <ScrollView>{contents}</ScrollView>
-        {this.state.isRemoveModalVisible ? (
+        {this.state.isRemoveModalVisible && myLog ? (
           <Modal
             onYes={this.handleRemove}
             handleModalVisible={this.handleModalVisible}
