@@ -64,8 +64,7 @@ class CrowdBoxFooter extends Component {
 
   getCommentList = async chatId => {
     const {userInputDialog} = this.props;
-    const commentOfThisChat = await fb.getAStory(chatId).comments;
-    console.log("commentOfThisChat: ", commentOfThisChat);
+    const commentOfThisChat = (await fb.getAStory(chatId)).comments;
     let thisCrowdBoxDialog = commentOfThisChat.map((commentObject, index) => ({
       speaker: commentObject.userId == this.props.userId ? "user" : "bot",
       text: commentObject.content,

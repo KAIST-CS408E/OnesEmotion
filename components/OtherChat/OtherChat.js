@@ -77,6 +77,7 @@ class OtherChat extends React.Component {
                   isStartTop={true} 
                   navigation={navigation}
                   myChat={false}
+                  state={state}
         />
       </View>
     );

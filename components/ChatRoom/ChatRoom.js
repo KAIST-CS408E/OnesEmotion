@@ -310,6 +310,7 @@ class ChatRoom extends Component {
       isButtonInput: false,
       isFinished: false
     };
+    console.log("forCrowdBox", forCrowdBox);
     // this.setState(isMyLog ? myLogInput : forCrowdBox);
     if (isMyLog) {
       this.setState(myLogInput);
@@ -829,8 +830,8 @@ class ChatRoom extends Component {
     // console.log("In ChatRoom this.state:", this.state);
     // this.printDialogAsWellFormed();
     const contentsTopBottomMargin = 8;
-    // const targetDialog = chatLog ? chatLog : this.state.currentDialog;
-    const targetDialog = this.state.currentDialog;
+    const targetDialog = chatLog ? chatLog : this.state.currentDialog;
+    // const targetDialog = this.state.currentDialog;
     var { navigate } = this.props.navigation;
     const navigation = this.props.navigation;
     const isNewChat = navigation.getParam("isNewChat");
@@ -892,11 +893,10 @@ class ChatRoom extends Component {
               />
             ))}
           </ScrollView>
-          {chatLog && this.state.isFinished ? (
+          {chatLog ? (
             <View>
               {this.state.isCrowdBox ||
-              isCrowdBox ||
-              this.state.isAlreadyCommentedWithThisUser ? (
+              isCrowdBox ? (
                 <CrowdBoxFooter
                   chatId={chatId}
                   userId={this.state.user.userId}
