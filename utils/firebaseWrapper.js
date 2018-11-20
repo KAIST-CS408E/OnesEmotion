@@ -28,6 +28,8 @@ auth.onAuthStateChanged((user) => {
   }
 })
 
+const chatIndexStore = {};
+
 // 'api' functions (e.g. api.logout())
 // For all functions, if they fail to run, return 'null'
 export default api = {
@@ -169,10 +171,10 @@ export default api = {
         userId: userId,
         totalComments: 0,
         createdAt: new Date(),
-        backgroundImage: backgroundImage,
-        isFinished: false
+        backgroundImage: backgroundImage
       });
       const chatId = chat.id;
+      chatIndexStore[chatId] = 0;
       await db.collection('users').doc(userId).collection('chats').doc(chatId).set({})
       return chatId
     } catch (e) {
@@ -182,6 +184,7 @@ export default api = {
   },
   closeChat: function (chatId) {
     try {
+      delete chatIndexStore[chatId];
       return db.collection('chats').doc(chatId).update({
         isFinished: true
       });
@@ -190,7 +193,7 @@ export default api = {
       return null;
     }
   },
-  removeChat: async function (chatId) {
+  removeChat: function (chatId) {
     // INPUT
     // chatId: chatroom's identifier
     // OUTPUT
@@ -202,7 +205,7 @@ export default api = {
       return null
     }
   },
-  createMessage: async function (userId, chatId, content, caching) {
+  createMessage: async function (userId, chatId, content, caching, state) {
     // INPUT
     // userId: user's identifier
     // chatId: chatroom's identifier
@@ -210,23 +213,34 @@ export default api = {
     // OUTPUT
     // messageId : message's identifier
     try {
-      if (caching) {
-        db.collection('chats').doc(chatId).update({
-          summary: content
-        });
-      }
+      const summary = caching ? content : null;
+      const stateObject = !state ? {summary} : {
+        summary,
+        currentQuestion: state.currentQuestion,
+        nextQuestion: state.nextQuestion,
+        listOfEmotion: state.listOfEmotion,
+        isCrowdBox: state.isCrowdBox,
+        isTextInput: state.isTextInput,
+        isIconInput: state.isIconInput,
+        isFinished: state.isFinished,
+        isOnceAgained: state.isOnceAgained,
+        visibleHeight: state.visibleHeight
+      };
+      await db.collection('chats').doc(chatId).update(stateObject);
       const doc = await db.collection('chats').doc(chatId).collection('msgs').add({
         userId: userId,
+        index: chatIndexStore[chatId],
         content: content,
         createdAt: new Date()
       });
+      chatIndexStore[chatId]++;
       return doc.id
     } catch (e) {
       console.log(e.toString());
       return null
     }
   },
-  removeMessage: async function (chatId, messageId) {
+  removeMessage: function (chatId, messageId) {
     // INPUT
     // chatId: chatroom's identifier
     // messageId: message's identifier
@@ -239,7 +253,7 @@ export default api = {
       return null
     }
   },
-  createEmotion: async function (userId, chatId, emotion) {
+  createEmotion: async function (userId, chatId, emotion, state) {
     // INPUT
     // userId: user's identifier
     // chatId: chatroom's identifier
@@ -247,14 +261,26 @@ export default api = {
     // OUTPUT
     // Object {}
     try {
-      await db.collection('chats').doc(chatId).update({
-        userEmotion: emotion
+      await db.collection('chats').doc(chatId).update(!state ? {userEmotion:emotion} : {
+        userEmotion: emotion,
+        currentQuestion: state.currentQuestion,
+        nextQuestion: state.nextQuestion,
+        listOfEmotion: state.listOfEmotion,
+        isCrowdBox: state.isCrowdBox,
+        isTextInput: state.isTextInput,
+        isIconInput: state.isIconInput,
+        isFinished: state.isFinished,
+        isOnceAgained: state.isOnceAgained,
+        visibleHeight: state.visibleHeight
       });
-      return db.collection('chats').doc(chatId).collection('msgs').add({
+      const doc = await db.collection('chats').doc(chatId).collection('msgs').add({
         userId: userId,
+        index: chatIndexStore[chatId],
         content: emotion,
         createdAt: new Date()
       });
+      chatIndexStore[chatId]++;
+      return doc.id
     } catch (e) {
       console.log(e.toString());
       return null;
@@ -349,7 +375,7 @@ export default api = {
           content: message.content
         })
       });
-      msgList.sort(this.orderByCreatedAtDesc);
+      msgList.sort(this.orderByIndex);
       console.log("READ");
       const chatInfoDoc = await db.collection('chats').doc(chatId).get()
       const chatInfo = chatInfoDoc.data();
@@ -358,7 +384,17 @@ export default api = {
         userId: chatInfo.userId,
         userEmotion: chatInfo.userEmotion,
         othersEmotion: chatInfo.othersEmotion,
-        isFinished: chatInfo.isFinished,
+        state: {
+          currentQuestion: chatInfo.currentQuestion,
+          nextQuestion: chatInfo.nextQuestion,
+          listOfEmotion: chatInfo.listOfEmotion,
+          isCrowdBox: chatInfo.isCrowdBox,
+          isTextInput: chatInfo.isTextInput,
+          isIconInput: chatInfo.isIconInput,
+          isFinished: chatInfo.isFinished,
+          isOnceAgained: chatInfo.isOnceAgained,
+          visibleHeight: chatInfo.visibleHeight
+        },
         createdAt: chatInfo.createdAt,
         messages: msgList
       }
@@ -398,6 +434,9 @@ export default api = {
       storyList.forEach((chat) => {
         const chatInfo = chat.data()
         if (chatInfo.userId == userId) {
+          return;
+        }
+        if (!chatInfo.isFinished) {
           return;
         }
         allStoryIds.push(chat.id);
@@ -493,7 +532,7 @@ export default api = {
           content: message.content
         })
       });
-      msgList.sort(this.orderByCreatedAtDesc);
+      msgList.sort(this.orderByIndex);
       console.log("READ");
       const comments = await db.collection('chats').doc(chatId).collection('comments').get()
       const commentList = [];
@@ -699,7 +738,7 @@ export default api = {
     if (!b.createdAt) {
       return false
     }
-    return a.createdAt.toDate() <= b.createdAt.toDate()
+    return a.createdAt.toDate() < b.createdAt.toDate();
   },
   orderByCreatedAtDesc: function (a, b) {
     if (!a.createdAt) {
@@ -708,6 +747,12 @@ export default api = {
     if (!b.createdAt) {
       return true
     }
-    return a.createdAt.toDate() >= b.createdAt.toDate()
+    return a.createdAt.toDate() > b.createdAt.toDate();
+  },
+  orderByIndex: function (a, b) {
+    if (!a.index || !b.index) {
+      return orderByCreatedAtDesc(a,b);
+    }
+    return a < b;
   }
 }

@@ -140,12 +140,26 @@ class ChatRoom extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {chatId, isFinished} = nextProps;
-    if (isFinished) {
-      this.setState({chatId, isFinished, isCrowdBox: true})
-    } else {
-      this.setState({chatId, isFinished});
+    const {chatId, state, chatLog} = nextProps;
+    const isBoolean = (value) => {
+      if (value === true || value === false) {
+        return true
+      }
+      return null
     }
+    this.setState({
+      chatId,
+      currentDialog: chatLog,
+      currentQuestion: state.currentQuestion || this.state.currentQuestion,
+      nextQuestion: state.nextQuestion || this.state.nextQuestion,
+      listOfEmotion: state.listOfEmotion || this.state.listOfEmotion,
+      isCrowdBox: isBoolean(state.isCrowdBox) ? state.isCrowdBox : this.state.isCrowdBox,
+      isTextInput: isBoolean(state.isTextInput) ? state.isTextInput : this.state.isTextInput,
+      isIconInput: isBoolean(state.isIconInput) ? state.isIconInput : this.state.isIconInput,
+      isFinished: isBoolean(state.isFinished) ? state.isFinished : this.state.isFinished,
+      isOnceAgained: isBoolean(state.isOnceAgained) ? state.isOnceAgained : this.state.isOnceAgained,
+      visibleHeight: state.visibleHeight || this.state.visibleHeight
+    })
   }
   
   componentDidMount() {
@@ -218,18 +232,18 @@ class ChatRoom extends Component {
     };
     // this.setState(isMyLog ? myLogInput : forCrowdBox);
     if (isMyLog) {
+      this.setState(myLogInput);
       const caching = !!this.state.firstQuestion;
       let {chatId} = this.state;
       if (firstQuestion) {
         chatId = await fb.createChat(user.userId, backgroundImageName);
         this.setState({chatId, firstQuestion: null});
-        fb.createMessage("bot", chatId, firstQuestion);
+        fb.createMessage("bot", chatId, firstQuestion, false, null);
       }
-      fb.createMessage(user.userId, chatId, text, caching);
-      this.setState(myLogInput);
+      await fb.createMessage(user.userId, chatId, text, caching, myLogInput);
     } else {
-      fb.createComment(user.userId, chatId, text, `${iconInput.split("_")[0]}_option_clicked`)
       this.setState(forCrowdBox);
+      fb.createComment(user.userId, chatId, text, `${iconInput.split("_")[0]}_option_clicked`)
     }
     //check user input here
     let nextQuestionFixed = this.state.nextQuestion;
@@ -246,11 +260,10 @@ class ChatRoom extends Component {
     this.botPushThisQuestion(nextQuestionFixed, this.state.listOfEmotion);
   };
 
-  handleIconInput = (speaker, iconInput, isMyLog) => {
+  handleIconInput = async (speaker, iconInput, isMyLog) => {
     const {user, chatId} = this.state;
     // console.log("In ChatRoom handleIconInput iconInput: ", iconInput);
-    fb.createEmotion(user.userId, chatId, iconInput)
-    this.setState({
+    const nextState = {
       currentDialog: [
         ...this.state.currentDialog,
         { speaker: "userIcon", text: iconInput }
@@ -260,7 +273,9 @@ class ChatRoom extends Component {
       isTextInput: false,
       isIconInput: false,
       isFinished: false
-    });
+    }
+    this.setState(nextState);
+    await fb.createEmotion(user.userId, chatId, iconInput, nextState);
     //add bot question here
     this.botPushThisQuestion(this.state.nextQuestion, [
       ...this.state.listOfEmotion,
@@ -514,8 +529,7 @@ class ChatRoom extends Component {
       // console.log(text);
       const isItLastItem = index == thisQuestionText.length - 1;
       setTimeout(() => {
-        fb.createMessage("bot", chatId, text);
-        this.setState({
+        const nextState = {
           currentDialog: [
             ...this.state.currentDialog,
             {
@@ -530,10 +544,9 @@ class ChatRoom extends Component {
           isTextInput: isItLastItem ? isTextInput : this.state.isTextInput,
           isIconInput: isItLastItem ? isIconInput : this.state.isIconInput,
           isFinished: isItLastItem ? isFinished : this.state.isFinished
-        });
-        if (this.state.isFinished) {
-          fb.closeChat();
         }
+        this.setState(nextState);
+        await fb.createMessage("bot", chatId, text, false, nextState);
       }, firstTimeIntervalFiexd + this.getRandomInt(1500, 1950) * timeOffset);
       timeOffset += 1;
     });
@@ -567,7 +580,8 @@ class ChatRoom extends Component {
     // console.log("In ChatRoom this.state:", this.state);
     this.printDialogAsWellFormed();
     const contentsTopBottomMargin = 8;
-    const targetDialog = chatLog ? chatLog : this.state.currentDialog;
+    // const targetDialog = chatLog ? chatLog : this.state.currentDialog;
+    const targetDialog = this.state.currentDialog;
     var { navigate } = this.props.navigation;
     const navigation = this.props.navigation;
     // const backgroundImageName = navigation.getParam('backgroundImageName');
