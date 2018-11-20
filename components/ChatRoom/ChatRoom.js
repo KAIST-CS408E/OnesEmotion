@@ -756,7 +756,13 @@ class ChatRoom extends Component {
           style={styles.backgroundImage}
         >
           <Header
-            title={chatLog ? myChat ? "나의 이야기" : "다른 사람의 이야기" : "내가 진행중인 대화"}
+            title={
+              chatLog
+                ? myChat
+                  ? "나의 이야기"
+                  : "다른 사람의 이야기"
+                : "내가 진행중인 대화"
+            }
             left={this.renderChatRoomHeaderLeft(chatLog)}
             right={this.renderChatRoomHeaderRight(chatLog)}
           />
@@ -795,7 +801,7 @@ class ChatRoom extends Component {
               />
             ))}
           </ScrollView>
-          {chatLog ? (
+          {chatLog && this.state.isFinished ? (
             <View>
               {this.state.isCrowdBox || isCrowdBox ? (
                 <CrowdBoxFooter
