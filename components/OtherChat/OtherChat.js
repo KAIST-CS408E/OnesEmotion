@@ -9,7 +9,7 @@ import {
 
 import { withNavigation, DrawerActions } from "react-navigation";
 
-import fb from '../../utils/firebaseWrapper';
+import fb from "../../utils/firebaseWrapper";
 
 const sampleDialog = [
   { speaker: "bot", text: "오늘 무슨 일 있었어?" },
@@ -56,19 +56,21 @@ class OtherChat extends React.Component {
 
   getChatLogs = async () => {
     const chatId = this.props.navigation.getParam('chatId') // TODO
-    const {messages, comments, isFinished} = await fb.getAStory(chatId)
+    const {messages, comments} = await fb.getAStory(chatId)
     this.setState({
       chatId,
-      chatLog: messages.map((m) => {
+      chatLog: messages.map(m => {
         if (m.userId == "bot") {
           return {
-            speaker: "bot", text: m.content
-          }
+            speaker: "bot",
+            text: m.content
+          };
         }
-        if (m.content.indexOf('clicked') != -1) {
+        if (m.content.indexOf("clicked") != -1) {
           return {
-            speaker: "userIcon", text: m.content
-          }
+            speaker: "userIcon",
+            text: m.content
+          };
         }
         return {
           speaker: "user", text: m.content
@@ -89,9 +91,10 @@ class OtherChat extends React.Component {
                   chatId={chatId} 
                   chatLog={chatLog} 
                   comments={comments} 
-                  isFinished={isFinished}
                   isStartTop={true} 
-                  navigation={navigation} />
+                  navigation={navigation}
+                  myChat={false}
+        />
       </View>
     );
   }

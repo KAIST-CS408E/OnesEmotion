@@ -21,7 +21,7 @@ class LogItem extends Component {
       text,
       selfEmotion,
       crowdEmotion,
-      onRemove,
+      onLongPress,
       onClick,
       backgroundImageName,
     } = this.props;
@@ -36,7 +36,7 @@ class LogItem extends Component {
             ? this.props.navigation.navigate("MyChat", {chatId: id, backgroundImageName})
             : this.props.navigation.navigate("OtherChat", {chatId: id, backgroundImageName})
         }
-        onLongPress={() => onRemove(id)}
+        onLongPress={() => onLongPress()}
       >
         <ImageBackground 
           source={Images(backgroundImageName)}

@@ -14,7 +14,8 @@ class ChatElement extends Component {
   }
 
   render() {
-    const { speaker, text, profileImageName } = this.props;
+    const { speaker, text, profileImageName, isMyChat } = this.props;
+    console.log("In ChatElement isMyChat: ", isMyChat);
     const { crowdEmotion } = this.props;
     // console.log("In ChatElement profileImageName: ",profileImageName);
     const isBot = speaker == "bot";
@@ -87,7 +88,8 @@ class ChatElement extends Component {
                     style={{ width: profileSize, height: profileSize }}
                     source={Icons(crowdEmotion)}
                   />
-                </View>) : null }
+                </View>
+              ) : null}
             </View>
           </View>
         ) : (
@@ -105,6 +107,7 @@ class ChatElement extends Component {
                   alignItems: "center",
                   justifyContent: "center",
                   padding: 5,
+                  paddingRight: isMyChat ? 10 : 5,
                   marginRight: marginBetweenPrfileAndText
                 }}
               >
@@ -137,20 +140,22 @@ class ChatElement extends Component {
                   </Text>
                 )}
               </View>
-              <View
-                style={{
-                  width: profileBoxSize,
-                  height: profileBoxSize,
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center"
-                }}
-              >
-                <Image
-                  style={{ width: profileSize, height: profileSize }}
-                  source={Icons(profileImageName)}
-                />
-              </View>
+              {!isMyChat ? (
+                <View
+                  style={{
+                    width: profileBoxSize,
+                    height: profileBoxSize,
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                >
+                  <Image
+                    style={{ width: profileSize, height: profileSize }}
+                    source={Icons(profileImageName)}
+                  />
+                </View>
+              ) : null}
             </View>
           </View>
         )}

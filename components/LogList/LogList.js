@@ -83,78 +83,79 @@ class LogList extends Component {
       // }
     ],
     user: fb.getUser(),
-    update: true
+    isRemoveModalVisible: false,
+    removeTargetKey: -1
   };
 
   componentDidMount() {
-    this.getChatList()
+    this.getChatList();
   }
 
   componentWillReceiveProps(nextProps) {
-    this.getChatList()
+    this.getChatList();
   }
 
-  // shouldComponentUpdate() {
-  //   const {update} = this.state;
-  //   return update;    
-  // }
-
   getChatList = async () => {
-    let user = this.state.user || await fb.getUserInfo();
-    const {myLog} = this.props;
+    let user = this.state.user || (await fb.getUserInfo());
+    const { myLog } = this.props;
     if (myLog) {
       const chatList = await fb.getAllChats(user.userId);
       if (chatList.length == 0) {
-        return
+        return;
       }
       this.setState({
-        logList: chatList.map((chat) => ({
+        logList: chatList.map(chat => ({
           key: chat.chatId,
           selfEmotion: chat.userEmotion, // TODO: emotion name matching
           crowdEmotion: chat.othersEmotion, // TODO: emotion name matching
           date: datetime.toString(chat.createdAt.toDate()),
-          text: this.toShort(chat.summary ? chat.summary : "채팅 요약 캐싱 전 로그입니다."),
+          text: this.toShort(
+            chat.summary ? chat.summary : "채팅 요약 캐싱 전 로그입니다."
+          ),
           backgroundImageName: chat.backgroundImage
         }))
-      })
+      });
     } else {
       const chatList = await fb.getAllStories(user.userId);
       if (chatList.length == 0) {
-        return
+        return;
       }
       let logList = [];
-      chatList.forEach((chat) => {
+      chatList.forEach(chat => {
         if (!chat.createdAt) {
-          return
+          return;
         }
         logList.push({
           key: chat.chatId,
-          date: datetime.toString(chat.createdAt? chat.createdAt.toDate() : new Date()),
-          text: this.toShort(chat.summary ? chat.summary : "채팅 요약 캐싱 전 로그입니다."),
+          date: datetime.toString(
+            chat.createdAt ? chat.createdAt.toDate() : new Date()
+          ),
+          text: this.toShort(
+            chat.summary ? chat.summary : "채팅 요약 캐싱 전 로그입니다."
+          ),
           backgroundImageName: chat.backgroundImage
-        })
+        });
       });
       this.setState({
-        logList: logList,
-        update: false
-      })
+        logList: logList
+      });
     }
-  }
+  };
 
-  toShort = (text) => {
+  toShort = text => {
     if (text.length > 30) {
-      return text.slice(0, 28) + '...'
+      return text.slice(0, 28) + "...";
     }
-    return text
-  }
+    return text;
+  };
 
-  handleRemove = key => {
-    const {myLog} = this.props;
+  handleRemove = () => {
+    const { myLog } = this.props;
     if (!myLog) {
-      return
+      return;
     }
     const nextLogList = this.state.logList.filter(item => {
-      const keeping = item.key !== key
+      const keeping = item.key !== this.state.removeTargetKey;
       if (!keeping && myLog) {
         fb.removeChat(item.key);
       }
@@ -163,6 +164,10 @@ class LogList extends Component {
     this.setState({
       logList: nextLogList
     });
+  };
+
+  handleModalVisible = () => {
+    this.setState({ isRemoveModalVisible: false, removeTargetKey: -1 });
   };
 
   renderLogListHeaderLeft = () => (
@@ -219,7 +224,13 @@ class LogList extends Component {
         text={item.text}
         selfEmotion={item.selfEmotion}
         crowdEmotion={item.crowdEmotion}
-        onRemove={this.handleRemove}
+        onLongPress={() => {
+          this.setState({
+            isRemoveModalVisible: true,
+            removeTargetKey: item.key
+          });
+          console.log("onLongPressed", this.state);
+        }}
         navigation={this.props.navigation}
         backgroundImageName={item.backgroundImageName}
       />
@@ -228,12 +239,18 @@ class LogList extends Component {
     return (
       <View>
         <Header
-          title={myLog ? "나의 이야기" : "다른 사람들의 이야기"}
+          title={myLog ? "내가 진행한 이야기들" : "다른 사람들의 이야기"}
           left={this.renderLogListHeaderLeft()}
           right={this.renderLogListHeaderRight(myLog)}
         />
         <NoticeBox notice={myLog ? myLogNotice : storyNotice} />
         <ScrollView>{contents}</ScrollView>
+        {this.state.isRemoveModalVisible ? (
+          <Modal
+            onYes={this.handleRemove}
+            handleModalVisible={this.handleModalVisible}
+          />
+        ) : null}
       </View>
     );
   }

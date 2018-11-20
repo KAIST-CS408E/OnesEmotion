@@ -24,13 +24,13 @@ class ButtonInputFooter extends Component {
 
     return (
       <View style={styles.container}>
-        <View style={{marginLeft: wp("5%")}}>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate("MyLog")}>
+        <View style={{ marginLeft: wp("5%") }}>
+          <TouchableOpacity onPress={() => onPress("응 그렇게 해줘")}>
             <Text style={styles.text}>응 그렇게 해줘</Text>
           </TouchableOpacity>
         </View>
-        <View style={{marginRight: wp("5%")}}>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate("MyLog")}>
+        <View style={{ marginRight: wp("5%") }}>
+          <TouchableOpacity onPress={() => onPress("아니 괜찮아")}>
             <Text style={styles.text}>아니 괜찮아</Text>
           </TouchableOpacity>
         </View>

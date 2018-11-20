@@ -62,7 +62,7 @@ var styles = StyleSheet.create({
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ECEFF1',
+	backgroundColor: '#ECEFF1',
   },
   modalcontainer: {
 		flex: 1,
@@ -74,7 +74,8 @@ var styles = StyleSheet.create({
   	width: wp("75%"),
   	height: 300,
   	backgroundColor: '#FFFFFF',
-    alignItems: 'center'
+	alignItems: 'center',
+	borderRadius: 15
   },
   buttonView: {
   	width: 250,

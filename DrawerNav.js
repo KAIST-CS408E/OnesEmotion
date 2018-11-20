@@ -99,7 +99,7 @@ class MidTitle extends React.Component {
         </View>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => this.props.navigation.navigate("ChatRoom")}
+          onPress={() => this.props.navigation.navigate("ChatRoom", {isNewChat:true})}
         >
           <Image style={styles.icon} source={Icons("chat")} />
           <Text style={styles.title}>새로운 이야기 시작하기</Text>
