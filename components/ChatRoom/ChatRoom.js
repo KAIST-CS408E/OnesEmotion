@@ -385,8 +385,10 @@ class ChatRoom extends Component {
   );
 
   finishChat = async () => {
-    const {user, backgroundImageName} = this.state;
-    fb.createChat(user.userId, backgroundImageName, this.state);
+    const {user, backgroundImageName, chatId} = this.state;
+    if (!chatId) {
+      fb.createChat(user.userId, backgroundImageName, this.state);
+    }
     this.props.navigation.goBack()
   }
 
@@ -714,7 +716,7 @@ class ChatRoom extends Component {
       // console.log(text);
       const isItFirstItem = index == 0;
       const isItLastItem = index == thisQuestionText.length - 1;
-      setTimeout(() => {
+      setTimeout(async () => {
         fb.createMessage("bot", chatId, text);
         this.setState({
           currentDialog: isItLastItem
@@ -753,11 +755,12 @@ class ChatRoom extends Component {
             : this.state.isButtonInput,
           isFinished: isItLastItem ? isFinished : this.state.isFinished
         });
-        this.setState(nextState);
+        // this.setState(nextState);
         // fb.createMessage("bot", chatId, text, false, nextState);
         // if (nextState.isFinished)
-        if (nextState.isFinished) {
-          fb.createChat(user.userId, backgroundImageName, this.state);
+        if (isItLastItem ? isFinished : this.state.isFinished) {
+          const {chatId} = await fb.createChat(user.userId, backgroundImageName, this.state);
+          this.setState({chatId})
         }
       }, firstTimeIntervalFiexd + this.getRandomInt(1500, 1950) * timeOffset);
       timeOffset += 1;
