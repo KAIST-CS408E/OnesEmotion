@@ -15,10 +15,10 @@ class ChatElement extends Component {
 
   render() {
     const { speaker, text, profileImageName, isMyChat } = this.props;
-    console.log("In ChatElement isMyChat: ", isMyChat);
+    // console.log("In ChatElement isMyChat: ", isMyChat);
     const { crowdEmotion } = this.props;
     // console.log("In ChatElement profileImageName: ",profileImageName);
-    console.log("In ChatElement isMyChat: ", isMyChat);
+    // console.log("In ChatElement isMyChat: ", isMyChat);
     const isBot = speaker == "bot";
     const isUserIcon = speaker == "userIcon";
     const profileSize = 40;

@@ -176,7 +176,12 @@ class ChatRoom extends Component {
 
   componentWillReceiveProps(nextProps) {
     const {chatId, state, chatLog} = nextProps;
+<<<<<<< HEAD
     this.getCommentList(chatId)
+=======
+    console.log("Console ChatRoom isFinished: ",state.isFinished)
+    console.log("Console ChatRoom state: ",state)
+>>>>>>> master
     const isBoolean = (value) => {
       if (value === true || value === false) {
         return true
@@ -204,6 +209,7 @@ class ChatRoom extends Component {
 
   componentDidMount() {
     this.getUser();
+<<<<<<< HEAD
   }
 
   getCommentList = async chatId => {
@@ -238,6 +244,41 @@ class ChatRoom extends Component {
       isAlreadyCommentedWithThisUser: thisIsAlreadyCommentedWithThisUser
     });
   };
+=======
+    // this.getCommentList(this.props.chatId);
+  }
+
+  // getCommentList = async chatId => {
+  //   const commentOfThisChat = await fb.getAStory(chatId).comments;
+  //   let thisIsAlreadyCommentedWithThisUser = false;
+  //   console.log("commentOfThisChat: ", commentOfThisChat);
+  //   //이미 코멘트 달았는지 확인
+  //   commentOfThisChat.forEach((commentObject, index) => {
+  //     commentObject.userId == this.props.userId
+  //       ? (thisIsAlreadyCommentedWithThisUser = true)
+  //       : null;
+  //   });
+  //   let thisCrowdBoxDialog = commentOfThisChat.map((commentObject, index) => ({
+  //     speaker: commentObject.userId == this.props.userId ? "user" : "bot",
+  //     text: commentObject.content,
+  //     profileImageName: commentObject.profileImageName,
+  //     crowdEmotion: commentObject.emotion
+  //   }));
+  //   this.props.isCrowdBox
+  //     ? null
+  //     : thisCrowdBoxDialog.push({
+  //         speaker: "user",
+  //         text: userInputDialog.text,
+  //         profileImageName: userInputDialog.profileImageName,
+  //         crowdEmotion: commentObject.emotion
+  //       });
+  //   this.crowdBoxDialog = thisCrowdBoxDialog;
+  //   this.setState({
+  //     crowdBoxDialog: thisCrowdBoxDialog,
+  //     isAlreadyCommentedWithThisUser: thisIsAlreadyCommentedWithThisUser
+  //   });
+  // };
+>>>>>>> master
 
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
@@ -827,7 +868,7 @@ class ChatRoom extends Component {
       backgroundImageName = this.state.backgroundImageName;
     }
     // console.log("In ChatRoom this.state:", this.state);
-    this.printDialogAsWellFormed();
+    // this.printDialogAsWellFormed();
     const contentsTopBottomMargin = 8;
     // const targetDialog = chatLog ? chatLog : this.state.currentDialog;
     const targetDialog = this.state.currentDialog;
@@ -901,7 +942,7 @@ class ChatRoom extends Component {
                   chatId={chatId}
                   userId={this.state.user.userId}
                   isCrowdBox={true}
-                  crowdBoxDialog={this.crowdBoxDialog}
+                  // crowdBoxDialog={this.crowdBoxDialog}
                   userInputDialog={this.state.currentDialog[0]}
                 />
               ) : (
