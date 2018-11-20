@@ -86,7 +86,7 @@ const botQuestions = {
   ],
   q9: [
     "좋아. 좋은 답변들이 모아지면 알려줄게!",
-    "지금 대화는 메뉴의 '내 이야기 보기'와 '다른 사람들의 이야기 보기'에서 확인할 수 있어."
+    "지금 대화는 메뉴의 '내 이야기'와 '다른 사람들의 이야기'에서 확인할 수 있어."
   ],
   q10: ["알겠어!", "지금 대화는 메뉴의 '내 이야기 보기'에서 확인할 수 있어."]
 };
@@ -217,13 +217,15 @@ class ChatRoom extends Component {
   };
 
   handleTextInput = async (speaker, text, iconInput, isMyLog) => {
-    const { user, firstQuestion, backgroundImageName } = this.state;
+    const { firstQuestion, backgroundImageName } = this.state;
+    const { user, chatId } = this.state;
     //crowdbox면 this.state.currentDialog를 답변 하나만 있는 상태로 초기화!
     const myLogInput = {
       //when is not MyLog and don't have iconInput
       currentDialog: [
         ...this.state.currentDialog,
-        { speaker: speaker, text: text }
+        { speaker: speaker, text: text },
+        { speaker: "bot", text: "..." }
       ],
       isCrowdBox: false,
       isTextInput: false,
@@ -235,8 +237,8 @@ class ChatRoom extends Component {
       //when is not MyLog
       currentDialog: [
         {
-          speaker: "user", 
-          text: text, 
+          speaker: "user",
+          text: text,
           profileImageName: user.usericon,
           crowdEmotion: `${iconInput.split("_")[0]}_option_clicked`
         }
@@ -292,7 +294,8 @@ class ChatRoom extends Component {
     this.setState({
       currentDialog: [
         ...this.state.currentDialog,
-        { speaker: "userIcon", text: iconInput }
+        { speaker: "userIcon", text: iconInput },
+        { speaker: "bot", text: "..." }
       ],
       listOfEmotion: [...this.state.listOfEmotion, iconInput],
       isCrowdBox: false,
@@ -674,7 +677,7 @@ class ChatRoom extends Component {
     const isButtonInput =
       !isFinished &&
       !isIconInput &&
-      (thisQuestion === "q7" || thisQuestion === "q8");
+      (nextQuestion == "end");
     const isTextInput = !isFinished && !isIconInput && !isButtonInput;
 
     // console.log("In ChatRoom botPushThisQuestion isFinished:", isFinished);
@@ -685,17 +688,36 @@ class ChatRoom extends Component {
     let timeOffset = 0;
     thisQuestionText.map((text, index) => {
       // console.log(text);
+      const isItFirstItem = index == 0;
       const isItLastItem = index == thisQuestionText.length - 1;
       setTimeout(() => {
         fb.createMessage("bot", chatId, text);
         this.setState({
-          currentDialog: [
-            ...this.state.currentDialog,
-            {
-              speaker: "bot",
-              text: text
-            }
-          ],
+          currentDialog: isItLastItem
+            ? [
+                ...this.state.currentDialog.slice(
+                  0,
+                  this.state.currentDialog.length - 1
+                ),
+                {
+                  speaker: "bot",
+                  text: text
+                }
+              ]
+            : [
+                ...this.state.currentDialog.slice(
+                  0,
+                  this.state.currentDialog.length - 1
+                ),
+                {
+                  speaker: "bot",
+                  text: text
+                },
+                {
+                  speaker: "bot",
+                  text: "..."
+                }
+              ],
           currentQuestion: isItLastItem
             ? thisQuestion
             : this.state.currentQuestion, // botPushThisQuestion에서만 수정해야함
