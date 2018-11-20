@@ -50,7 +50,7 @@ class CrowdBoxFooter extends Component {
   // crowdEmotion={userInputDialog.crowdEmotion}
 
   componentDidMount = () => {
-    const {userId, chatId, userInputDialog, crowdBoxDialog} = this.props
+    const { userId, chatId, userInputDialog, crowdBoxDialog } = this.props;
     // this.getCommentList(this.props.chatId); // load saved crowd comments
     this.setState({ crowdBoxDialog: crowdBoxDialog });
     this.setNewComment(
@@ -114,15 +114,17 @@ class CrowdBoxFooter extends Component {
               this.scrollView.scrollToEnd({ animated: true });
             }}
           >
-            {this.state.crowdBoxDialog.map((dialog, index) => (
-              <ChatElement
-                key={index}
-                speaker={dialog.speaker}
-                text={dialog.text}
-                profileImageName={dialog.profileImageName}
-                crowdEmotion={dialog.crowdEmotion}
-              />
-            ))}
+            {this.state.crowdBoxDialog
+              ? this.state.crowdBoxDialog.map((dialog, index) => (
+                  <ChatElement
+                    key={index}
+                    speaker={dialog.speaker}
+                    text={dialog.text}
+                    profileImageName={dialog.profileImageName}
+                    crowdEmotion={dialog.crowdEmotion}
+                  />
+                ))
+              : null}
             {isCrowdBox ? null : (
               <ChatElement
                 speaker={userInputDialog.speaker}
