@@ -83,7 +83,8 @@ class OtherChat extends React.Component {
     // const chatLog = sampleDialog;
     const { chatLog, chatId } = this.state;
     const navigation = this.props.navigation;
-    console.log("otherChat", chatId);
+    const backgroundImage = navigation.getParam('backgroundImageName', 'background4');
+    console.log('backgroundImage', backgroundImage)
     return (
       <View style={styles.container}>
         <ChatRoom
@@ -92,6 +93,7 @@ class OtherChat extends React.Component {
           isStartTop={true}
           navigation={navigation}
           myChat={false}
+          backgroundImageName={backgroundImage}
         />
       </View>
     );

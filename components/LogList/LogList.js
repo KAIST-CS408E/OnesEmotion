@@ -16,6 +16,7 @@ import {
   DrawerActions
 } from "react-navigation";
 import NoticeBox from "../NoticeBox";
+import Loading from "../Loading";
 
 import fb from "../../utils/firebaseWrapper";
 import datetime from "../../utils/datetime";
@@ -31,62 +32,20 @@ const storyNotice = [
 const myLogNotice = [
   "나의 이야기",
   "이 페이지에서는",
-  "내 감정을 이야기할 수 있습니다.",
-  "오른쪽 상단의 + 버튼을 클릭하여",
-  "이야기를 시작하세요!"
+  "내가 기록한 이야기들을 볼 수 있습니다.",
+  "이야기를 삭제하고 싶다면",
+  "아이템을 길게 눌러주세요!"
 ];
 
 class LogList extends Component {
   state = {
-    logList: [
-      // {
-      //   key: "0",
-      //   selfEmotion: EMOTIONS[0],
-      //   crowdEmotion: EMOTIONS[1],
-      //   date: "18.10.05",
-      //   text: "I fought with my friend..."
-      // },
-      // {
-      //   key: "1",
-      //   selfEmotion: EMOTIONS[3],
-      //   crowdEmotion: EMOTIONS[2],
-      //   date: "18.10.04",
-      //   text: "My teacher said that i was bad guy..."
-      // },
-      // {
-      //   key: "2",
-      //   selfEmotion: EMOTIONS[2],
-      //   crowdEmotion: EMOTIONS[4],
-      //   date: "18.10.03",
-      //   text: "I got the GPA 4.3~"
-      // },
-      // {
-      //   key: "3",
-      //   selfEmotion: EMOTIONS[0],
-      //   crowdEmotion: EMOTIONS[1],
-      //   date: "18.10.02",
-      //   text: "I fought with my best friend..."
-      // },
-      // {
-      //   key: "4",
-      //   selfEmotion: EMOTIONS[1],
-      //   crowdEmotion: EMOTIONS[2],
-      //   date: "18.10.01",
-      //   text: "I played with my brother!"
-      // },
-      // {
-      //   key: "5",
-      //   selfEmotion: EMOTIONS[4],
-      //   crowdEmotion: EMOTIONS[4],
-      //   date: "18.09.31",
-      //   text: "I played with my sister!"
-      // }
-    ],
+    logList: [{}],
     user: fb.getUser(),
     isRemoveModalVisible: false,
-    removeTargetKey: -1
+    removeTargetKey: -1,
+    isLoading: true,
   };
-
+  
   componentDidMount() {
     this.getChatList();
   }
@@ -133,11 +92,13 @@ class LogList extends Component {
           text: this.toShort(
             chat.summary ? chat.summary : "채팅 요약 캐싱 전 로그입니다."
           ),
-          backgroundImageName: chat.backgroundImage
+          backgroundImageName: chat.backgroundImage,
+          commentNum: chat.totalComments,
         });
       });
       this.setState({
-        logList: logList
+        logList: logList,
+        isLoading: false
       });
     }
   };
@@ -233,6 +194,7 @@ class LogList extends Component {
         }}
         navigation={this.props.navigation}
         backgroundImageName={item.backgroundImageName}
+        commentNum={item.commentNum}
       />
     ));
 

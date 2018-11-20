@@ -24,6 +24,7 @@ class LogItem extends Component {
       onLongPress,
       onClick,
       backgroundImageName,
+      commentNum
     } = this.props;
 
     const { navigate } = this.props.navigation;
@@ -61,6 +62,9 @@ class LogItem extends Component {
               </View>
               <View style={{ alignItems: "center" }}>
                 <Text style={styles.itemText}>{text}</Text>
+              </View>
+              <View style={{ alignItems: "center" }}>
+                <Text style={styles.commentText}>댓글  {commentNum ? commentNum : 0}개</Text>
               </View>
             </View>
           </View>
@@ -144,6 +148,12 @@ const styles = StyleSheet.create({
   itemText: {
     textAlign: "center",
     fontSize: itemBoxHeight / 12,
+    color: Colors.white
+  },
+  commentText: {
+    marginTop: 20,
+    textAlign: "center",
+    fontSize: itemBoxHeight / 14,
     color: Colors.white
   },
   imageSelfEmotion: {

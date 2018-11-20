@@ -20,7 +20,6 @@ class ButtonInputFooter extends Component {
 
   render() {
     const { onPress } = this.props; // onPress에서 반드시 yes, no 둘중 뭐를 체크한건지 param으로 받아오도록 해야함.
-    var { navigate } = this.props.navigation;
 
     return (
       <View style={styles.container}>

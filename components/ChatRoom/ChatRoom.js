@@ -35,7 +35,10 @@ import {
 
 import fb from "../../utils/firebaseWrapper";
 import nlp from "./../../utils/nlp";
+
 import NoticeBox from "../NoticeBox";
+import Loading from "../Loading";
+
 import { StackActions } from "react-navigation";
 import getBackgroundImageName from "../../assets/Images/getBackgroundImageName";
 
@@ -135,8 +138,9 @@ class ChatRoom extends Component {
     // get user info
     user: fb.getUser(),
     chatId: null,
-    backgroundImageName: "",
-    firstQuestion: null
+    backgroundImageName: "background1",
+    firstQuestion: null,
+    isLoading: true
   };
 
   componentWillMount() {
