@@ -36,6 +36,7 @@ import {
 import fb from "../../utils/firebaseWrapper";
 import nlp from "./../../utils/nlp";
 import NoticeBox from "../NoticeBox";
+import { StackActions } from "react-navigation";
 import getBackgroundImageName from "../../assets/Images/getBackgroundImageName";
 
 const botQuestions = {
@@ -356,7 +357,7 @@ class ChatRoom extends Component {
       onPress={
         chatLog
           ? () => this.props.navigation.goBack()
-          : () => this.props.navigation.navigate("MyLog")
+          : () => this.props.navigation.goBack()
       }
     />
   );
@@ -846,7 +847,6 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     flex: 1,
-    resizeMode: "cover" // or 'stretch'
   }
 });
 
