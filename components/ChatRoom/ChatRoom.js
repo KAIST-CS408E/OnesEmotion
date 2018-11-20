@@ -179,7 +179,29 @@ class ChatRoom extends Component {
 
   componentDidMount() {
     this.getUser();
+    this.getCommentList(this.props.chatId); 
   }
+
+  getCommentList = async chatId => {
+    const commentOfThisChat = await fb.getAStory(chatId).comments;
+    console.log("commentOfThisChat: ", commentOfThisChat);
+    let thisCrowdBoxDialog = commentOfThisChat.map((commentObject, index) => ({
+      speaker: commentObject.userId == this.props.userId ? "user" : "bot",
+      text: commentObject.content,
+      profileImageName: commentObject.profileImageName,
+      crowdEmotion: commentObject.emotion
+    }));
+    this.props.isCrowdBox
+      ? null
+      : thisCrowdBoxDialog.push({
+          speaker: "user",
+          text: userInputDialog.text,
+          profileImageName: userInputDialog.profileImageName,
+          crowdEmotion: commentObject.emotion
+        });
+    this.crowdBoxDialog = thisCrowdBoxDialog
+    // this.setState({ crowdBoxDialog: thisCrowdBoxDialog });
+  };
 
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
@@ -827,11 +849,12 @@ class ChatRoom extends Component {
           </ScrollView>
           {chatLog && this.state.isFinished ? (
             <View>
-              {this.state.isCrowdBox || isCrowdBox ? (
+              {this.state.isCrowdBox || isCrowdBox || this.crowdBoxDialog ? (
                 <CrowdBoxFooter
                   chatId={chatId}
                   userId={this.state.user.userId}
-                  isCrowdBox={isCrowdBox}
+                  isCrowdBox={true}
+                  crowdBoxDialog={this.crowdBoxDialog}
                   userInputDialog={this.state.currentDialog[0]}
                 />
               ) : (
