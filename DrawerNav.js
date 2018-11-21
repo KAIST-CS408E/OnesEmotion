@@ -166,7 +166,7 @@ const drawer = createStackNavigator({
   Splash: {screen: Splash},
   Loading: {screen: Loading}
 },{
-  initialRouteName: "Login",  
+  initialRouteName: "Splash",  
   headerMode: 'none',
   navigationOptions: {
     headerVisible: false,
