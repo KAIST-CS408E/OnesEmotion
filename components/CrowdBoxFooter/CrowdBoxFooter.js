@@ -54,13 +54,15 @@ class CrowdBoxFooter extends Component {
     const { userId, chatId, userInputDialog, crowdBoxDialog } = this.props;
     // this.getCommentList(this.props.chatId); // load saved crowd comments
     // this.setState({ crowdBoxDialog: crowdBoxDialog });
-    this.setNewComment(
-      userId,
-      chatId,
-      userInputDialog.text,
-      userInputDialog.crowdEmotion,
-      userInputDialog.profileImageName
-    );
+    if (userInputDialog && userInputDialog.crowdEmotion) {
+      this.setNewComment(
+        userId,
+        chatId,
+        userInputDialog.text,
+        userInputDialog.crowdEmotion,
+        userInputDialog.profileImageName
+      );
+    }
     setTimeout(() => {
       const {crowdBoxDialog} = this.state;
       if (crowdBoxDialog.length != 0) {

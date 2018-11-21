@@ -142,7 +142,8 @@ class ChatRoom extends Component {
     firstQuestion: null,
     crowdBoxDialog: [],
     isAlreadyCommentedWithThisUser: false,
-    isLoaded: false
+    isLoaded: false,
+    chatting: false
   };
 
   componentWillMount() {
@@ -316,7 +317,8 @@ class ChatRoom extends Component {
       isTextInput: false,
       isIconInput: false,
       isButtonInput: false,
-      isFinished: false
+      isFinished: false,
+      chatting: true
     };
     const forCrowdBox = {
       //when is not MyLog
@@ -335,7 +337,8 @@ class ChatRoom extends Component {
       isTextInput: false,
       isIconInput: false,
       isButtonInput: false,
-      isFinished: false
+      isFinished: false,
+      chatting: true
     };
     console.log("forCrowdBox", forCrowdBox);
     // this.setState(isMyLog ? myLogInput : forCrowdBox);
@@ -364,7 +367,6 @@ class ChatRoom extends Component {
       isOnceAgained: isTarget ? true : false
     });
     //add bot question here
-    console.log("nextQuestionFixed: ", nextQuestionFixed);
     this.botPushThisQuestion(nextQuestionFixed, this.state.listOfEmotion);
   };
 
@@ -449,11 +451,17 @@ class ChatRoom extends Component {
   );
 
   finishChat = async () => {
-    const { user, backgroundImageName, chatId, currentDialog } = this.state;
+    const { user, backgroundImageName, chatId, currentDialog, chatting } = this.state;
     if (!chatId && currentDialog.length > 1) {
       fb.createChat(user.userId, backgroundImageName, this.state);
+      this.props.navigation.goBack();
+      return;
     }
-    this.props.navigation.goBack();
+    if (chatting && chatId) {
+      fb.updateChat(chatId, this.state);
+      this.props.navigation.goBack();
+      return;
+    }
   };
 
   iconNameToKorean = iconName => {
@@ -857,8 +865,8 @@ class ChatRoom extends Component {
     console.log("In ChatRoom this.state:", this.state);
     // this.printDialogAsWellFormed();
     const contentsTopBottomMargin = 8;
-    const targetDialog = chatLog ? chatLog : this.state.currentDialog;
-    // const targetDialog = this.state.currentDialog;
+    // const targetDialog = chatLog ? chatLog : this.state.currentDialog;
+    const targetDialog = this.state.currentDialog;
     var { navigate } = this.props.navigation;
     const navigation = this.props.navigation;
     const isNewChat = navigation.getParam("isNewChat");

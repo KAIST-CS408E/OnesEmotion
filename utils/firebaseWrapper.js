@@ -625,6 +625,12 @@ export default api = {
         if (chat.totalComments > 0) {
           return;
         }
+        if (chatInfo.state && !chatInfo.state.isFinished) {
+          return;
+        }
+        if (chatInfo.state && chatInfo.state.buttonInputAns === "아니 괜찮아") {
+          return;
+        }
         allStoryIds.push(chat.id);
       })
       let allStories = await Promise.all(allStoryIds.map(async (chatId) => {

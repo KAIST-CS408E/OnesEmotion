@@ -16,6 +16,7 @@ import {
   DrawerActions
 } from "react-navigation";
 import NoticeBox from "../NoticeBox";
+import Loading from "../Loading";
 
 import fb from "../../utils/firebaseWrapper";
 import datetime from "../../utils/datetime";
