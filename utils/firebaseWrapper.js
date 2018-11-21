@@ -387,6 +387,25 @@ export default api = {
       // });
       // msgList.sort(this.orderByIndex);
       console.log("READ");
+      const comments = await db.collection('chats').doc(chatId).collection('comments').get()
+      const commentList = [];
+      comments.forEach((comment) => {
+        cmnt = comment.data()
+        commentList.push({
+          commentId: cmnt.id,
+          userId: cmnt.userId,
+          content: cmnt.content,
+          emotion: cmnt.emotion,
+          like: cmnt.like,
+          report: cmnt.report,
+          createdAt: cmnt.createdAt,
+          profileImageName: cmnt.profileImageName,
+        })
+      });
+      db.collection('chats').doc(chatId).update({
+        totalComments: commentList.length
+      });
+      console.log("READ");
       const chatInfoDoc = await db.collection('chats').doc(chatId).get()
       const chatInfo = chatInfoDoc.data();
       return {
@@ -396,6 +415,7 @@ export default api = {
         othersEmotion: chatInfo.othersEmotion,
         state: chatInfo.state,
         createdAt: chatInfo.createdAt,
+        comments: commentList
         // messages: msgList
       }
     } catch (e) {
