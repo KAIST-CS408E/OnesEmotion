@@ -139,7 +139,7 @@ class ChatRoom extends Component {
     // get user info
     user: fb.getUser(),
     chatId: null,
-    backgroundImageName: "",
+    backgroundImageName: getBackgroundImageName(),
     firstQuestion: null,
     crowdBoxDialog: [],
     isAlreadyCommentedWithThisUser: false,

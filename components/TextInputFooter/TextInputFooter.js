@@ -59,7 +59,7 @@ class TextInputFooter extends Component {
   renderIconOptionBox = isMyLog => (
     <View style={styles.iconOptionBoxContainer}>
       <Text style={styles.iconOptionBoxText}>
-        {isMyLog ? "Choose your emotion" : "How about your thought?"}
+        {isMyLog ? "Choose your emotion" : "당신이 위의 상황이라면 어떤 감정을 느꼈을까요?"}
       </Text>
       <View style={styles.iconOptionBox}>
         <ScrollView
@@ -215,7 +215,7 @@ class TextInputFooter extends Component {
   }
 }
 
-const IconOptionBoxTitleTextSize = 20;
+const IconOptionBoxTitleTextSize = 16;
 const IconOptionBoxTitleBoxSize = 2 * IconOptionBoxTitleTextSize;
 const TextInputBoxHeight = 44;
 const TextInputHeight = TextInputBoxHeight * 0.8;
@@ -233,7 +233,8 @@ const styles = StyleSheet.create({
   },
   iconOptionBox: {
     width: wp("100%"),
-    height: 60
+    height: 60,
+    marginTop: 8
     // alignItems: "center",
     // // flex: 1,
     // flexDirection: "row",

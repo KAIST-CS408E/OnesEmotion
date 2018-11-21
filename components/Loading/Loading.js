@@ -11,11 +11,15 @@ class Loading extends React.Component {
 	render() {
 		return (
 			<View style={styles.container}>
-        <ImageBackground
-          source={Images("Loading")}
-          style={styles.backgroundImage}
-        >
-        </ImageBackground>
+        <View style={styles.wrapper}>
+          <View>
+            <ImageBackground
+              source={Images("loading")}
+              style={styles.backgroundImage}
+            >
+            </ImageBackground>
+          </View>
+        </View>
       </View>
 		);
 	}
@@ -23,13 +27,22 @@ class Loading extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    width: wp("100%"),
-    height: hp("80%"),
+    display: 'flex',
     zIndex: 2,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    height:hp("80%")
+  },
+  wrapper: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: 'center',
   },
   backgroundImage: {
-    width: wp("100%"),
-    height: hp("100%"),
+    height: 200,
+    width: 200
   }
 });
 

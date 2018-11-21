@@ -57,7 +57,7 @@ class IconInputFooter extends Component {
   renderIconOptionBox = isMyLog => (
     <View style={styles.iconOptionBoxContainer}>
       <Text style={styles.iconOptionBoxText}>
-        {isMyLog ? "Choose your emotion" : "How about your thought?"}
+        {isMyLog ? "Choose your emotion" : "위의 상황에서 보통 어떤 감정을 느끼나요?"}
       </Text>
       <View style={styles.iconOptionBox}>
         <ScrollView
