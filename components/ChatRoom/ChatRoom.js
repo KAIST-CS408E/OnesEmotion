@@ -191,7 +191,7 @@ class ChatRoom extends Component {
     if (!state) {
       this.setState({
         chatId,
-        currentDialog: chatLog ? chatLog : this.state.currentDialog
+        currentDialog: chatLog ? chatLog : this.state.currentDialog,
       });
       return;
     }
@@ -217,7 +217,7 @@ class ChatRoom extends Component {
         ? state.isOnceAgained
         : this.state.isOnceAgained,
       isLoaded: true
-    });
+    }) ;
   }
 
   componentDidMount() {
@@ -890,7 +890,7 @@ class ChatRoom extends Component {
               chatLog ? (myChat ? myLogNotice : otherChatNotice) : myChatNotice
             }
           />
-          {this.state.isLoaded ? null : <Loading />}
+          {chatLog ? (this.state.isLoaded ? null : <Loading />) : null}
           <View style={{ flex: 1 }}>
             <ScrollView
               style={{
@@ -921,7 +921,7 @@ class ChatRoom extends Component {
                 />
               ))}
             </ScrollView>
-            {chatLog ? (
+            {chatLog && this.state.isFinished? (
               <View>
                 {this.state.isCrowdBox || isCrowdBox ? (
                   <CrowdBoxFooter
