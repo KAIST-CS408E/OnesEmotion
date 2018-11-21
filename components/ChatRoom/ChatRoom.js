@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import {
   View,
   Alert,
@@ -14,6 +15,7 @@ import {
   ImageBackground
 } from "react-native";
 import Header from "./../Header";
+import Loading from "./../Loading";
 import TextInputFooter from "./../TextInputFooter";
 import IconInputFooter from "./../IconInputFooter";
 import ButtonInputFooter from "./../ButtonInputFooter";
@@ -139,9 +141,11 @@ class ChatRoom extends Component {
     firstQuestion: null,
     crowdBoxDialog: [],
     isAlreadyCommentedWithThisUser: false,
+    isLoaded: false
   };
 
   componentWillMount() {
+    console.log("keyboard: ", Dimensions.get("window").height, hp("100%"));
     const backgroundImageName = this.props.navigation.getParam(
       "backgroundImageName"
     );
@@ -167,25 +171,28 @@ class ChatRoom extends Component {
         this.keyboardDidHide.bind(this)
       );
     }
-    const {done} = this.props;
+    const { done } = this.props;
     if (done) {
-      return
+      return;
     }
     this.createChatRoom();
   }
 
   componentWillReceiveProps(nextProps) {
-    const {chatId, state, chatLog} = nextProps;
+    const { chatId, state, chatLog } = nextProps;
     // this.getCommentList(chatId)
-    const isBoolean = (value) => {
+    const isBoolean = value => {
       if (value === true || value === false) {
-        return true
+        return true;
       }
-      return null
-    }
+      return null;
+    };
     if (!state) {
-      this.setState({chatId, currentDialog: chatLog ? chatLog : this.state.currentDialog})
-      return
+      this.setState({
+        chatId,
+        currentDialog: chatLog ? chatLog : this.state.currentDialog
+      });
+      return;
     }
     this.setState({
       chatId,
@@ -193,16 +200,27 @@ class ChatRoom extends Component {
       currentQuestion: state.currentQuestion || this.state.currentQuestion,
       nextQuestion: state.nextQuestion || this.state.nextQuestion,
       listOfEmotion: state.listOfEmotion || this.state.listOfEmotion,
-      isCrowdBox: isBoolean(state.isCrowdBox) ? state.isCrowdBox : this.state.isCrowdBox,
-      isTextInput: isBoolean(state.isTextInput) ? state.isTextInput : this.state.isTextInput,
-      isIconInput: isBoolean(state.isIconInput) ? state.isIconInput : this.state.isIconInput,
-      isFinished: isBoolean(state.isFinished) ? state.isFinished : this.state.isFinished,
-      isOnceAgained: isBoolean(state.isOnceAgained) ? state.isOnceAgained : this.state.isOnceAgained,
-      visibleHeight: state.visibleHeight || this.state.visibleHeight
-    })
+      isCrowdBox: isBoolean(state.isCrowdBox)
+        ? state.isCrowdBox
+        : this.state.isCrowdBox,
+      isTextInput: isBoolean(state.isTextInput)
+        ? state.isTextInput
+        : this.state.isTextInput,
+      isIconInput: isBoolean(state.isIconInput)
+        ? state.isIconInput
+        : this.state.isIconInput,
+      isFinished: isBoolean(state.isFinished)
+        ? state.isFinished
+        : this.state.isFinished,
+      isOnceAgained: isBoolean(state.isOnceAgained)
+        ? state.isOnceAgained
+        : this.state.isOnceAgained,
+      isLoaded: true
+    });
   }
 
   componentDidMount() {
+    console.log("screenHeight: ", Dimensions.get("window").height, hp("100%"));
     this.getUser();
   }
 
@@ -244,8 +262,11 @@ class ChatRoom extends Component {
     this.keyboardDidHideListener.remove();
   }
 
+  componentDidUpdate = (prevProps, prevState) => {};
+
   keyboardDidShow(e) {
     let newSize = Dimensions.get("window").height - e.endCoordinates.height;
+    console.log("keyboard: ", Dimensions.get("window").height, hp("100%"));
     this.setState({
       visibleHeight: newSize
       // topLogo: {width: 100, height: 70}
@@ -342,7 +363,7 @@ class ChatRoom extends Component {
   };
 
   handleIconInput = async (speaker, iconInput, isMyLog) => {
-    const {user, chatId} = this.state;
+    const { user, chatId } = this.state;
     // console.log("In ChatRoom handleIconInput iconInput: ", iconInput);
     const nextState = {
       currentDialog: [
@@ -356,7 +377,7 @@ class ChatRoom extends Component {
       isIconInput: false,
       isButtonInput: false,
       isFinished: false
-    }
+    };
     this.setState(nextState);
     // await fb.createEmotion(user.userId, chatId, iconInput, nextState);
     //add bot question here
@@ -414,20 +435,18 @@ class ChatRoom extends Component {
       imageWidth={"5"}
       imageName={"cancel"}
       onPress={
-        chatLog
-          ? () => this.props.navigation.goBack()
-          : () => this.finishChat()
+        chatLog ? () => this.props.navigation.goBack() : () => this.finishChat()
       }
     />
   );
 
   finishChat = async () => {
-    const {user, backgroundImageName, chatId, currentDialog} = this.state;
+    const { user, backgroundImageName, chatId, currentDialog } = this.state;
     if (!chatId && currentDialog.length > 1) {
       fb.createChat(user.userId, backgroundImageName, this.state);
     }
-    this.props.navigation.goBack()
-  }
+    this.props.navigation.goBack();
+  };
 
   iconNameToKorean = iconName => {
     if (iconName.includes("joy")) return "즐거움";
@@ -793,8 +812,12 @@ class ChatRoom extends Component {
         // fb.createMessage("bot", chatId, text, false, nextState);
         // if (nextState.isFinished)
         if (isItLastItem ? isFinished : this.state.isFinished) {
-          const {chatId} = await fb.createChat(user.userId, backgroundImageName, this.state);
-          this.setState({chatId})
+          const { chatId } = await fb.createChat(
+            user.userId,
+            backgroundImageName,
+            this.state
+          );
+          this.setState({ chatId });
         }
       }, firstTimeIntervalFiexd + this.getRandomInt(1500, 1950) * timeOffset);
       timeOffset += 1;
@@ -827,7 +850,7 @@ class ChatRoom extends Component {
     if (!backgroundImageName) {
       backgroundImageName = this.state.backgroundImageName;
     }
-    // console.log("In ChatRoom this.state:", this.state);
+    console.log("In ChatRoom this.state:", this.state);
     // this.printDialogAsWellFormed();
     const contentsTopBottomMargin = 8;
     const targetDialog = chatLog ? chatLog : this.state.currentDialog;
@@ -858,81 +881,82 @@ class ChatRoom extends Component {
             left={this.renderChatRoomHeaderLeft(chatLog)}
             right={this.renderChatRoomHeaderRight(chatLog)}
           />
-
           <NoticeBox
             notice={
               chatLog ? (myChat ? myLogNotice : otherChatNotice) : myChatNotice
             }
           />
-          <ScrollView
-            style={{
-              backgroundColor: "rgba(0,0,0,0)",
-              paddingBottom: contentsTopBottomMargin,
-              paddingTop: contentsTopBottomMargin
-            }}
-            ref={ref => (this.scrollView = ref)}
-            onContentSizeChange={(contentWidth, contentHeight) => {
-              isStartTop
-                ? null
-                : this.scrollView.scrollToEnd({ animated: true });
-            }}
-          >
-            {targetDialog.map((dialog, index) => (
-              <ChatElement
-                key={index}
-                speaker={dialog.speaker}
-                isMyChat={myChat || isNewChat}
-                text={dialog.text}
-                profileImageName={
-                  dialog.speaker == "bot"
-                    ? "bot"
-                    : this.state.user
-                    ? this.state.user.usericon
-                    : "user"
-                }
-              />
-            ))}
-          </ScrollView>
-          {chatLog ? (
-            <View>
-              {this.state.isCrowdBox ||
-              isCrowdBox ? (
-                <CrowdBoxFooter
-                  chatId={chatId}
-                  userId={this.state.user.userId}
-                  isCrowdBox={true}
-                  // crowdBoxDialog={this.crowdBoxDialog}
-                  userInputDialog={this.state.currentDialog[0]}
-                  comments={this.props.comments}
+          {this.state.isLoaded ? null : <Loading />}
+          <View style={{ flex: 1 }}>
+            <ScrollView
+              style={{
+                backgroundColor: "rgba(0,0,0,0)",
+                paddingBottom: contentsTopBottomMargin,
+                paddingTop: contentsTopBottomMargin
+              }}
+              ref={ref => (this.scrollView = ref)}
+              onContentSizeChange={(contentWidth, contentHeight) => {
+                isStartTop
+                  ? null
+                  : this.scrollView.scrollToEnd({ animated: true });
+              }}
+            >
+              {targetDialog.map((dialog, index) => (
+                <ChatElement
+                  key={index}
+                  speaker={dialog.speaker}
+                  isMyChat={myChat || isNewChat}
+                  text={dialog.text}
+                  profileImageName={
+                    dialog.speaker == "bot"
+                      ? "bot"
+                      : this.state.user
+                      ? this.state.user.usericon
+                      : "user"
+                  }
                 />
-              ) : (
-                <TextInputFooter
-                  onPress={this.handleTextInput}
-                  isIconOptionBox={true}
-                  isMyLog={false}
-                />
-              )}
-            </View>
-          ) : (
-            <View>
-              {this.state.isTextInput && !this.state.isFinished ? (
-                <TextInputFooter
-                  onPress={this.handleTextInput}
-                  isIconOptionBox={false}
-                  isMyLog={true}
-                />
-              ) : null}
-              {this.state.isIconInput && !this.state.isFinished ? (
-                <IconInputFooter
-                  onPress={this.handleIconInput}
-                  isMyLog={true}
-                />
-              ) : null}
-              {this.state.isButtonInput && !this.state.isFinished ? (
-                <ButtonInputFooter onPress={this.handleButtonInput} />
-              ) : null}
-            </View>
-          )}
+              ))}
+            </ScrollView>
+            {chatLog ? (
+              <View>
+                {this.state.isCrowdBox || isCrowdBox ? (
+                  <CrowdBoxFooter
+                    chatId={chatId}
+                    userId={this.state.user.userId}
+                    isCrowdBox={true}
+                    // crowdBoxDialog={this.crowdBoxDialog}
+                    userInputDialog={this.state.currentDialog[0]}
+                    comments={this.props.comments}
+                  />
+                ) : (
+                  <TextInputFooter
+                    onPress={this.handleTextInput}
+                    isIconOptionBox={true}
+                    isMyLog={false}
+                  />
+                )}
+              </View>
+            ) : (
+              <View>
+                {this.state.isTextInput && !this.state.isFinished ? (
+                  <TextInputFooter
+                    onPress={this.handleTextInput}
+                    isIconOptionBox={false}
+                    isMyLog={true}
+                  />
+                ) : null}
+                {this.state.isIconInput && !this.state.isFinished ? (
+                  <IconInputFooter
+                    onPress={this.handleIconInput}
+                    isMyLog={true}
+                  />
+                ) : null}
+                {this.state.isButtonInput && !this.state.isFinished ? (
+                  <ButtonInputFooter onPress={this.handleButtonInput} />
+                ) : null}
+              </View>
+            )}
+          </View>
         </ImageBackground>
       </View>
     );

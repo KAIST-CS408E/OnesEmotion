@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  Dimensions,
   ScrollView
 } from "react-native";
 import {
@@ -89,115 +90,124 @@ class TextInputFooter extends Component {
     const textInputMinHeight = TextInputHeight;
     const height = this.state.height;
     // console.log("In TextInputFooter height:", height);
-
+    console.log("TextInput: ", Dimensions.get("window").height, hp("100%"));
     return (
       <View
-        style={{
-          maxHeight: textInputMaxHeight + textInputBoxOffset,
-          minHeight: textInputMinHeight + textInputBoxOffset
+        onLayout={event => {
+          var { x, y, width, height } = event.nativeEvent.layout;
+          console.log("ref={ref => (this.scrollView = ref): ",x,y,width,height);
         }}
       >
-        {isIconOptionBox ? this.renderIconOptionBox(isMyLog) : null}
         <View
           style={{
-            width: wp("100%"),
-            height: height + textInputBoxOffset,
-            minHeight: textInputMinHeight + textInputBoxOffset,
             maxHeight: textInputMaxHeight + textInputBoxOffset,
-            backgroundColor: Colors.headerGrey,
-            alignItems: "center",
-            // flex: 1,
-            flexDirection: "row",
-            justifyContent: "space-around"
+            minHeight: textInputMinHeight + textInputBoxOffset
           }}
         >
+          {isIconOptionBox ? this.renderIconOptionBox(isMyLog) : null}
           <View
             style={{
-              width: wp("80%"),
-              height: height,
-              minHeight: textInputMinHeight,
-              backgroundColor: Colors.white,
-              maxHeight: textInputMaxHeight,
-              marginLeft: wp("1%"),
-              borderRadius: 15,
-              flexDirection: "column",
+              width: wp("100%"),
+              height: height + textInputBoxOffset,
+              minHeight: textInputMinHeight + textInputBoxOffset,
+              maxHeight: textInputMaxHeight + textInputBoxOffset,
+              backgroundColor: Colors.headerGrey,
               alignItems: "center",
-              justifyContent: "center"
+              // flex: 1,
+              flexDirection: "row",
+              justifyContent: "space-around"
             }}
           >
-            <TextInput
+            <View
               style={{
-                width: wp("75%"),
+                width: wp("80%"),
                 height: height,
                 minHeight: textInputMinHeight,
-                paddingRight: 10,
-                borderRadius: 15,
+                backgroundColor: Colors.white,
                 maxHeight: textInputMaxHeight,
-                marginLeft: 10,
-                fontSize: 15
-              }}
-              multiline={true}
-              onChangeText={text => this.setState({ text })}
-              onContentSizeChange={event => {
-                this.setState({ height: event.nativeEvent.contentSize.height });
-              }}
-              value={this.state.text}
-              underlineColorAndroid="transparent"
-              placeholder="내용을 입력해주세요."
-              placeholderTextColor={Colors.headerGrey}
-              autoCapitalize="none"
-            />
-          </View>
-          <View style={{ opacity: this.state.text ? 1 : 0.5 }}>
-            <TouchableOpacity
-              disabled={this.state.text ? false : true}
-              style={{
-                width: wp("15%"),
-                height: TextInputHeight,
-                backgroundColor: Colors.chatElementGrey,
-                borderRadius: 10,
+                marginLeft: wp("1%"),
+                borderRadius: 15,
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center"
               }}
-              onPress={() => {
-                // console.log("In TextInputFooter state before onPress:", this.state);
-                onPress(
-                  "user",
-                  this.state.text,
-                  this.state.selectedIconName,
-                  isMyLog
-                );
-                // console.log("In TextInputFooter state after onPress:", this.state);
-                this.setState({
-                  text: "",
-                  optionIconNameList: [
-                    "nothing_option_unclicked",
-                    "joy_option_unclicked",
-                    "trust_option_unclicked",
-                    "fear_option_unclicked",
-                    "surprise_option_unclicked",
-                    "anticipation_option_unclicked",
-                    "anger_option_unclicked",
-                    "disgust_option_unclicked",
-                    "sadness_option_unclicked"
-                  ],
-                  selectedIconName: ""
-                });
-              }}
             >
-              <Text
+              <TextInput
                 style={{
-                  color: Colors.white,
-                  fontSize: 15,
-                  fontWeight: "bold",
-                  textAlign: "center",
-                  textAlignVertical: "center"
+                  width: wp("75%"),
+                  height: height,
+                  minHeight: textInputMinHeight,
+                  paddingRight: 10,
+                  borderRadius: 15,
+                  maxHeight: textInputMaxHeight,
+                  marginLeft: 10,
+                  fontSize: 15
+                }}
+                multiline={true}
+                onChangeText={text => this.setState({ text })}
+                onContentSizeChange={event => {
+                  this.setState({
+                    height: event.nativeEvent.contentSize.height
+                  });
+                }}
+                value={this.state.text}
+                underlineColorAndroid="transparent"
+                placeholder="내용을 입력해주세요."
+                placeholderTextColor={Colors.headerGrey}
+                autoCapitalize="none"
+              />
+            </View>
+            <View style={{ opacity: this.state.text ? 1 : 0.5 }}>
+              <TouchableOpacity
+                disabled={this.state.text ? false : true}
+                style={{
+                  width: wp("15%"),
+                  height: TextInputHeight,
+                  backgroundColor: Colors.chatElementGrey,
+                  borderRadius: 10,
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
+                onPress={() => {
+                  // console.log("In TextInputFooter state before onPress:", this.state);
+                  onPress(
+                    "user",
+                    this.state.text,
+                    this.state.selectedIconName,
+                    isMyLog
+                  );
+                  // console.log("In TextInputFooter state after onPress:", this.state);
+                  this.setState({
+                    text: "",
+                    optionIconNameList: [
+                      "nothing_option_unclicked",
+                      "joy_option_unclicked",
+                      "trust_option_unclicked",
+                      "fear_option_unclicked",
+                      "surprise_option_unclicked",
+                      "anticipation_option_unclicked",
+                      "anger_option_unclicked",
+                      "disgust_option_unclicked",
+                      "sadness_option_unclicked"
+                    ],
+                    selectedIconName: ""
+                  });
                 }}
               >
-                전송
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={{
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    textAlignVertical: "center"
+                  }}
+                >
+                  전송
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </View>

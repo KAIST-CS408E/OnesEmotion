@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { View, Text, Image, Alert, StyleSheet, ScrollView } from "react-native";
 import LogItem from "./LogItem";
+import Loading from "./../Loading";
 import Header from "./../Header";
 import ImageButton from "./../ImageButton";
 import {
@@ -84,7 +85,8 @@ class LogList extends Component {
     ],
     user: fb.getUser(),
     isRemoveModalVisible: false,
-    removeTargetKey: -1
+    removeTargetKey: -1,
+    isLoaded: false
   };
 
   componentDidMount() {
@@ -109,11 +111,10 @@ class LogList extends Component {
           selfEmotion: chat.userEmotion, // TODO: emotion name matching
           crowdEmotion: chat.othersEmotion, // TODO: emotion name matching
           date: datetime.toString(chat.createdAt.toDate()),
-          text: this.toShort(
-            chat.summary ? chat.summary : ""
-          ),
-          backgroundImageName: chat.backgroundImage
-        }))
+          text: this.toShort(chat.summary ? chat.summary : ""),
+          backgroundImageName: chat.backgroundImage,
+        })),
+        isLoaded: true,
       });
     } else {
       const chatList = await fb.getAllStories(user.userId);
@@ -130,14 +131,13 @@ class LogList extends Component {
           date: datetime.toString(
             chat.createdAt ? chat.createdAt.toDate() : new Date()
           ),
-          text: this.toShort(
-            chat.summary ? chat.summary : ""
-          ),
+          text: this.toShort(chat.summary ? chat.summary : ""),
           backgroundImageName: chat.backgroundImage
         });
       });
       this.setState({
-        logList: logList
+        logList: logList,
+        isLoaded: true
       });
     }
   };
@@ -243,6 +243,7 @@ class LogList extends Component {
           right={this.renderLogListHeaderRight(myLog)}
         />
         <NoticeBox notice={myLog ? myLogNotice : storyNotice} />
+        {this.state.isLoaded ? null : <Loading />}
         <ScrollView>{contents}</ScrollView>
         {this.state.isRemoveModalVisible && myLog ? (
           <Modal

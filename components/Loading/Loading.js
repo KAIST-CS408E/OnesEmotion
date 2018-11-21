@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
   container: {
     width: wp("100%"),
     height: hp("100%"),
+    zIndex: 2,
   },
   backgroundImage: {
     width: wp("100%"),
