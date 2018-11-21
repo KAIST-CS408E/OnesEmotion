@@ -30,6 +30,7 @@ export default class Login extends React.Component {
   }
 
   login = async () => {
+
     try {
       const {email, password} = this.state;
       const {error} = await fb.login(email, password);

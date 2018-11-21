@@ -91,9 +91,9 @@ export default withNavigation(MyChat);
 
 const styles = StyleSheet.create({
   container: {
-    width: wp("100%"),
-    alignItems: "center",
-    justifyContent: "center"
+    // width: wp("100%"),
+    // alignItems: "center",
+    // justifyContent: "center"
   },
   icon: {
     width: 24,

@@ -68,6 +68,7 @@ class OtherChat extends React.Component {
     // const chatLog = sampleDialog;
     const {state, chatId, comments, isCrowdBox} = this.state;
     const navigation = this.props.navigation;
+    const backgroundImage = navigation.getParam('backgroundImageName', 'background4');
     return (
       <View style={styles.container}>
         <ChatRoom done={true} 
@@ -78,6 +79,7 @@ class OtherChat extends React.Component {
                   navigation={navigation}
                   myChat={false}
                   state={state}
+                  backgroundImageName={backgroundImage}
         />
       </View>
     );
@@ -88,9 +90,9 @@ export default withNavigation(OtherChat);
 
 const styles = StyleSheet.create({
   container: {
-    width: wp("100%"),
-    alignItems: "center",
-    justifyContent: "center"
+    // width: wp("100%"),
+    // alignItems: "center",
+    // justifyContent: "center"
   },
   icon: {
     width: 24,

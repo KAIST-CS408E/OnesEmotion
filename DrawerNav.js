@@ -93,7 +93,7 @@ class MidTitle extends React.Component {
       <TouchableOpacity
         key={recommandation.chatId}
         style={styles.button}
-        onPress={() => this.props.navigation.navigate("OtherChat", {chatId: recommandation.chatId})}
+        onPress={() => this.props.navigation.navigate("OtherChat", {chatId: recommandation.chatId, backgroundImageName: recommandation.backgroundImageName})}
       >
         <Image style={styles.icon} source={Icons("emphaty")} />
         <Text style={styles.title}>{this.toShort(recommandation.summary)}</Text>
