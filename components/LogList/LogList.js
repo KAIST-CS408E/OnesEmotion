@@ -131,7 +131,7 @@ class LogList extends Component {
             chat.createdAt ? chat.createdAt.toDate() : new Date()
           ),
           text: this.toShort(
-            chat.summary ? chat.summary : "채팅 요약 캐싱 전 로그입니다."
+            chat.summary ? chat.summary : ""
           ),
           backgroundImageName: chat.backgroundImage
         });

@@ -46,7 +46,8 @@ const sampleDialog = [
 class MyChat extends React.Component {
   state = {
     chatId: null,
-    state: null
+    state: null,
+    comments: []
   }
 
   componentDidMount() {
@@ -55,16 +56,17 @@ class MyChat extends React.Component {
 
   getChatLogs = async () => {
     const chatId = this.props.navigation.getParam('chatId')
-    const {state} = await fb.getAChat(chatId)
+    const {state, comments} = await fb.getAChat(chatId)
     this.setState({
       chatId,
-      state
+      state,
+      comments
     })
   }
 
   render() {
     // const chatLog = sampleDialog;
-    const {chatId, state} = this.state;
+    const {chatId, state, comments} = this.state;
     const navigation = this.props.navigation;
 
     return (
@@ -78,6 +80,7 @@ class MyChat extends React.Component {
           isStartTop={true}
           navigation={navigation}
           myChat={true}
+          comments={comments}
         />
       </View>
     );

@@ -903,6 +903,7 @@ class ChatRoom extends Component {
                   isCrowdBox={true}
                   // crowdBoxDialog={this.crowdBoxDialog}
                   userInputDialog={this.state.currentDialog[0]}
+                  comments={this.props.comments}
                 />
               ) : (
                 <TextInputFooter

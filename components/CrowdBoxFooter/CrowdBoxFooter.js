@@ -51,7 +51,7 @@ class CrowdBoxFooter extends Component {
 
   componentDidMount = () => {
     const { userId, chatId, userInputDialog, crowdBoxDialog } = this.props;
-    this.getCommentList(this.props.chatId); // load saved crowd comments
+    // this.getCommentList(this.props.chatId); // load saved crowd comments
     // this.setState({ crowdBoxDialog: crowdBoxDialog });
     this.setNewComment(
       userId,
@@ -61,6 +61,26 @@ class CrowdBoxFooter extends Component {
       userInputDialog.profileImageName
     );
   };
+
+  componentWillReceiveProps(nextProps) {
+    const {comments} = nextProps;
+    const commentOfThisChat = comments;
+    let thisCrowdBoxDialog = commentOfThisChat.map((commentObject, index) => ({
+      speaker: commentObject.userId == this.props.userId ? "user" : "bot",
+      text: commentObject.content,
+      profileImageName: commentObject.profileImageName,
+      crowdEmotion: commentObject.emotion
+    }));
+    this.props.isCrowdBox
+      ? null
+      : thisCrowdBoxDialog.push({
+          speaker: "user",
+          text: userInputDialog.text,
+          profileImageName: userInputDialog.profileImageName,
+          crowdEmotion: commentObject.emotion
+        });
+    this.setState({ crowdBoxDialog: thisCrowdBoxDialog });
+  }
 
   getCommentList = async chatId => {
     const {userInputDialog} = this.props;
