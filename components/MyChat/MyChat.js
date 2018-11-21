@@ -46,7 +46,8 @@ const sampleDialog = [
 class MyChat extends React.Component {
   state = {
     chatId: null,
-    chatLog: []
+    state: null,
+    comments: []
   }
 
   componentDidMount() {
@@ -55,41 +56,31 @@ class MyChat extends React.Component {
 
   getChatLogs = async () => {
     const chatId = this.props.navigation.getParam('chatId')
-    const {messages} = await fb.getAChat(chatId)
+    const {state, comments} = await fb.getAChat(chatId)
     this.setState({
       chatId,
-      chatLog: messages.map((m) => {
-        if (m.userId == "bot") {
-          return {
-            speaker: "bot", text: m.content
-          }
-        }
-        if (m.content.indexOf('clicked') != -1) {
-          return {
-            speaker: "userIcon", text: m.content
-          }
-        }
-        return {
-          speaker: "user", text: m.content
-        }
-      })
+      state,
+      comments
     })
   }
 
   render() {
     // const chatLog = sampleDialog;
-    const {chatLog, chatId} = this.state;
+    const {chatId, state, comments} = this.state;
     const navigation = this.props.navigation;
 
     return (
       <View style={styles.container}>
         <ChatRoom
-          chatLog={chatLog}
+          done={true}
+          chatLog={state ? state.currentDialog : []}
           chatId={chatId}
+          state={state}
           isCrowdBox={true}
           isStartTop={true}
           navigation={navigation}
           myChat={true}
+          comments={comments}
         />
       </View>
     );
@@ -100,9 +91,9 @@ export default withNavigation(MyChat);
 
 const styles = StyleSheet.create({
   container: {
-    width: wp("100%"),
-    alignItems: "center",
-    justifyContent: "center"
+    // width: wp("100%"),
+    // alignItems: "center",
+    // justifyContent: "center"
   },
   icon: {
     width: 24,

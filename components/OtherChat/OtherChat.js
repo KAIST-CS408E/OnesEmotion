@@ -46,54 +46,40 @@ const sampleDialog = [
 class OtherChat extends React.Component {
   state = {
     chatId: null,
-    chatLog: []
-  };
+    state: null,
+    comments: []
+  }
 
   componentDidMount() {
     this.getChatLogs();
   }
 
   getChatLogs = async () => {
-    const chatId = this.props.navigation.getParam("chatId"); // TODO
-    const { messages } = await fb.getAStory(chatId);
+    const chatId = this.props.navigation.getParam('chatId') // TODO
+    const {state, comments} = await fb.getAStory(chatId)
     this.setState({
       chatId,
-      chatLog: messages.map(m => {
-        if (m.userId == "bot") {
-          return {
-            speaker: "bot",
-            text: m.content
-          };
-        }
-        if (m.content.indexOf("clicked") != -1) {
-          return {
-            speaker: "userIcon",
-            text: m.content
-          };
-        }
-        return {
-          speaker: "user",
-          text: m.content
-        };
-      })
-    });
-  };
+      state,
+      comments
+    })
+  }
 
   render() {
     // const chatLog = sampleDialog;
-    const { chatLog, chatId } = this.state;
+    const {state, chatId, comments} = this.state;
     const navigation = this.props.navigation;
     const backgroundImage = navigation.getParam('backgroundImageName', 'background4');
-    console.log('backgroundImage', backgroundImage)
     return (
       <View style={styles.container}>
-        <ChatRoom
-          chatId={chatId}
-          chatLog={chatLog}
-          isStartTop={true}
-          navigation={navigation}
-          myChat={false}
-          backgroundImageName={backgroundImage}
+        <ChatRoom done={true} 
+                  chatId={chatId} 
+                  chatLog={state ? state.currentDialog : []} 
+                  comments={comments} 
+                  isStartTop={true} 
+                  navigation={navigation}
+                  myChat={false}
+                  state={state}
+                  backgroundImageName={backgroundImage}
         />
       </View>
     );
@@ -104,9 +90,9 @@ export default withNavigation(OtherChat);
 
 const styles = StyleSheet.create({
   container: {
-    width: wp("100%"),
-    alignItems: "center",
-    justifyContent: "center"
+    // width: wp("100%"),
+    // alignItems: "center",
+    // justifyContent: "center"
   },
   icon: {
     width: 24,

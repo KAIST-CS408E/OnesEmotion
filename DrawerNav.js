@@ -66,7 +66,6 @@ class MidTitle extends React.Component {
         NavigationActions.navigate({ routeName: 'Login'})
       ]
     })
-
 		if (user) {
       this.middleWare(resetAction1)
       this.setState({user})
@@ -167,7 +166,7 @@ const drawer = createStackNavigator({
   Splash: {screen: Splash},
   Loading: {screen: Loading}
 },{
-  initialRouteName: "Splash",  
+  initialRouteName: "Login",  
   headerMode: 'none',
   navigationOptions: {
     headerVisible: false,

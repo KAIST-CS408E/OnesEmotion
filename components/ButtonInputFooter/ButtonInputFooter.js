@@ -15,7 +15,7 @@ import Colors from "./../../assets/Colors";
 
 class ButtonInputFooter extends Component {
   state = {
-    text: "Type your answer"
+    text: ""
   };
 
   render() {

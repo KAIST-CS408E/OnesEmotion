@@ -98,7 +98,8 @@ const imageSizeCrowd = itemBoxHeight / 6;
 const styles = StyleSheet.create({
   itemBox: {
     height: itemBoxHeight,
-    marginTop: wp("3%"),
+    marginTop: wp("1.5%"),
+    marginBottom: wp("1.5%"),
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
