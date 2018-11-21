@@ -66,7 +66,7 @@ class OtherChat extends React.Component {
 
   render() {
     // const chatLog = sampleDialog;
-    const {state, chatId, comments} = this.state;
+    const {state, chatId, comments, isCrowdBox} = this.state;
     const navigation = this.props.navigation;
     return (
       <View style={styles.container}>
@@ -74,7 +74,7 @@ class OtherChat extends React.Component {
                   chatId={chatId} 
                   chatLog={state ? state.currentDialog : []} 
                   comments={comments} 
-                  isStartTop={true} 
+                  isStartTop={true}
                   navigation={navigation}
                   myChat={false}
                   state={state}

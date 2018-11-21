@@ -21,7 +21,8 @@ import fb from "../../utils/firebaseWrapper";
 
 class CrowdBoxFooter extends Component {
   state = {
-    crowdBoxDialog: []
+    crowdBoxDialog: [],
+    notice: '대화를 불러오는 중..'
     // [
     //   {
     //     speaker: "bot",
@@ -60,9 +61,24 @@ class CrowdBoxFooter extends Component {
       userInputDialog.crowdEmotion,
       userInputDialog.profileImageName
     );
+    setTimeout(() => {
+      const {crowdBoxDialog} = this.state;
+      if (crowdBoxDialog.length != 0) {
+        return;
+      }
+      this.setState({ notice: "아직 댓글이 없습니다."})
+    }, 3000);
+    this.getCommentList()
   };
 
   componentWillReceiveProps(nextProps) {
+    const {crowdBoxDialog} = this.state;
+    if (crowdBoxDialog.length > 0) {
+      if (thisCrowdBoxDialog && thisCrowdBoxDialog.length != 0) {
+        this.setState({ notice: "다른 사람들의 댓글"})
+      }
+      return;
+    }
     const {comments} = nextProps;
     const commentOfThisChat = comments;
     let thisCrowdBoxDialog = commentOfThisChat.map((commentObject, index) => ({
@@ -80,11 +96,18 @@ class CrowdBoxFooter extends Component {
           crowdEmotion: commentObject.emotion
         });
     this.setState({ crowdBoxDialog: thisCrowdBoxDialog });
+    if (thisCrowdBoxDialog && thisCrowdBoxDialog.length != 0) {
+      this.setState({ notice: "다른 사람들의 댓글"})
+    }
   }
 
-  getCommentList = async chatId => {
-    const {userInputDialog} = this.props;
-    const commentOfThisChat = (await fb.getAStory(chatId)).comments;
+  getCommentList = async () => {
+    const {chatId} = this.props;
+    if (!chatId) {
+      return;
+    }
+    const {comments} = await fb.getAStory(chatId);
+    const commentOfThisChat = comments;
     let thisCrowdBoxDialog = commentOfThisChat.map((commentObject, index) => ({
       speaker: commentObject.userId == this.props.userId ? "user" : "bot",
       text: commentObject.content,
@@ -107,7 +130,8 @@ class CrowdBoxFooter extends Component {
   };
 
   render() {
-    const { userInputDialog, isCrowdBox, onPress } = this.props; // onPress에서 반드시 yes, no 둘중 뭐를 체크한건지 param으로 받아오도록 해야함.
+    const { userInputDialog, isCrowdBox, onPress} = this.props; // onPress에서 반드시 yes, no 둘중 뭐를 체크한건지 param으로 받아오도록 해야함.
+    const {notice} = this.state;
     // console.log("In CrowdBoxFooter userInputDialog elems: ", userInputDialog);
     // console.log(
     //   "In CrowdBoxFooter userInputDialog elems: ",
@@ -120,7 +144,7 @@ class CrowdBoxFooter extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.crowdBoxHeader}>
-          <Text style={styles.crowdBoxHeaderText}>다른 사람들의 댓글</Text>
+          <Text style={styles.crowdBoxHeaderText}>{notice}</Text>
         </View>
         <View style={{ flex: 1 }}>
           <ScrollView

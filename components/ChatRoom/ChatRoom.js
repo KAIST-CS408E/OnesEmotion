@@ -242,6 +242,11 @@ class ChatRoom extends Component {
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
+    const getChatList = this.props.navigation.getParam('getChatList');
+    if (getChatList) {
+      getChatList();
+    }
+    this.finishChat();
   }
 
   keyboardDidShow(e) {
@@ -416,7 +421,7 @@ class ChatRoom extends Component {
       onPress={
         chatLog
           ? () => this.props.navigation.goBack()
-          : () => this.finishChat()
+          : () => this.props.navigation.goBack()
       }
     />
   );
@@ -792,10 +797,10 @@ class ChatRoom extends Component {
         // this.setState(nextState);
         // fb.createMessage("bot", chatId, text, false, nextState);
         // if (nextState.isFinished)
-        if (isItLastItem ? isFinished : this.state.isFinished) {
-          const {chatId} = await fb.createChat(user.userId, backgroundImageName, this.state);
-          this.setState({chatId})
-        }
+        // if (isItLastItem ? isFinished : this.state.isFinished) {
+        //   const {chatId} = await fb.createChat(user.userId, backgroundImageName, this.state);
+        //   this.setState({chatId})
+        // }
       }, firstTimeIntervalFiexd + this.getRandomInt(1500, 1950) * timeOffset);
       timeOffset += 1;
     });

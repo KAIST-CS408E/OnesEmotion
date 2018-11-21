@@ -186,7 +186,7 @@ class LogList extends Component {
       imageName={myLog ? "add" : "refresh"}
       onPress={
         myLog
-          ? () => this.props.navigation.navigate("ChatRoom")
+          ? () => this.props.navigation.navigate("ChatRoom", {getChatList: this.getChatList})
           : () => this.getChatList()
       }
     />

@@ -57,6 +57,10 @@ export default api = {
         userIcon: usericon,
         createdAt: new Date()
       })
+      userObject.uid = user.uid
+      userObject.displayName = name
+      userObject.gender = gender
+      userObject.userIcon = usericon
       return {
         userId: user.uid,
         name: name
@@ -77,10 +81,16 @@ export default api = {
     // }
     try {
       const user = await auth.signInWithEmailAndPassword(email, password);
-      console.log(user);
       if (!user) {
         return null
       }
+      console.log("READ");
+      const userDoc = await db.collection('users').doc(user.userId).get();
+      const userInfo = userDoc.data()
+      userObject.uid = userInfo.userId
+      userObject.displayName = userInfo.name
+      userObject.gender = userInfo.gender
+      userObject.userIcon = userInfo.userIcon
       return {
         userId: user.uid,
         name: user.displayName
@@ -129,6 +139,9 @@ export default api = {
   getUserInfo: async function () {
     try {
       const user = await this.isUserLoggedIn();
+      if (!user) {
+        return null;
+      }
       const userDoc = await db.collection('users').doc(user.userId).get();
       const userInfo = userDoc.data()
       userObject.gender = userInfo.gender;
@@ -168,8 +181,7 @@ export default api = {
     // chatId: chatroom's identifier
     try {
       if (!userId) {
-        console.log("creatChat(): No userId")
-        return null;
+        userId = userObject.uid
       }
       let summary;
       if (state && state.currentDialog && state.currentDialog.length > 1) {
@@ -326,6 +338,9 @@ export default api = {
     //            }, ...]
     // }, ...]
     try {
+      if (!userId) {
+        userId = userObject.uid
+      }
       const allChatIds = [];
       console.log("READ");
       const chatList = await db.collection('users').doc(userId).collection('chats').get()
@@ -373,6 +388,9 @@ export default api = {
     //             }, ...]
     // }
     try {
+      if (!chatId) {
+        return null;
+      }
       // console.log("READ");
       // const msgs = await db.collection('chats').doc(chatId).collection('msgs').get()
       // const msgList = [];
@@ -387,7 +405,7 @@ export default api = {
       // });
       // msgList.sort(this.orderByIndex);
       console.log("READ");
-      const comments = await db.collection('chats').doc(chatId).collection('comments').get()
+      const comments = await db.collection('chats').doc(chatId).collection('comments').orderBy("createdAt").get()
       const commentList = [];
       comments.forEach((comment) => {
         cmnt = comment.data()
@@ -448,6 +466,9 @@ export default api = {
     //            }, ...]
     // }, ...]
     try {
+      if (!userId) {
+        userId = userObject.uid
+      }
       const allStoryIds = [];
       console.log("READ");
       const storyList = await db.collection('chats').orderBy("createdAt", "desc").get()
@@ -457,6 +478,9 @@ export default api = {
           return;
         }
         if (chatInfo.state && !chatInfo.state.isFinished) {
+          return;
+        }
+        if (chatInfo.state && chatInfo.state.buttonInputAns === "아니 괜찮아") {
           return;
         }
         allStoryIds.push(chat.id);
@@ -511,6 +535,9 @@ export default api = {
     //            }, ...]
     // }
     try {
+      if (!chatId) {
+        return null;
+      }
       // console.log("READ");
       // const msgs = await db.collection('chats').doc(chatId).collection('msgs').get()
       // const msgList = [];
@@ -525,7 +552,7 @@ export default api = {
       // });
       // msgList.sort(this.orderByIndex);
       console.log("READ");
-      const comments = await db.collection('chats').doc(chatId).collection('comments').get()
+      const comments = await db.collection('chats').doc(chatId).collection('comments').orderBy("createdAt").get()
       const commentList = [];
       comments.forEach((comment) => {
         cmnt = comment.data()
@@ -584,6 +611,9 @@ export default api = {
     //            }, ...]
     // }, ...]
     try {
+      if (!userId) {
+        userId = userObject.uid
+      }
       const allStoryIds = [];
       console.log("READ");
       const storyList = await db.collection('chats').orderBy("createdAt", "desc").limit(20).get()
@@ -630,6 +660,12 @@ export default api = {
     // OUTPUT
     // commentId
     try {
+      if (!chatId) {
+        return;
+      }
+      if (!userId) {
+        userId = userObject.uid
+      }
       await db.collection('chats').doc(chatId).update({
         othersEmotion: emotion
       });
@@ -645,7 +681,7 @@ export default api = {
       return doc.id
     } catch (e) {
       console.log(e.toString());
-      return [];
+      return null;
     }
   },
   removeComment: async function (chatId, commentId) {
