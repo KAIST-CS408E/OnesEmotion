@@ -10,6 +10,5 @@ export default function getSource(imageName) {
     if (imageName == "background9") return require("./background9.png")
     if (imageName == "background10") return require("./background10.png")
     if (imageName == "splash") return require("./splash.png")
-    if (imageName == "Loading") return require("./Loading.png")
     if (imageName == "loading") return require("./loading.gif")
 };
