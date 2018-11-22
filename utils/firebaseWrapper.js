@@ -159,7 +159,12 @@ export default api = {
   },
   isUserLoggedIn: function () {
     return new Promise(function(resolve, reject) {
+      let count = 0;
       setInterval(function() {
+        if (count > 50) {
+          resolve(false)
+          return
+        }
         if (arrived) {
           if (userObject) {
             resolve({
@@ -171,6 +176,7 @@ export default api = {
           }
           return
         }
+        count++;
       }, 10);
     });
   },
