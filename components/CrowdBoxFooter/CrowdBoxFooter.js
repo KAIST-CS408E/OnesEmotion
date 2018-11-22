@@ -54,15 +54,15 @@ class CrowdBoxFooter extends Component {
     const { userId, chatId, userInputDialog, crowdBoxDialog } = this.props;
     // this.getCommentList(this.props.chatId); // load saved crowd comments
     // this.setState({ crowdBoxDialog: crowdBoxDialog });
-    if (userInputDialog && userInputDialog.crowdEmotion) {
-      this.setNewComment(
-        userId,
-        chatId,
-        userInputDialog.text,
-        userInputDialog.crowdEmotion,
-        userInputDialog.profileImageName
-      );
-    }
+    // if (userInputDialog && userInputDialog.crowdEmotion) {
+    //   this.setNewComment(
+    //     userId,
+    //     chatId,
+    //     userInputDialog.text,
+    //     userInputDialog.crowdEmotion,
+    //     userInputDialog.profileImageName
+    //   );
+    // }
     setTimeout(() => {
       const {crowdBoxDialog} = this.state;
       if (crowdBoxDialog.length != 0) {
@@ -127,9 +127,9 @@ class CrowdBoxFooter extends Component {
     this.setState({ crowdBoxDialog: thisCrowdBoxDialog });
   };
 
-  setNewComment = (userId, chatId, content, emotion, profileImageName) => {
-    fb.createComment(userId, chatId, content, emotion, profileImageName);
-  };
+  // setNewComment = (userId, chatId, content, emotion, profileImageName) => {
+  //   fb.createComment(userId, chatId, content, emotion, profileImageName);
+  // };
 
   render() {
     const { userInputDialog, isCrowdBox, onPress} = this.props; // onPress에서 반드시 yes, no 둘중 뭐를 체크한건지 param으로 받아오도록 해야함.

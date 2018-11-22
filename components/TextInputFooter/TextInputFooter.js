@@ -53,7 +53,7 @@ class TextInputFooter extends Component {
     this.setState({
       optionIconNameList: newList,
       selectedIconName: `${selectedImageName.split("_")[0]}_option_clicked`
-    });
+    }, () => {console.log("selectedImageName", selectedImageName)});
   };
 
   renderIconOptionBox = isMyLog => (
@@ -86,24 +86,26 @@ class TextInputFooter extends Component {
   );
 
   render() {
+    const {selectedIconName} = this.state;
+    console.log("selectedIconName", selectedIconName)
     const { onPress, isIconOptionBox, isMyLog } = this.props;
     const textInputBoxOffset = 10;
     const textInputMaxHeight = hp("15%");
     const textInputMinHeight = TextInputHeight;
     const height = this.state.height;
     // console.log("In TextInputFooter height:", height);
-    console.log("TextInput: ", Dimensions.get("window").height, hp("100%"));
+    // console.log("TextInput: ", Dimensions.get("window").height, hp("100%"));
     return (
       <View
         onLayout={event => {
           var { x, y, width, height } = event.nativeEvent.layout;
-          console.log(
-            "ref={ref => (this.scrollView = ref): ",
-            x,
-            y,
-            width,
-            height
-          );
+          // console.log(
+          //   "ref={ref => (this.scrollView = ref): ",
+          //   x,
+          //   y,
+          //   width,
+          //   height
+          // );
         }}
       >
         {isIconOptionBox ? this.renderIconOptionBox(isMyLog) : null}
@@ -167,7 +169,7 @@ class TextInputFooter extends Component {
             </View>
             <View style={{ opacity: this.state.text ? 1 : 0.5 }}>
               <TouchableOpacity
-                disabled={this.state.text ? false : true}
+                disabled={this.state.text && selectedIconName? false : true}
                 style={{
                   width: wp("15%"),
                   height: TextInputHeight,
@@ -182,7 +184,7 @@ class TextInputFooter extends Component {
                   onPress(
                     "user",
                     this.state.text,
-                    this.state.selectedIconName,
+                    selectedIconName,
                     isMyLog
                   );
                   // console.log("In TextInputFooter state after onPress:", this.state);
