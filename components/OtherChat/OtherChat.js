@@ -80,6 +80,7 @@ class OtherChat extends React.Component {
                   myChat={false}
                   state={state}
                   backgroundImageName={backgroundImage}
+                  isOtherChat = {true}
         />
       </View>
     );

@@ -857,16 +857,17 @@ class ChatRoom extends Component {
   };
 
   render() {
-    const { myChat, chatLog, isCrowdBox, isStartTop, chatId } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
+    const { myChat, chatLog, isCrowdBox, isStartTop, chatId, isOtherChat } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
     let { backgroundImageName } = this.props;
     if (!backgroundImageName) {
       backgroundImageName = this.state.backgroundImageName;
     }
-    console.log("In ChatRoom this.state:", this.state);
+    // console.log("In ChatRoom this.state:", this.state);
     // this.printDialogAsWellFormed();
     const contentsTopBottomMargin = 8;
     // const targetDialog = chatLog ? chatLog : this.state.currentDialog;
-    const targetDialog = this.state.currentDialog;
+    const targetDialog = isOtherChat ? chatLog : this.state.currentDialog;
+    console.log("targetDialog: ",targetDialog)
     var { navigate } = this.props.navigation;
     const navigation = this.props.navigation;
     const isNewChat = navigation.getParam("isNewChat");
