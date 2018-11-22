@@ -59,7 +59,9 @@ class TextInputFooter extends Component {
   renderIconOptionBox = isMyLog => (
     <View style={styles.iconOptionBoxContainer}>
       <Text style={styles.iconOptionBoxText}>
-        {isMyLog ? "Choose your emotion" : "당신이 위의 상황이라면 어떤 감정을 느꼈을까요?"}
+        {isMyLog
+          ? "Choose your emotion"
+          : "당신이 위의 상황이라면 어떤 감정을 느꼈을까요?"}
       </Text>
       <View style={styles.iconOptionBox}>
         <ScrollView
@@ -95,16 +97,22 @@ class TextInputFooter extends Component {
       <View
         onLayout={event => {
           var { x, y, width, height } = event.nativeEvent.layout;
-          console.log("ref={ref => (this.scrollView = ref): ",x,y,width,height);
+          console.log(
+            "ref={ref => (this.scrollView = ref): ",
+            x,
+            y,
+            width,
+            height
+          );
         }}
       >
+        {isIconOptionBox ? this.renderIconOptionBox(isMyLog) : null}
         <View
           style={{
             maxHeight: textInputMaxHeight + textInputBoxOffset,
             minHeight: textInputMinHeight + textInputBoxOffset
           }}
         >
-          {isIconOptionBox ? this.renderIconOptionBox(isMyLog) : null}
           <View
             style={{
               width: wp("100%"),
