@@ -92,6 +92,7 @@ class OtherChat extends React.Component {
                   backgroundImageName={backgroundImage}
                   isOtherChat = {true}
                   isCrowdBox={isCrowdBox}
+                  writerIcon={state ? state.user.usericon : ""}
         />
       </View>
     );
