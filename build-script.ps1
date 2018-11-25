@@ -1,10 +1,3 @@
-git add .
-git commit -a -m "build"
-git checkout master
-git pull origin master
-git commit -a -m "build"
-git branch -D build
-git checkout -b build
 expo eject
 cp ..\ReactnativeExample\index.js .\
 rm .\android\gradle.properties
