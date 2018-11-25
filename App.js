@@ -6,6 +6,8 @@ import {
 } from "react-native-responsive-screen";
 // import {YellowBox} from 'react-native';
 // YellowBox.ignoreWarnings(['Setting a timer for a long period of time']);  
+import fb from  "./utils/firebaseWrapper"
+// fb.logout()
 
 import DrawerNav from './DrawerNav';
 

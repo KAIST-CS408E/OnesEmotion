@@ -32,10 +32,12 @@ export default class Signup extends React.Component {
     email: '',
     password: '',
     gender: '',
-    usericon: ''
+    usericon: '',
+    isClickable: true,
   }
 
   signup = async () => {
+    this.setState({isClickable:false})
     try {
       const {username, email, password, gender} = this.state;
       var usericon;
@@ -66,11 +68,13 @@ export default class Signup extends React.Component {
           message = "유효하지 않은 정보입니다.";
         }
         ToastAndroid.show(message, ToastAndroid.LONG);
+        this.setState({isClickable:true})
         return;
       }
       this.props.navigation.navigate("Story")
     } catch (e) {
       console.log(e);
+      this.setState({isClickable:true})
       return
     }
   }
@@ -86,10 +90,12 @@ export default class Signup extends React.Component {
 		return(
 				<View style={styles.container}>
 					<Logo/>
-					<Form type="Signup" handleTextChange={this.handleTextChange} form={{username, email, password, gender}}/>
-          <TouchableOpacity style={styles.button} onPress={this.signup}>
-            <Text style={styles.buttonText}>Signup</Text>
-          </TouchableOpacity>
+          <Form type="Signup" handleTextChange={this.handleTextChange} form={{username, email, password, gender}}/>
+          <View  style={{ opacity: this.state.isClickable ? 1 : 0.5 }}>
+            <TouchableOpacity style={styles.button} onPress={this.signup} disabled={!this.state.isClickable}>
+              <Text style={styles.buttonText}>Signup</Text>
+            </TouchableOpacity>
+          </View>
 					<View style={styles.signupTextCont}>
 						<Text style={styles.signupText}>Already have an account? </Text>
 						<TouchableOpacity onPress={() => this.props.navigation.goBack()}><Text style={styles.signupButton}>Sign in</Text></TouchableOpacity>

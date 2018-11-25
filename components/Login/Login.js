@@ -26,11 +26,12 @@ export default class Login extends React.Component {
 
   state = {
     email: '',
-    password: ''
+    password: '',
+    isClickable: true,
   }
 
   login = async () => {
-
+    this.setState({isClickable:false})
     try {
       const {email, password} = this.state;
       const {error} = await fb.login(email, password);
@@ -53,11 +54,13 @@ export default class Login extends React.Component {
           message = "유효하지 않은 계정입니다.";
         }
         ToastAndroid.show(message, ToastAndroid.LONG);
+        this.setState({isClickable:true})
         return;
       }
       this.props.navigation.navigate("Story")
     } catch (e) {
       console.log(e);
+      this.setState({isClickable:true})
       return
     }
   }
@@ -73,10 +76,12 @@ export default class Login extends React.Component {
 		return(
 				<View style={styles.container}>
 					<Logo/>
-					<Form type="Login" handleTextChange={this.handleTextChange} form={{email, password}}/>
-          <TouchableOpacity style={styles.button} onPress={this.login}>
-            <Text style={styles.buttonText}>Login</Text>
-          </TouchableOpacity>
+          <Form type="Login" handleTextChange={this.handleTextChange} form={{email, password}}/>
+          <View  style={{ opacity: this.state.isClickable ? 1 : 0.5 }}>
+            <TouchableOpacity style={styles.button} onPress={this.login} disabled={!this.state.isClickable}>
+              <Text style={styles.buttonText}>Login</Text>
+            </TouchableOpacity>
+          </View>
 					<View style={styles.signupTextCont}>
 						<Text style={styles.signupText}>Don't have an account yet? </Text>
 						<TouchableOpacity onPress={()=>this.props.navigation.navigate('Signup')}>
