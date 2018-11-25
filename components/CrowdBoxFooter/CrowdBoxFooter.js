@@ -76,7 +76,7 @@ class CrowdBoxFooter extends Component {
   componentWillReceiveProps(nextProps) {
     const {crowdBoxDialog} = this.state;
     if (crowdBoxDialog.length > 0) {
-      if (thisCrowdBoxDialog && thisCrowdBoxDialog.length != 0) {
+      if (crowdBoxDialog && crowdBoxDialog.length != 0) {
         this.setState({ notice: "다른 사람들의 댓글"})
       }
       return;
@@ -125,6 +125,9 @@ class CrowdBoxFooter extends Component {
           crowdEmotion: commentObject.emotion
         });
     this.setState({ crowdBoxDialog: thisCrowdBoxDialog });
+    if (thisCrowdBoxDialog && thisCrowdBoxDialog.length != 0) {
+      this.setState({ notice: "다른 사람들의 댓글"})
+    }
   };
 
   // setNewComment = (userId, chatId, content, emotion, profileImageName) => {
