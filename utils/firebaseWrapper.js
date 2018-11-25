@@ -644,7 +644,7 @@ export default api = {
         if (chatInfo.userId == userId) {
           return;
         }
-        if (chat.totalComments > 0) {
+        if (chatInfo.totalComments > 0) {
           return;
         }
         if (chatInfo.state && !chatInfo.state.isFinished) {
