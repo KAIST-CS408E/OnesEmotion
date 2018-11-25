@@ -78,7 +78,7 @@ class CrowdBoxFooter extends Component {
     const { crowdBoxDialog } = this.state;
     if (crowdBoxDialog.length > 0) {
       if (crowdBoxDialog && crowdBoxDialog.length != 0) {
-        this.setState({ notice: "다른 사람들의 댓글"})
+        this.setState({ notice: "사람들의 댓글"})
       }
       return;
     }
@@ -100,7 +100,7 @@ class CrowdBoxFooter extends Component {
         });
     this.setState({ crowdBoxDialog: thisCrowdBoxDialog });
     if (thisCrowdBoxDialog && thisCrowdBoxDialog.length != 0) {
-      this.setState({ notice: "다른 사람들의 댓글" });
+      this.setState({ notice: "사람들의 댓글" });
     }
   }
 
@@ -127,7 +127,7 @@ class CrowdBoxFooter extends Component {
         });
     this.setState({ crowdBoxDialog: thisCrowdBoxDialog });
     if (thisCrowdBoxDialog && thisCrowdBoxDialog.length != 0) {
-      this.setState({ notice: "다른 사람들의 댓글"})
+      this.setState({ notice: "사람들의 댓글"})
     }
   };
 
