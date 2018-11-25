@@ -656,7 +656,7 @@ class ChatRoom extends Component {
 
   isBadEmotion = (emotion1, emotion2) => {
     // console.log("Input emotion1, 2: ", emotion1, emotion2);
-    if (this.isIncludes(["즐거움", "설렘", "신뢰"], emotion1, emotion2)) {
+    if (this.isIncludes(["즐거움", "설렘", "신뢰"], emotion1, emotion1) || this.isIncludes(["즐거움", "설렘", "신뢰"], emotion2, emotion2)) {
       return false;
     }
     return true;
