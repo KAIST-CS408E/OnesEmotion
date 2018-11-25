@@ -81,11 +81,12 @@ export default api = {
     // }
     try {
       const user = await auth.signInWithEmailAndPassword(email, password);
+      console.log(user)
       if (!user) {
         return null
       }
       console.log("READ");
-      const userDoc = await db.collection('users').doc(user.userId).get();
+      const userDoc = await db.collection('users').doc(user.uid).get();
       const userInfo = userDoc.data()
       userObject.uid = userInfo.userId
       userObject.displayName = userInfo.name
@@ -159,7 +160,12 @@ export default api = {
   },
   isUserLoggedIn: function () {
     return new Promise(function(resolve, reject) {
+      let count = 0;
       setInterval(function() {
+        if (count > 50) {
+          resolve(false)
+          return
+        }
         if (arrived) {
           if (userObject) {
             resolve({
@@ -171,6 +177,7 @@ export default api = {
           }
           return
         }
+        count++;
       }, 10);
     });
   },
@@ -675,6 +682,7 @@ export default api = {
       await db.collection('chats').doc(chatId).update({
         othersEmotion: emotion
       });
+      console.log("USERID", userId)
       const doc = await db.collection('chats').doc(chatId).collection('comments').add({
         userId: userId,
         content: content,
@@ -762,5 +770,26 @@ export default api = {
       return true
     }
     return a.createdAt.toString() > b.createdAt.toString();
+  },
+  getMyComments: async function (userId, chatId) {
+    try {
+      if (!chatId) {
+        return [];
+      }
+      if (!userId) {
+        userId = userObject.uid;
+      }
+      if (!userId) {
+        return [];
+      }
+      const comments = await db.collection.doc(chatId).collection('comments').where('userId', '==', userId).get()
+      if (comments && comments.length > 0) {
+        return true
+      }
+      return false
+    } catch (e) {
+      console.log(e.toString())
+      return [];
+    }
   }
 }

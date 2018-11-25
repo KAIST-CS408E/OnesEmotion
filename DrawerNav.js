@@ -36,7 +36,6 @@ class MidTitle extends React.Component {
   state = {
     user: fb.getUser(),
     recommandationList: [],
-    isAppBooted : true,
   }
 
 	componentWillMount() {
@@ -48,8 +47,7 @@ class MidTitle extends React.Component {
   }
 
   middleWare = (resetAction) => {
-      this.state.isAppBooted ? this.props.navigation.dispatch(resetAction) : null
-      this.setState({isAppBooted:false})
+      this.props.navigation.dispatch(resetAction)
   }
 	
 	autoLogin = async function () {
