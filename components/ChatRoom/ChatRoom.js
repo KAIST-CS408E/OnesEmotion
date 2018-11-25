@@ -182,7 +182,7 @@ class ChatRoom extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { chatId, state, chatLog, isCrowdBox } = nextProps;
-    console.log("componentWillReceiveProps myChat:",this.props.myChat)
+    console.log("componentWillReceiveProps myChat:", this.props.myChat);
     // this.getCommentList(chatId)
     const isBoolean = value => {
       if (value === true || value === false) {
@@ -197,42 +197,47 @@ class ChatRoom extends Component {
       });
       return;
     }
-    this.setState(this.props.myChat ? {
-      chatId,
-      currentDialog: chatLog ? chatLog : this.state.currentDialog,
-      currentQuestion: state.currentQuestion || this.state.currentQuestion,
-      nextQuestion: state.nextQuestion || this.state.nextQuestion,
-      listOfEmotion: state.listOfEmotion || this.state.listOfEmotion,
-      isCrowdBox: isBoolean(state.isCrowdBox)
-        ? state.isCrowdBox && state.isFinished
-        : this.state.isCrowdBox,
-      isTextInput: isBoolean(state.isTextInput)
-        ? state.isTextInput
-        : this.state.isTextInput,
-      isIconInput: isBoolean(state.isIconInput)
-        ? state.isIconInput
-        : this.state.isIconInput,
-      isFinished: isBoolean(state.isFinished)
-        ? state.isFinished
-        : this.state.isFinished,
-      isOnceAgained: isBoolean(state.isOnceAgained)
-        ? state.isOnceAgained
-        : this.state.isOnceAgained,
-      isLoaded: true
-    } : {
-      chatId,
-      currentDialog: this.props.chatLog,
-      currentQuestion: null,
-      nextQuestion: null,
-      listOfEmotion: [],
-      isCrowdBox: isCrowdBox,
-      isTextInput: false,
-      isIconInput: false,
-      isButtonInput: false,
-      isFinished: true,
-      chatting: false,
-      isLoaded: true
-    }) ;
+    this.setState(
+      this.props.myChat
+        ? {
+            chatId,
+            currentDialog: chatLog ? chatLog : this.state.currentDialog,
+            currentQuestion:
+              state.currentQuestion || this.state.currentQuestion,
+            nextQuestion: state.nextQuestion || this.state.nextQuestion,
+            listOfEmotion: state.listOfEmotion || this.state.listOfEmotion,
+            isCrowdBox: isBoolean(state.isCrowdBox)
+              ? state.isCrowdBox && state.isFinished
+              : this.state.isCrowdBox,
+            isTextInput: isBoolean(state.isTextInput)
+              ? state.isTextInput
+              : this.state.isTextInput,
+            isIconInput: isBoolean(state.isIconInput)
+              ? state.isIconInput
+              : this.state.isIconInput,
+            isFinished: isBoolean(state.isFinished)
+              ? state.isFinished
+              : this.state.isFinished,
+            isOnceAgained: isBoolean(state.isOnceAgained)
+              ? state.isOnceAgained
+              : this.state.isOnceAgained,
+            isLoaded: true
+          }
+        : {
+            chatId,
+            currentDialog: this.props.chatLog,
+            currentQuestion: null,
+            nextQuestion: null,
+            listOfEmotion: [],
+            isCrowdBox: isCrowdBox,
+            isTextInput: false,
+            isIconInput: false,
+            isButtonInput: false,
+            isFinished: true,
+            chatting: false,
+            isLoaded: true
+          }
+    );
   }
 
   componentDidMount() {
@@ -241,17 +246,17 @@ class ChatRoom extends Component {
   }
 
   // getCommentList = async chatId => {
-    // const userInputDialog = this.state.currentDialog[0]
-    // const story = await fb.getAStory(chatId);
-    // const commentOfThisChat = story.comments;
-    // let thisIsAlreadyCommentedWithThisUser = false;
-    // console.log("commentOfThisChat: ", commentOfThisChat);
-    // //이미 코멘트 달았는지 확인
-    // commentOfThisChat.forEach((commentObject, index) => {
-    //   commentObject.userId == this.props.userId
-    //     ? (thisIsAlreadyCommentedWithThisUser = true)
-    //     : null;
-    // });
+  // const userInputDialog = this.state.currentDialog[0]
+  // const story = await fb.getAStory(chatId);
+  // const commentOfThisChat = story.comments;
+  // let thisIsAlreadyCommentedWithThisUser = false;
+  // console.log("commentOfThisChat: ", commentOfThisChat);
+  // //이미 코멘트 달았는지 확인
+  // commentOfThisChat.forEach((commentObject, index) => {
+  //   commentObject.userId == this.props.userId
+  //     ? (thisIsAlreadyCommentedWithThisUser = true)
+  //     : null;
+  // });
   //   let thisCrowdBoxDialog = commentOfThisChat.map((commentObject, index) => ({
   //     speaker: commentObject.userId == this.props.userId ? "user" : "bot",
   //     text: commentObject.content,
@@ -276,7 +281,7 @@ class ChatRoom extends Component {
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
-    const getChatList = this.props.navigation.getParam('getChatList');
+    const getChatList = this.props.navigation.getParam("getChatList");
     if (getChatList) {
       getChatList();
     }
@@ -319,7 +324,7 @@ class ChatRoom extends Component {
   handleTextInput = async (speaker, text, iconInput, isMyLog) => {
     const { firstQuestion, backgroundImageName } = this.state;
     const { user, chatId } = this.state;
-    console.log("handleTextInput iconInput:", iconInput)
+    console.log("handleTextInput iconInput:", iconInput);
     //crowdbox면 this.state.currentDialog를 답변 하나만 있는 상태로 초기화!
     const myLogInput = {
       //when is not MyLog and don't have iconInput
@@ -353,7 +358,7 @@ class ChatRoom extends Component {
       isIconInput: false,
       isButtonInput: false,
       isFinished: true,
-      chatting: false,
+      chatting: false
     };
     console.log("forCrowdBox", forCrowdBox);
     // this.setState(isMyLog ? myLogInput : forCrowdBox);
@@ -368,8 +373,16 @@ class ChatRoom extends Component {
       // }
       // await fb.createMessage(user.userId, chatId, text, caching, myLogInput);
     } else {
-      this.setState(forCrowdBox);
-      fb.createComment(user.userId, chatId, text, `${iconInput.split("_")[0]}_option_clicked`);
+      this.setState(forCrowdBox, function() {
+        console.log("handleTextInput profileImageName:", user.usericon)
+        fb.createComment(
+          user.userId,
+          chatId,
+          text,
+          `${iconInput.split("_")[0]}_option_clicked`,
+          user.usericon
+        );
+      });
     }
     //check user input here
     let nextQuestionFixed = this.state.nextQuestion;
@@ -466,7 +479,13 @@ class ChatRoom extends Component {
   );
 
   finishChat = async () => {
-    const { user, backgroundImageName, chatId, currentDialog, chatting } = this.state;
+    const {
+      user,
+      backgroundImageName,
+      chatId,
+      currentDialog,
+      chatting
+    } = this.state;
     if (!chatId && currentDialog.length > 1) {
       fb.createChat(user.userId, backgroundImageName, this.state);
       this.props.navigation.goBack();
@@ -872,7 +891,14 @@ class ChatRoom extends Component {
   };
 
   render() {
-    const { myChat, chatLog, isCrowdBox, isStartTop, chatId, isOtherChat } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
+    const {
+      myChat,
+      chatLog,
+      isCrowdBox,
+      isStartTop,
+      chatId,
+      isOtherChat
+    } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
     let { backgroundImageName } = this.props;
     if (!backgroundImageName) {
       backgroundImageName = this.state.backgroundImageName;
@@ -882,7 +908,7 @@ class ChatRoom extends Component {
     const contentsTopBottomMargin = 8;
     // const targetDialog = chatLog ? chatLog : this.state.currentDialog;
     const targetDialog = isOtherChat ? chatLog : this.state.currentDialog;
-    console.log("targetDialog: ",targetDialog)
+    console.log("targetDialog: ", targetDialog);
     var { navigate } = this.props.navigation;
     const navigation = this.props.navigation;
     const isNewChat = navigation.getParam("isNewChat");
@@ -914,7 +940,7 @@ class ChatRoom extends Component {
               chatLog ? (myChat ? myLogNotice : otherChatNotice) : myChatNotice
             }
           />
-          {chatLog ? (this.state.isLoaded ? null : <Loading />) : null}
+          {chatLog ? this.state.isLoaded ? null : <Loading /> : null}
           <View style={{ flex: 1 }}>
             <ScrollView
               style={{
@@ -947,7 +973,7 @@ class ChatRoom extends Component {
             </ScrollView>
             {chatLog && this.state.isFinished ? (
               <View>
-                {(this.state.isCrowdBox || isCrowdBox)? (
+                {this.state.isCrowdBox || isCrowdBox ? (
                   <CrowdBoxFooter
                     chatId={chatId}
                     userId={this.state.user.userId}
