@@ -20,6 +20,7 @@ import Loading from "../Loading";
 
 import fb from "../../utils/firebaseWrapper";
 import datetime from "../../utils/datetime";
+import { bold } from "../../node_modules/ansi-colors";
 
 const EMOTIONS = ["sobad", "bad", "soso", "good", "sogood"];
 const storyNotice = [
@@ -45,7 +46,7 @@ class LogList extends Component {
     removeTargetKey: -1,
     isLoaded: false
   };
-  
+
   componentDidMount() {
     this.getChatList();
   }
@@ -60,7 +61,7 @@ class LogList extends Component {
     if (myLog) {
       const chatList = await fb.getAllChats(user.userId);
       if (chatList.length == 0) {
-        this.setState({isLoaded: true})
+        this.setState({ isLoaded: true });
         return;
       }
       this.setState({
@@ -70,14 +71,14 @@ class LogList extends Component {
           crowdEmotion: chat.othersEmotion, // TODO: emotion name matching
           date: datetime.toString(chat.createdAt.toDate()),
           text: this.toShort(chat.summary ? chat.summary : ""),
-          backgroundImageName: chat.backgroundImage,
+          backgroundImageName: chat.backgroundImage
         })),
-        isLoaded: true,
+        isLoaded: true
       });
     } else {
       const chatList = await fb.getAllStories(user.userId);
       if (chatList.length == 0) {
-        this.setState({isLoaded: true})
+        this.setState({ isLoaded: true });
         return;
       }
       let logList = [];
@@ -92,7 +93,7 @@ class LogList extends Component {
           ),
           text: this.toShort(chat.summary ? chat.summary : ""),
           backgroundImageName: chat.backgroundImage,
-          commentNum: chat.totalComments,
+          commentNum: chat.totalComments
         });
       });
       this.setState({
@@ -146,7 +147,10 @@ class LogList extends Component {
       imageName={myLog ? "add" : "refresh"}
       onPress={
         myLog
-          ? () => this.props.navigation.navigate("ChatRoom", {getChatList: this.getChatList})
+          ? () =>
+              this.props.navigation.navigate("ChatRoom", {
+                getChatList: this.getChatList
+              })
           : () => this.getChatList()
       }
     />
@@ -174,7 +178,7 @@ class LogList extends Component {
 
   render() {
     const { myLog } = this.props;
-    console.log("logList", this.state.logList)
+    console.log("logList", this.state.logList);
     const contents = this.state.logList.map((item, i) => (
       <LogItem
         myLog={myLog}
@@ -195,6 +199,7 @@ class LogList extends Component {
         commentNum={item.commentNum}
       />
     ));
+
     return (
       <View>
         <Header
@@ -204,7 +209,22 @@ class LogList extends Component {
         />
         <NoticeBox notice={myLog ? myLogNotice : storyNotice} />
         {this.state.isLoaded ? null : <Loading />}
-        <ScrollView>{this.state.isLoaded && contents.length==0 ? (<Text>{"아직 채팅이 없습니다."}</Text>) : contents}</ScrollView>
+        <ScrollView>
+          {this.state.isLoaded && contents.length == 0 ? (
+            <View style={styles.emptyMyLogMessageContainer}>
+              <View style={styles.emptyMyLogMessageWrapper}>
+                <Text style={styles.emptyMyLogMessageText1}>
+                  {"아직 채팅이 없습니다."}
+                </Text>
+                <Text style={styles.emptyMyLogMessageText2}>
+                  {"오른쪽 상단의 '+' 버튼을 눌러 시작해 보세요!"}
+                </Text>
+              </View>
+            </View>
+          ) : (
+            contents
+          )}
+        </ScrollView>
         {this.state.isRemoveModalVisible && myLog ? (
           <Modal
             onYes={this.handleRemove}
@@ -224,6 +244,27 @@ const styles = StyleSheet.create({
   icon: {
     width: 24,
     height: 24
+  },
+  emptyMyLogMessageContainer: {
+    height: hp("85%"),
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  emptyMyLogMessageWrapper: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  emptyMyLogMessageText1: {
+    fontSize: 20,
+    fontWeight: "bold"
+  },
+  emptyMyLogMessageText2: {
+    fontSize: 15,
+    fontWeight: "bold"
   }
 });
 

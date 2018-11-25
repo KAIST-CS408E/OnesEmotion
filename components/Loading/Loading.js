@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: 'center',
     backgroundColor: 'transparent',
-    height:hp("80%")
+    height:hp("90%")
   },
   wrapper: {
     flexDirection: "column",
