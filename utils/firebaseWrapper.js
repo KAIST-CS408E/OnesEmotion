@@ -682,6 +682,7 @@ export default api = {
       await db.collection('chats').doc(chatId).update({
         othersEmotion: emotion
       });
+      console.log("USERID", userId)
       const doc = await db.collection('chats').doc(chatId).collection('comments').add({
         userId: userId,
         content: content,
@@ -769,5 +770,26 @@ export default api = {
       return true
     }
     return a.createdAt.toString() > b.createdAt.toString();
+  },
+  getMyComments: async function (userId, chatId) {
+    try {
+      if (!chatId) {
+        return [];
+      }
+      if (!userId) {
+        userId = userObject.uid;
+      }
+      if (!userId) {
+        return [];
+      }
+      const comments = await db.collection.doc(chatId).collection('comments').where('userId', '==', userId).get()
+      if (comments && comments.length > 0) {
+        return true
+      }
+      return false
+    } catch (e) {
+      console.log(e.toString())
+      return [];
+    }
   }
 }

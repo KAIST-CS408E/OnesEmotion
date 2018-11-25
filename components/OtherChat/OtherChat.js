@@ -47,7 +47,8 @@ class OtherChat extends React.Component {
   state = {
     chatId: null,
     state: null,
-    comments: []
+    comments: [],
+    user: fb.getUser()
   }
 
   componentDidMount() {
@@ -55,12 +56,21 @@ class OtherChat extends React.Component {
   }
 
   getChatLogs = async () => {
+    const {user} = this.state;
     const chatId = this.props.navigation.getParam('chatId') // TODO
-    const {state, comments} = await fb.getAStory(chatId)
+    const {state, comments} = await fb.getAStory(chatId);
+    let isCrowdBox = false;
+    comments.forEach((comment) => {
+      if (comment.userId === user.userId) {
+        isCrowdBox = true;
+      }
+    })
+    console.log("isCrowdBox", isCrowdBox)
     this.setState({
       chatId,
       state,
-      comments
+      comments,
+      isCrowdBox
     })
   }
 
@@ -81,6 +91,7 @@ class OtherChat extends React.Component {
                   state={state}
                   backgroundImageName={backgroundImage}
                   isOtherChat = {true}
+                  isCrowdBox={isCrowdBox}
         />
       </View>
     );
