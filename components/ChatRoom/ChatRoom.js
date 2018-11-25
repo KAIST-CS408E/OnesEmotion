@@ -669,7 +669,7 @@ class ChatRoom extends Component {
     let { user, chatId, backgroundImageName } = this.state;
     console.log("thisQuestion: ", thisQuestion);
     let nextQuestion = [];
-    let thisQuestionText = "";
+    let thisQuestionText = [];
     //nextQuestion을 list형태로 만들고, 보여줘야 하는 답변을 순서대로 list안에 넣어둠!
     if (thisQuestion == "q1") {
       thisQuestionText = botQuestions.q1;
