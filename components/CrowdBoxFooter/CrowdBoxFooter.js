@@ -22,7 +22,7 @@ import fb from "../../utils/firebaseWrapper";
 class CrowdBoxFooter extends Component {
   state = {
     crowdBoxDialog: [],
-    notice: '대화를 불러오는 중..'
+    notice: '댓글을 불러오는 중..'
     // [
     //   {
     //     speaker: "bot",

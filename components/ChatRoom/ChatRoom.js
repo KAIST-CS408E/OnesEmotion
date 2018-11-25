@@ -182,6 +182,7 @@ class ChatRoom extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { chatId, state, chatLog, isCrowdBox } = nextProps;
+    console.log("componentWillReceiveProps myChat:",this.props.myChat)
     // this.getCommentList(chatId)
     const isBoolean = value => {
       if (value === true || value === false) {
@@ -203,7 +204,7 @@ class ChatRoom extends Component {
       nextQuestion: state.nextQuestion || this.state.nextQuestion,
       listOfEmotion: state.listOfEmotion || this.state.listOfEmotion,
       isCrowdBox: isBoolean(state.isCrowdBox)
-        ? state.isCrowdBox
+        ? state.isCrowdBox && state.isFinished
         : this.state.isCrowdBox,
       isTextInput: isBoolean(state.isTextInput)
         ? state.isTextInput
@@ -228,7 +229,7 @@ class ChatRoom extends Component {
       isTextInput: false,
       isIconInput: false,
       isButtonInput: false,
-      isFinished: false,
+      isFinished: true,
       chatting: false,
       isLoaded: true
     }) ;
@@ -351,7 +352,7 @@ class ChatRoom extends Component {
       isTextInput: false,
       isIconInput: false,
       isButtonInput: false,
-      isFinished: false,
+      isFinished: true,
       chatting: false,
     };
     console.log("forCrowdBox", forCrowdBox);
@@ -944,9 +945,9 @@ class ChatRoom extends Component {
                 />
               ))}
             </ScrollView>
-            {chatLog? (
+            {chatLog && this.state.isFinished ? (
               <View>
-                {this.state.isCrowdBox || isCrowdBox ? (
+                {(this.state.isCrowdBox || isCrowdBox)? (
                   <CrowdBoxFooter
                     chatId={chatId}
                     userId={this.state.user.userId}

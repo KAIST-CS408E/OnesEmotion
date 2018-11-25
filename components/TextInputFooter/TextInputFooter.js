@@ -87,7 +87,7 @@ class TextInputFooter extends Component {
 
   render() {
     const {selectedIconName} = this.state;
-    console.log("selectedIconName", selectedIconName)
+    // console.log("selectedIconName", selectedIconName)
     const { onPress, isIconOptionBox, isMyLog } = this.props;
     const textInputBoxOffset = 10;
     const textInputMaxHeight = hp("15%");
@@ -169,7 +169,7 @@ class TextInputFooter extends Component {
             </View>
             <View style={{ opacity: this.state.text ? 1 : 0.5 }}>
               <TouchableOpacity
-                disabled={this.state.text && selectedIconName? false : true}
+                disabled={this.state.text ? false : true}
                 style={{
                   width: wp("15%"),
                   height: TextInputHeight,
