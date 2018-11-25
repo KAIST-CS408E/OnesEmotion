@@ -8,8 +8,6 @@ import {
 // YellowBox.ignoreWarnings(['Setting a timer for a long period of time']);  
 
 import DrawerNav from './DrawerNav';
-// import fb from './utils/firebaseWrapper';
-// fb.logout();
 
 const myLog = true; //true for MyLog and false for Story
 const story = false;

@@ -51,7 +51,8 @@ class MidTitle extends React.Component {
   }
 	
 	autoLogin = async function () {
-		const user = await fb.getUserInfo()
+    const user = await fb.getUserInfo()
+    console.log("user", user)
     const resetAction1 = StackActions.reset({
       index: 0,
       actions: [
@@ -74,6 +75,9 @@ class MidTitle extends React.Component {
 
   getUser = async function () {
     const user = this.state.user || await fb.getUserInfo();
+    if (!user) {
+      return null
+    }
     const recommandationList = await fb.recommandStories(user.userId);
     this.setState({user, recommandationList});
   }

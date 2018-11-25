@@ -368,6 +368,7 @@ class ChatRoom extends Component {
       // await fb.createMessage(user.userId, chatId, text, caching, myLogInput);
     } else {
       this.setState(forCrowdBox);
+      console.log("iconInput", iconInput)
       fb.createComment(user.userId, chatId, text, `${iconInput.split("_")[0]}_option_clicked`);
     }
     //check user input here

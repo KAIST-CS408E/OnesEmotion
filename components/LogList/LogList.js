@@ -39,7 +39,7 @@ const myLogNotice = [
 
 class LogList extends Component {
   state = {
-    logList: [{}],
+    logList: [],
     user: fb.getUser(),
     isRemoveModalVisible: false,
     removeTargetKey: -1,
@@ -60,6 +60,7 @@ class LogList extends Component {
     if (myLog) {
       const chatList = await fb.getAllChats(user.userId);
       if (chatList.length == 0) {
+        this.setState({isLoaded: true})
         return;
       }
       this.setState({
@@ -76,6 +77,7 @@ class LogList extends Component {
     } else {
       const chatList = await fb.getAllStories(user.userId);
       if (chatList.length == 0) {
+        this.setState({isLoaded: true})
         return;
       }
       let logList = [];
@@ -193,7 +195,6 @@ class LogList extends Component {
         commentNum={item.commentNum}
       />
     ));
-
     return (
       <View>
         <Header
@@ -203,7 +204,7 @@ class LogList extends Component {
         />
         <NoticeBox notice={myLog ? myLogNotice : storyNotice} />
         {this.state.isLoaded ? null : <Loading />}
-        <ScrollView>{contents}</ScrollView>
+        <ScrollView>{this.state.isLoaded && contents.length==0 ? (<Text>{"아직 채팅이 없습니다."}</Text>) : contents}</ScrollView>
         {this.state.isRemoveModalVisible && myLog ? (
           <Modal
             onYes={this.handleRemove}

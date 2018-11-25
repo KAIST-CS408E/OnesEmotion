@@ -81,9 +81,11 @@ export default api = {
     // }
     try {
       const user = await auth.signInWithEmailAndPassword(email, password);
-      console.log(user)
       if (!user) {
-        return null
+        user = userObject
+      }
+      if (!user.uid) {
+        return null;
       }
       console.log("READ");
       const userDoc = await db.collection('users').doc(user.uid).get();
@@ -161,9 +163,17 @@ export default api = {
   isUserLoggedIn: function () {
     return new Promise(function(resolve, reject) {
       let count = 0;
-      setInterval(function() {
-        if (count > 50) {
-          resolve(false)
+      var interval = setInterval(function() {
+        if (count > 100) {
+          if (userObject) {
+            resolve({
+              userId: userObject.uid,
+              name: userObject.displayName
+            })
+          } else {
+            resolve(false)
+          }
+          clearInterval(interval)
           return
         }
         if (arrived) {
@@ -359,7 +369,7 @@ export default api = {
         const chatInfoDoc = await db.collection('chats').doc(chatId).get()
         const chatInfo = chatInfoDoc.data();
         if (!chatInfo) {
-          return null;
+          return [];
         }
         return {
           chatId: chatId,
@@ -441,7 +451,6 @@ export default api = {
         state: chatInfo.state,
         createdAt: chatInfo.createdAt,
         comments: commentList
-        // messages: msgList
       }
     } catch (e) {
       console.log(e.toString());
@@ -497,7 +506,7 @@ export default api = {
         const chatInfoDoc = await db.collection('chats').doc(chatId).get()
         const chatInfo = chatInfoDoc.data();
         if (!chatInfo) {
-          return null;
+          return [];
         }
         return {
           chatId: chatId,
@@ -682,7 +691,6 @@ export default api = {
       await db.collection('chats').doc(chatId).update({
         othersEmotion: emotion
       });
-      console.log("USERID", userId)
       const doc = await db.collection('chats').doc(chatId).collection('comments').add({
         userId: userId,
         content: content,
