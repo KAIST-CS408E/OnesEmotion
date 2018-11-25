@@ -22,7 +22,8 @@ import fb from "../../utils/firebaseWrapper";
 class CrowdBoxFooter extends Component {
   state = {
     crowdBoxDialog: [],
-    notice: '댓글을 불러오는 중..'
+    notice: "댓글을 불러오는 중..",
+    scrollViewHeight: CommentHeaderHeight
     // [
     //   {
     //     speaker: "bot",
@@ -64,24 +65,24 @@ class CrowdBoxFooter extends Component {
     //   );
     // }
     setTimeout(() => {
-      const {crowdBoxDialog} = this.state;
+      const { crowdBoxDialog } = this.state;
       if (crowdBoxDialog.length != 0) {
         return;
       }
-      this.setState({ notice: "아직 댓글이 없습니다."})
+      this.setState({ notice: "아직 댓글이 없습니다." });
     }, 3000);
-    this.getCommentList()
+    this.getCommentList();
   };
 
   componentWillReceiveProps(nextProps) {
-    const {crowdBoxDialog} = this.state;
+    const { crowdBoxDialog } = this.state;
     if (crowdBoxDialog.length > 0) {
       if (thisCrowdBoxDialog && thisCrowdBoxDialog.length != 0) {
-        this.setState({ notice: "다른 사람들의 댓글"})
+        this.setState({ notice: "다른 사람들의 댓글" });
       }
       return;
     }
-    const {comments} = nextProps;
+    const { comments } = nextProps;
     const commentOfThisChat = comments;
     let thisCrowdBoxDialog = commentOfThisChat.map((commentObject, index) => ({
       speaker: commentObject.userId == this.props.userId ? "user" : "bot",
@@ -99,16 +100,16 @@ class CrowdBoxFooter extends Component {
         });
     this.setState({ crowdBoxDialog: thisCrowdBoxDialog });
     if (thisCrowdBoxDialog && thisCrowdBoxDialog.length != 0) {
-      this.setState({ notice: "다른 사람들의 댓글"})
+      this.setState({ notice: "다른 사람들의 댓글" });
     }
   }
 
   getCommentList = async () => {
-    const {chatId} = this.props;
+    const { chatId } = this.props;
     if (!chatId) {
       return;
     }
-    const {comments} = await fb.getAStory(chatId);
+    const { comments } = await fb.getAStory(chatId);
     const commentOfThisChat = comments;
     let thisCrowdBoxDialog = commentOfThisChat.map((commentObject, index) => ({
       speaker: commentObject.userId == this.props.userId ? "user" : "bot",
@@ -132,8 +133,8 @@ class CrowdBoxFooter extends Component {
   // };
 
   render() {
-    const { userInputDialog, isCrowdBox, onPress} = this.props; // onPress에서 반드시 yes, no 둘중 뭐를 체크한건지 param으로 받아오도록 해야함.
-    const {notice} = this.state;
+    const { userInputDialog, isCrowdBox, onPress } = this.props; // onPress에서 반드시 yes, no 둘중 뭐를 체크한건지 param으로 받아오도록 해야함.
+    const { notice } = this.state;
     // console.log("In CrowdBoxFooter userInputDialog elems: ", userInputDialog);
     // console.log(
     //   "In CrowdBoxFooter userInputDialog elems: ",
@@ -141,58 +142,65 @@ class CrowdBoxFooter extends Component {
     //   userInputDialog.text,
     //   userInputDialog.profileImageName
     // );
+    console.log("scrollViewHeight:", this.state.scrollViewHeight);
     const contentsTopBottomMargin = 8;
 
     return (
       <View style={styles.container}>
-        <View style={styles.crowdBoxHeader}>
-          <Text style={styles.crowdBoxHeaderText}>{notice}</Text>
-        </View>
-        <View style={{ flex: 1 }}>
-          <ScrollView
-            style={{
-              width: wp("100%"),
-              paddingBottom: contentsTopBottomMargin,
-              paddingTop: contentsTopBottomMargin
-            }}
-            ref={ref => (this.scrollView = ref)}
-            onContentSizeChange={(contentWidth, contentHeight) => {
-              this.scrollView.scrollToEnd({ animated: true });
-            }}
-          >
-            {this.state.crowdBoxDialog
-              ? this.state.crowdBoxDialog.map((dialog, index) => (
-                  <ChatElement
-                    key={index}
-                    speaker={dialog.speaker}
-                    text={dialog.text}
-                    profileImageName={dialog.profileImageName}
-                    crowdEmotion={dialog.crowdEmotion}
-                  />
-                ))
-              : null}
-            {isCrowdBox ? null : (
-              <ChatElement
-                speaker={userInputDialog.speaker}
-                text={userInputDialog.text}
-                profileImageName={userInputDialog.profileImageName}
-                crowdEmotion={userInputDialog.crowdEmotion}
-              />
-            )}
-          </ScrollView>
+        <View style={{ height: this.state.scrollViewHeight }}>
+          <View style={{ flex: 1 }}>
+            <View style={styles.crowdBoxHeader}>
+              <Text style={styles.crowdBoxHeaderText}>{notice}</Text>
+            </View>
+            <ScrollView
+              style={{
+                width: wp("100%"),
+                paddingBottom: contentsTopBottomMargin,
+                paddingTop: contentsTopBottomMargin
+              }}
+              ref={ref => (this.scrollView = ref)}
+              onContentSizeChange={(contentWidth, contentHeight) => {
+                this.scrollView.scrollToEnd({ animated: true });
+                this.setState({ scrollViewHeight: contentHeight===0 ? CommentHeaderHeight : contentHeight + 50});
+                this.forceUpdate();
+              }}
+            >
+              {this.state.crowdBoxDialog
+                ? this.state.crowdBoxDialog.map((dialog, index) => (
+                    <ChatElement
+                      key={index}
+                      speaker={dialog.speaker}
+                      text={dialog.text}
+                      profileImageName={dialog.profileImageName}
+                      crowdEmotion={dialog.crowdEmotion}
+                    />
+                  ))
+                : null}
+              {isCrowdBox ? null : (
+                <ChatElement
+                  speaker={userInputDialog.speaker}
+                  text={userInputDialog.text}
+                  profileImageName={userInputDialog.profileImageName}
+                  crowdEmotion={userInputDialog.crowdEmotion}
+                />
+              )}
+            </ScrollView>
+          </View>
         </View>
       </View>
     );
   }
 }
 
+const CommentHeaderHeight = hp("6%");
 const crowdBoxHeaderText = 15;
 const crowdBoxHeaderBox = 2 * crowdBoxHeaderText;
 
 const styles = StyleSheet.create({
   container: {
     width: wp("100%"),
-    height: hp("40%"),
+    maxHeight: hp("40%"),
+    // height: hp("40%"),
     // marginTop: 10,
     backgroundColor: "#E0E0E0",
     alignItems: "center",
@@ -202,7 +210,7 @@ const styles = StyleSheet.create({
   },
   crowdBoxHeader: {
     width: wp("100%"),
-    height: hp("5%"),
+    height: CommentHeaderHeight,
     backgroundColor: "#212121",
     alignItems: "center",
     // flex: 1,

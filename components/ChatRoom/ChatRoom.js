@@ -324,7 +324,7 @@ class ChatRoom extends Component {
   handleTextInput = async (speaker, text, iconInput, isMyLog) => {
     const { firstQuestion, backgroundImageName } = this.state;
     const { user, chatId } = this.state;
-    console.log("handleTextInput iconInput:", iconInput);
+    // console.log("handleTextInput iconInput:", iconInput);
     //crowdbox면 this.state.currentDialog를 답변 하나만 있는 상태로 초기화!
     const myLogInput = {
       //when is not MyLog and don't have iconInput
@@ -360,7 +360,7 @@ class ChatRoom extends Component {
       isFinished: true,
       chatting: false
     };
-    console.log("forCrowdBox", forCrowdBox);
+    // console.log("forCrowdBox", forCrowdBox);
     // this.setState(isMyLog ? myLogInput : forCrowdBox);
     if (isMyLog) {
       this.setState(myLogInput);
@@ -374,7 +374,7 @@ class ChatRoom extends Component {
       // await fb.createMessage(user.userId, chatId, text, caching, myLogInput);
     } else {
       this.setState(forCrowdBox, function() {
-        console.log("handleTextInput profileImageName:", user.usericon)
+        // console.log("handleTextInput profileImageName:", user.usericon)
         fb.createComment(
           user.userId,
           chatId,
@@ -667,7 +667,7 @@ class ChatRoom extends Component {
 
   botPushThisQuestion = (thisQuestion, listOfEmotion, buttonAnswer = null) => {
     let { user, chatId, backgroundImageName } = this.state;
-    console.log("thisQuestion: ", thisQuestion);
+    // console.log("thisQuestion: ", thisQuestion);
     let nextQuestion = [];
     let thisQuestionText = [];
     //nextQuestion을 list형태로 만들고, 보여줘야 하는 답변을 순서대로 list안에 넣어둠!
@@ -887,7 +887,7 @@ class ChatRoom extends Component {
   getUser = async () => {
     const user = this.state.user || (await fb.getUserInfo());
     this.setState({ user });
-    console.log("usericon: ", user.usericon);
+    // console.log("usericon: ", user.usericon);
   };
 
   render() {
@@ -908,7 +908,7 @@ class ChatRoom extends Component {
     const contentsTopBottomMargin = 8;
     // const targetDialog = chatLog ? chatLog : this.state.currentDialog;
     const targetDialog = isOtherChat ? chatLog : this.state.currentDialog;
-    console.log("targetDialog: ", targetDialog);
+    // console.log("targetDialog: ", targetDialog);
     var { navigate } = this.props.navigation;
     const navigation = this.props.navigation;
     const isNewChat = navigation.getParam("isNewChat");
