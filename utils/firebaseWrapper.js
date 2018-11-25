@@ -673,6 +673,7 @@ export default api = {
     }
   },
   createComment: async function (userId, chatId, content, emotion, profileImageName) {
+    console.log("createComment profileImageName:",profileImageName)
     // INPUT
     // userId: user's identifier
     // chatId: chatroom's identifier

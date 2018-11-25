@@ -77,9 +77,10 @@ class MyChat extends React.Component {
           chatId={chatId}
           state={state}
           isCrowdBox={true}
-          isStartTop={true}
+          isStartTop={false}
           navigation={navigation}
           myChat={true}
+          isOtherChat={false}
           comments={comments}
         />
       </View>
