@@ -81,11 +81,12 @@ export default api = {
     // }
     try {
       const user = await auth.signInWithEmailAndPassword(email, password);
+      console.log(user)
       if (!user) {
         return null
       }
       console.log("READ");
-      const userDoc = await db.collection('users').doc(user.userId).get();
+      const userDoc = await db.collection('users').doc(user.uid).get();
       const userInfo = userDoc.data()
       userObject.uid = userInfo.userId
       userObject.displayName = userInfo.name
