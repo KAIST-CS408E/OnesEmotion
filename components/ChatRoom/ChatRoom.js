@@ -434,7 +434,8 @@ class ChatRoom extends Component {
       isTextInput: false,
       isIconInput: false,
       isButtonInput: false,
-      isFinished: false
+      isFinished: false,
+      buttonInputAns: buttonAnswer,
     });
     this.botPushThisQuestion(
       this.state.nextQuestion,

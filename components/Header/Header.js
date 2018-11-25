@@ -33,7 +33,7 @@ const headerTextHeight = (headerHeight * 1) / 3;
 
 const styles = StyleSheet.create({
   header: {
-    marginTop: StatusBar.currentHeight,
+    // marginTop: StatusBar.currentHeight,
     width: wp("100%"),
     height: headerHeight,
     backgroundColor: Colors.headerGrey,
