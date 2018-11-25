@@ -56,6 +56,9 @@ class LogList extends Component {
   }
 
   getChatList = async () => {
+    if (this.props.refreshRecommend) {
+      this.props.refreshRecommend()
+    }
     let user = this.state.user || (await fb.getUserInfo());
     const { myLog } = this.props;
     if (myLog) {
