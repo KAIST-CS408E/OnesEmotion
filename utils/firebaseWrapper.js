@@ -57,6 +57,7 @@ export default api = {
         userIcon: usericon,
         createdAt: new Date()
       })
+      arrived = true
       userObject.uid = user.uid
       userObject.displayName = name
       userObject.gender = gender
@@ -126,6 +127,9 @@ export default api = {
     try {
       const user = auth.currentUser;
       if (!user) {
+        user = userObject
+      }
+      if (!user) {
         return null;
       }
       return {
@@ -147,6 +151,7 @@ export default api = {
       }
       const userDoc = await db.collection('users').doc(user.userId).get();
       const userInfo = userDoc.data()
+      arrived = true
       userObject.gender = userInfo.gender;
       userObject.userIcon = userInfo.userIcon;
       return {
@@ -166,6 +171,7 @@ export default api = {
       var interval = setInterval(function() {
         if (count > 100) {
           if (userObject) {
+            arrived = true
             resolve({
               userId: userObject.uid,
               name: userObject.displayName
