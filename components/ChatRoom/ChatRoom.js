@@ -435,7 +435,7 @@ class ChatRoom extends Component {
       isIconInput: false,
       isButtonInput: false,
       isFinished: false,
-      buttonInputAns: buttonAnswer,
+      buttonInputAns: buttonAnswer
     });
     this.botPushThisQuestion(
       this.state.nextQuestion,
@@ -898,7 +898,8 @@ class ChatRoom extends Component {
       isCrowdBox,
       isStartTop,
       chatId,
-      isOtherChat
+      isOtherChat,
+      writerIcon
     } = this.props; //chatLog가 있으면 기존 chatLog에 담긴 대화 내용으로 로그 만들기, 없으면 새로운 채팅창 열기(아직 새 채팅창만 구현됨)
     let { backgroundImageName } = this.props;
     if (!backgroundImageName) {
@@ -963,11 +964,12 @@ class ChatRoom extends Component {
                   isMyChat={myChat || isNewChat}
                   text={dialog.text}
                   profileImageName={
-                    dialog.speaker == "bot"
-                      ? "bot"
-                      : this.state.user
-                      ? this.state.user.usericon
-                      : "user"
+                    dialog.speaker == "bot" ? "bot" : writerIcon
+                    // dialog.speaker == "bot"
+                    //   ? "bot"F
+                    //   : this.state.user
+                    //   ? this.state.user.usericon
+                    //   : "user"
                   }
                 />
               ))}
