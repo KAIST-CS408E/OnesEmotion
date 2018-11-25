@@ -14,12 +14,14 @@ class MyLog extends React.Component {
   render() {
     const myLog = false
     const navigation = this.props.navigation;
+    const refreshRecommend = navigation.getParam('refreshRecommend')
 
     return (
       <View style={styles.container}>
         <LogList 
           myLog={myLog} 
           navigation={navigation}
+          refreshRecommend={refreshRecommend}
         />
       </View>
     );

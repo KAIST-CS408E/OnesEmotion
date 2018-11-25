@@ -138,7 +138,7 @@ class MidTitle extends React.Component {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => this.props.navigation.navigate("Story")}
+          onPress={() => this.props.navigation.navigate("Story", {refreshRecommend:this.getUser()})}
         >
           <Image style={styles.icon} source={Icons("Story")} />
           <Text style={styles.title}>다른 사람들의 이야기 보기</Text>
