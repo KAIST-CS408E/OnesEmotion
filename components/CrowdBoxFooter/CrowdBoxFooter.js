@@ -78,7 +78,7 @@ class CrowdBoxFooter extends Component {
     const { crowdBoxDialog } = this.state;
     if (crowdBoxDialog.length > 0) {
       if (crowdBoxDialog && crowdBoxDialog.length != 0) {
-        this.setState({ notice: "사람들의 댓글"})
+        this.setState({ notice: "사람들의 댓글" });
       }
       return;
     }
@@ -127,7 +127,7 @@ class CrowdBoxFooter extends Component {
         });
     this.setState({ crowdBoxDialog: thisCrowdBoxDialog });
     if (thisCrowdBoxDialog && thisCrowdBoxDialog.length != 0) {
-      this.setState({ notice: "사람들의 댓글"})
+      this.setState({ notice: "사람들의 댓글" });
     }
   };
 
@@ -150,45 +150,46 @@ class CrowdBoxFooter extends Component {
 
     return (
       <View style={styles.container}>
-        <View style={{ height: this.state.scrollViewHeight }}>
-          <View style={{ flex: 1 }}>
-            <View style={styles.crowdBoxHeader}>
-              <Text style={styles.crowdBoxHeaderText}>{notice}</Text>
-            </View>
-            <ScrollView
-              style={{
-                width: wp("100%"),
-                paddingBottom: contentsTopBottomMargin,
-                paddingTop: contentsTopBottomMargin
-              }}
-              ref={ref => (this.scrollView = ref)}
-              onContentSizeChange={(contentWidth, contentHeight) => {
-                this.scrollView.scrollToEnd({ animated: true });
-                this.setState({ scrollViewHeight: contentHeight===0 ? CommentHeaderHeight : contentHeight + 50});
-                this.forceUpdate();
-              }}
-            >
-              {this.state.crowdBoxDialog
-                ? this.state.crowdBoxDialog.map((dialog, index) => (
-                    <ChatElement
-                      key={index}
-                      speaker={dialog.speaker}
-                      text={dialog.text}
-                      profileImageName={dialog.profileImageName}
-                      crowdEmotion={dialog.crowdEmotion}
-                    />
-                  ))
-                : null}
-              {isCrowdBox ? null : (
-                <ChatElement
-                  speaker={userInputDialog.speaker}
-                  text={userInputDialog.text}
-                  profileImageName={userInputDialog.profileImageName}
-                  crowdEmotion={userInputDialog.crowdEmotion}
-                />
-              )}
-            </ScrollView>
+        <View style={{ flex: 1 }}>
+          <View style={styles.crowdBoxHeader}>
+            <Text style={styles.crowdBoxHeaderText}>{notice}</Text>
           </View>
+          <ScrollView
+            style={{
+              width: wp("100%"),
+              paddingBottom: contentsTopBottomMargin,
+              paddingTop: contentsTopBottomMargin
+            }}
+            ref={ref => (this.scrollView = ref)}
+            onContentSizeChange={(contentWidth, contentHeight) => {
+              this.scrollView.scrollToEnd({ animated: true });
+              this.setState({
+                scrollViewHeight:
+                  contentHeight === 0 ? CommentHeaderHeight : contentHeight + 50
+              });
+              this.forceUpdate();
+            }}
+          >
+            {this.state.crowdBoxDialog
+              ? this.state.crowdBoxDialog.map((dialog, index) => (
+                  <ChatElement
+                    key={index}
+                    speaker={dialog.speaker}
+                    text={dialog.text}
+                    profileImageName={dialog.profileImageName}
+                    crowdEmotion={dialog.crowdEmotion}
+                  />
+                ))
+              : null}
+            {isCrowdBox ? null : (
+              <ChatElement
+                speaker={userInputDialog.speaker}
+                text={userInputDialog.text}
+                profileImageName={userInputDialog.profileImageName}
+                crowdEmotion={userInputDialog.crowdEmotion}
+              />
+            )}
+          </ScrollView>
         </View>
       </View>
     );
@@ -203,7 +204,7 @@ const styles = StyleSheet.create({
   container: {
     width: wp("100%"),
     maxHeight: hp("40%"),
-    // height: hp("40%"),
+    height: hp("35%"),
     // marginTop: 10,
     backgroundColor: "#E0E0E0",
     alignItems: "center",
