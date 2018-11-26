@@ -919,7 +919,8 @@ class ChatRoom extends Component {
     return (
       <View
         style={{
-          height: this.state.visibleHeight
+          height: this.state.visibleHeight,
+          paddingBottom: 30
         }}
       >
         <ImageBackground
