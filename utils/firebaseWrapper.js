@@ -143,6 +143,11 @@ export default api = {
       return null;
     }
   },
+  getUserName: async function (userId) {
+    const userDoc = await db.collection('users').doc(userId).get();
+    const userInfo = userDoc.data()
+    return userInfo.name
+  },
   getUserInfo: async function () {
     try {
       const user = await this.isUserLoggedIn();
