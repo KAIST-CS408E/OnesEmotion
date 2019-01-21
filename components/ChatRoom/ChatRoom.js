@@ -656,7 +656,10 @@ class ChatRoom extends Component {
 
   isBadEmotion = (emotion1, emotion2) => {
     // console.log("Input emotion1, 2: ", emotion1, emotion2);
-    if (this.isIncludes(["즐거움", "설렘", "신뢰"], emotion1, emotion1) || this.isIncludes(["즐거움", "설렘", "신뢰"], emotion2, emotion2)) {
+    if (
+      this.isIncludes(["즐거움", "설렘", "신뢰"], emotion1, emotion1) ||
+      this.isIncludes(["즐거움", "설렘", "신뢰"], emotion2, emotion2)
+    ) {
       return false;
     }
     return true;
@@ -764,13 +767,7 @@ class ChatRoom extends Component {
         : isBadEmotion
         ? botQuestions.q5
         : botQuestions.q8;
-      nextQuestion = analyzedEmotion
-        ? isBadEmotion
-          ? "q5"
-          : "q8"
-        : isBadEmotion
-        ? "q8"
-        : null;
+      nextQuestion = isBadEmotion ? "q8" : "end";
     }
     if (thisQuestion == "q5") {
       thisQuestionText = botQuestions.q5;

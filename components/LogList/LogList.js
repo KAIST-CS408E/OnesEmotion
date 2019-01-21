@@ -53,6 +53,7 @@ class LogList extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.getChatList();
+    // console.log("LogList this.state: ",this.state)
   }
 
   getChatList = async () => {
@@ -179,9 +180,43 @@ class LogList extends Component {
     );
   };
 
+  analysisData = (logList) => {
+    var userInfo = {};
+    logList.forEach(async (data, index) => {
+      const chatId = data.key
+      const thisChat = await fb.getAChat(chatId)
+      const userId = thisChat.state.user.userId
+      var userName = thisChat.state.user.name
+      if (userInfo[userName]) {
+        userInfo[userName].numOfDialog += 1
+      } else {
+        userInfo[userName] = {
+          numOfDialog:1,
+          numOfComments:0
+        }
+      }
+      const comments = thisChat.comments
+
+      comments.forEach(async (data, index) => {
+        userName = await fb.getUserName(data.userId)
+        if (userInfo[userName]) {
+          userInfo[userName].numOfComments += 1
+        } else {
+          userInfo[userName] = {
+            numOfDialog:0,
+            numOfComments:1
+          }
+        }
+        console.log("userInfo:",userInfo)
+      })
+      // console.log(thisChat.state.user.userId)
+    })
+  }
+
   render() {
     const { myLog } = this.props;
-    console.log("logList", this.state.logList);
+    // console.log("logList", this.state.logList);
+    this.analysisData(this.state.logList)
     const contents = this.state.logList.map((item, i) => (
       <LogItem
         myLog={myLog}
